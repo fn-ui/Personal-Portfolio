@@ -1,41 +1,41 @@
 function Footer() {
   return (
-    <footer className="bg-black text-white py-10 px-6">
+    <footer className="bg-white text-slate-950 py-10 px-6 border-t border-slate-200">
 
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
 
         <div>
 
-          <h2 className="text-2xl font-bold mb-2">
+          <h2 className="text-2xl font-bold mb-2 text-slate-950">
             Faith Njeri
           </h2>
 
-          <p className="text-gray-400">
+          <p className="text-slate-600">
             MERN Stack Developer passionate about building
             modern web experiences.
           </p>
 
         </div>
 
-        <div className="flex gap-6 text-lg">
+        <div className="flex gap-6 text-lg text-slate-600">
 
           <a
             href="#"
-            className="hover:text-gray-400 transition"
+            className="hover:text-slate-950 transition"
           >
             GitHub
           </a>
 
           <a
             href="#"
-            className="hover:text-gray-400 transition"
+            className="hover:text-slate-950 transition"
           >
             LinkedIn
           </a>
 
           <a
             href="#"
-            className="hover:text-gray-400 transition"
+            className="hover:text-slate-950 transition"
           >
             Email
           </a>
@@ -44,7 +44,7 @@ function Footer() {
 
       </div>
 
-      <div className="border-t border-gray-700 mt-8 pt-6 text-center text-gray-500 text-sm">
+      <div className="mt-8 pt-6 text-center text-slate-500 text-sm">
 
         © 2026 Faith Njeri. All rights reserved.
 
