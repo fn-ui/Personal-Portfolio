@@ -1,4 +1,4 @@
-import ScrollProgressBar from "./components/Scrollprogressbar";
+import Scrollprogressbar from "./components/Scrollprogressbar";
 import Navbar from "./components/Navbar"
 import Hero from "./components/Hero"
 import About from "./components/About"
