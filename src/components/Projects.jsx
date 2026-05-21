@@ -1,7 +1,6 @@
 import { FaArrowRight, FaGithub } from "react-icons/fa";
 import bellebliss from "../assets/bellebliss.png";
 import portfolio from "../assets/portfolio.png";
-import { Images } from "lucide-react";
 
 function Projects() {
   return (
@@ -33,6 +32,7 @@ function Projects() {
 
           {/* Project 1 */}
           <div className="group overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur-md transition duration-500 hover:-translate-y-2 hover:border-white/20">
+            
             {/* Project Image */}
             <div className="overflow-hidden">
               <img
@@ -68,8 +68,10 @@ function Projects() {
 
               {/* Buttons */}
               <div className="flex items-center gap-4">
+
+                {/* Live Demo */}
                 <a
-                  href="https://github.com/yourusername/portfolio"
+                  href="https://personal-portfolio-tlvs.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group/button relative inline-flex items-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 px-7 py-4 font-semibold text-white shadow-lg shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-purple-500/40"
@@ -83,8 +85,9 @@ function Projects() {
                   <div className="absolute inset-0 translate-y-full bg-gradient-to-r from-purple-500 to-blue-500 transition duration-500 group-hover/button:translate-y-0" />
                 </a>
 
+                {/* GitHub Repo */}
                 <a
-                  href="https://personal-portfolio-tlvs.vercel.app/"
+                  href="https://github.com/fn-ui"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/10 hover:text-blue-400"
@@ -97,11 +100,12 @@ function Projects() {
 
           {/* Project 2 */}
           <div className="group overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur-md transition duration-500 hover:-translate-y-2 hover:border-white/20">
+
             {/* Project Image */}
             <div className="overflow-hidden">
               <img
                 src={bellebliss}
-                alt="Second Project"
+                alt="Bellebliss Website"
                 className="h-72 w-full object-cover transition duration-700 group-hover:scale-110"
               />
             </div>
@@ -109,16 +113,20 @@ function Projects() {
             {/* Content */}
             <div className="p-8">
               <h3 className="mb-4 text-3xl font-bold text-white">
-                Bellebliss website
+                Bellebliss Website
               </h3>
 
               <p className="mb-8 text-lg leading-relaxed text-slate-300">
-                A modern online clothing store offering stylish, affordable, and high-quality fashion for everyday wear. The website provides a seamless shopping experience with trendy collections, easy navigation, secure checkout, and responsive design across all devices.
+                A modern online clothing store offering stylish,
+                affordable, and high-quality fashion for everyday wear.
+                The website provides a seamless shopping experience with
+                trendy collections, easy navigation, secure checkout,
+                and responsive design across all devices.
               </p>
 
               {/* Tech Stack */}
               <div className="mb-8 flex flex-wrap gap-3">
-                {["Html", "JavaScript", "CSS"].map((tech) => (
+                {["HTML", "JavaScript", "CSS"].map((tech) => (
                   <span
                     key={tech}
                     className="rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition duration-300 hover:border-white/40 hover:bg-white/10"
@@ -130,6 +138,8 @@ function Projects() {
 
               {/* Buttons */}
               <div className="flex items-center gap-4">
+
+                {/* Live Demo */}
                 <a
                   href="https://bellebliss-website.vercel.app/"
                   target="_blank"
@@ -145,8 +155,9 @@ function Projects() {
                   <div className="absolute inset-0 translate-y-full bg-gradient-to-r from-purple-500 to-blue-500 transition duration-500 group-hover/button:translate-y-0" />
                 </a>
 
+                {/* GitHub Repo */}
                 <a
-                  href="https://github.com/fn-ui/Bellebliss-website.git"
+                  href="https://github.com/fn-ui/Bellebliss-website"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/10 hover:text-blue-400"
@@ -156,24 +167,21 @@ function Projects() {
               </div>
             </div>
           </div>
-
-          
-
         </div>
 
-        {/* View Projects Button */}
-            <div className="mt-14 w-full flex justify-center">
-              <a
-                href="https://github.com/yourusername"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center gap-3 rounded-full border border-purple-500/20 bg-white/5 px-8 py-4 text-lg font-medium text-white backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-purple-500 hover:bg-purple-500/10"
-              >
-                View All Projects
+        {/* View All Projects Button */}
+        <div className="mt-14 flex w-full justify-center">
+          <a
+            href="https://github.com/fn-ui"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-3 rounded-full border border-purple-500/20 bg-white/5 px-8 py-4 text-lg font-medium text-white backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-purple-500 hover:bg-purple-500/10"
+          >
+            View All Projects
 
-                <FaArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
-              </a>
-            </div>
+            <FaArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+          </a>
+        </div>
       </div>
     </section>
   );
