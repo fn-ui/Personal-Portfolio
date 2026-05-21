@@ -84,7 +84,7 @@ function Projects() {
                 </a>
 
                 <a
-                  href="https://github.com/yourusername/portfolio"
+                  href="https://personal-portfolio-tlvs.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/10 hover:text-blue-400"
@@ -131,7 +131,7 @@ function Projects() {
               {/* Buttons */}
               <div className="flex items-center gap-4">
                 <a
-                  href="https://github.com/fn-ui/Bellebliss-website.git"
+                  href="https://bellebliss-website.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group/button relative inline-flex items-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 px-7 py-4 font-semibold text-white shadow-lg shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-purple-500/40"
