@@ -1,5 +1,8 @@
 import { FaArrowRight, FaGithub } from "react-icons/fa";
-import bellebliss from "../assets/bellebliss.jpg";
+import bellebliss from "../assets/bellebliss.png";
+import portfolio from "../assets/portfolio.png";
+import { Images } from "lucide-react";
+
 function Projects() {
   return (
     <section
@@ -33,8 +36,8 @@ function Projects() {
             {/* Project Image */}
             <div className="overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f"
-                alt="Portfolio Website"
+                src={portfolio}
+                alt="Personal Portfolio"
                 className="h-72 w-full object-cover transition duration-700 group-hover:scale-110"
               />
             </div>
@@ -154,7 +157,23 @@ function Projects() {
             </div>
           </div>
 
+          
+
         </div>
+
+        {/* View Projects Button */}
+            <div className="mt-14 w-full flex justify-center">
+              <a
+                href="https://github.com/yourusername"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-3 rounded-full border border-purple-500/20 bg-white/5 px-8 py-4 text-lg font-medium text-white backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-purple-500 hover:bg-purple-500/10"
+              >
+                View All Projects
+
+                <FaArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+              </a>
+            </div>
       </div>
     </section>
   );

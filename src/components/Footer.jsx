@@ -21,15 +21,10 @@ function Footer() {
 
           {/* Brand */}
           <div>
-            <h2 className="mb-4 text-4xl font-black leading-none tracking-tight md:text-5xl">
-              Faith{" "}
-              <span className="bg-gradient-to-r from-white via-slate-300 to-slate-500 bg-clip-text text-transparent">
-                Njeri
-              </span>
-            </h2>
+            
 
             <p className="mb-5 max-w-md text-base leading-relaxed text-slate-300">
-              MERN Stack Developer focused on modern, responsive,
+              Full Stack Developer focused on modern, responsive,
               and high-performance digital experiences. I build clean UI,
               accessible interfaces, and scalable web applications.
             </p>
@@ -57,11 +52,13 @@ function Footer() {
                   <span>✉️</span>
 
                   <a
-                    href="mailto:fn0740839@gmail.com"
-                    className="text-blue-400 underline transition duration-300 hover:text-blue-300"
-                  >
-                    fn0740839@gmail.com
-                  </a>
+                      href="https://mail.google.com/mail/?view=cm&fs=1&to=fn0740839@gmail.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-400 underline transition duration-300 hover:text-blue-300"
+                    >
+                      fn0740839@gmail.com
+                    </a>
                 </li>
 
                 <li className="flex items-center gap-2">
@@ -93,11 +90,11 @@ function Footer() {
                 </li>
 
                 <li className="transition duration-300 hover:text-white">
-                  API Integration
+                  API integration
                 </li>
 
                 <li className="transition duration-300 hover:text-white">
-                  Performance Optimization
+                  Responsive Design
                 </li>
 
               </ul>
@@ -132,10 +129,15 @@ function Footer() {
                 </li>
 
                 <li>
-                  <a href="#" className={linkClass}>
-                    Resume
-                  </a>
-                </li>
+                <a
+                  href="/resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={linkClass}
+                >
+                  Resume
+                </a>
+              </li>
 
               </ul>
             </nav>
@@ -174,19 +176,16 @@ function Footer() {
                   />
                 </a>
 
-                {/* Email */}
                 
-           
                 {/* Email */}
-                <a
-                  href="mailto:fn0740839@gmail.com"
-                  aria-label="Email"
-                  className="group flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-purple-400 backdrop-blur-md transition-all duration-300 hover:-translate-y-2 hover:scale-110 hover:border-purple-500/50 hover:bg-purple-500/10 hover:shadow-[0_0_25px_rgba(168,85,247,0.35)]"
+               <a
+                  href="https://mail.google.com/mail/?view=cm&fs=1&to=fn0740839@gmail.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Send Email"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-slate-400 transition-all duration-300 hover:-translate-y-1 hover:border-pink-400/40 hover:text-pink-400"
                 >
-                  <FaEnvelope
-                    size={20}
-                    className="transition-transform duration-300 group-hover:rotate-6"
-                  />
+                  <FaEnvelope size={20} />
                 </a>
               </div>
             </section>
