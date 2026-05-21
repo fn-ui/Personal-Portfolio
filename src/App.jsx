@@ -14,7 +14,7 @@ import ChatBot from "./components/chatbot"
 function App() {
   return (
     <>
-      <ScrollProgressBar />
+      <Scrollprogressbar />
       <Navbar />
 
       <main>
