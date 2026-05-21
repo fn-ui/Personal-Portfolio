@@ -42,11 +42,9 @@ function Contact() {
       id="contact"
       className="relative overflow-hidden bg-gradient-to-b from-black via-[#050816] to-black px-6 py-20 text-white"
     >
-      {/* Background Glow Effects */}
       <div className="absolute left-0 top-0 h-72 w-72 animate-pulse rounded-full bg-blue-500/10 blur-3xl" />
       <div className="absolute bottom-0 right-0 h-72 w-72 animate-pulse rounded-full bg-purple-500/10 blur-3xl" />
 
-      {/* 🔥 Reduced width */}
       <div className="relative z-10 mx-auto max-w-3xl">
 
         {/* Heading */}
@@ -74,12 +72,10 @@ function Contact() {
           </div>
         </div>
 
-        {/* 🔥 Smaller card */}
-        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-6 shadow-2xl backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-white/20 hover:shadow-purple-500/10 md:p-8">
+        {/* Form */}
+        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-6 shadow-2xl backdrop-blur-xl md:p-8">
 
-          <div className="absolute -right-10 top-0 h-40 w-40 rounded-full bg-purple-500/10 blur-3xl" />
-
-          <form ref={form} onSubmit={sendEmail} className="relative z-10 space-y-5">
+          <form ref={form} onSubmit={sendEmail} className="space-y-5">
 
             {/* Name */}
             <div>
@@ -93,9 +89,9 @@ function Contact() {
                 <input
                   type="text"
                   name="user_name"
-                  placeholder="Enter your name"
                   required
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white outline-none transition-all duration-300 placeholder:text-slate-500 focus:border-blue-400/50 focus:bg-white/10"
+                  placeholder="Enter your name"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white outline-none focus:border-blue-400/50"
                 />
               </div>
             </div>
@@ -112,9 +108,9 @@ function Contact() {
                 <input
                   type="email"
                   name="user_email"
-                  placeholder="Enter your email"
                   required
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white outline-none transition-all duration-300 placeholder:text-slate-500 focus:border-purple-400/50 focus:bg-white/10"
+                  placeholder="Enter your email"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white outline-none focus:border-purple-400/50"
                 />
               </div>
             </div>
@@ -128,9 +124,9 @@ function Contact() {
               <textarea
                 rows="4"
                 name="message"
-                placeholder="Tell me about your project..."
                 required
-                className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition-all duration-300 placeholder:text-slate-500 focus:border-pink-400/50 focus:bg-white/10"
+                placeholder="Tell me about your project..."
+                className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-pink-400/50"
               />
             </div>
 
@@ -142,14 +138,16 @@ function Contact() {
             )}
 
             {errorMessage && (
-              <p className="text-sm text-red-400">{errorMessage}</p>
+              <p className="text-sm text-red-400">
+                {errorMessage}
+              </p>
             )}
 
             {/* Button */}
             <button
               type="submit"
               disabled={loading}
-              className="group relative flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-3 font-semibold text-white transition-all hover:scale-[1.02] disabled:opacity-70"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-3 font-semibold text-white disabled:opacity-60"
             >
               <FaPaperPlane />
               {loading ? "Sending..." : "Send Message"}

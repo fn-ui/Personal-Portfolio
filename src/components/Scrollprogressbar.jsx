@@ -1,6 +1,6 @@
 import { motion, useScroll } from "framer-motion";
 
-function ScrollProgressBar() {
+export default function ScrollProgressBar() {
   const { scrollYProgress } = useScroll();
 
   return (
@@ -12,5 +12,3 @@ function ScrollProgressBar() {
     />
   );
 }
-
-export default Scrollprogressbar;

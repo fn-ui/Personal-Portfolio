@@ -9,29 +9,29 @@ function Navbar() {
   const [mobileMenu, setMobileMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  const navItems = ["About", "Services", "Projects", "Contact"];
+  // ⚠️ IMPORTANT: make sure these IDs match your sections EXACTLY
+  const navItems = ["about", "services", "projects", "contact"];
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowNavbar(window.scrollY < 10 || window.scrollY < 100);
-
+      setShowNavbar(window.scrollY < 100);
       setScrolled(window.scrollY > 30);
 
       const sections = navItems.map((item) =>
-        document.getElementById(item.toLowerCase())
+        document.getElementById(item)
       );
 
       sections.forEach((section) => {
-        if (section) {
-          const sectionTop = section.offsetTop - 120;
-          const sectionHeight = section.offsetHeight;
+        if (!section) return;
 
-          if (
-            window.scrollY >= sectionTop &&
-            window.scrollY < sectionTop + sectionHeight
-          ) {
-            setActiveSection(section.id);
-          }
+        const sectionTop = section.offsetTop - 120;
+        const sectionHeight = section.offsetHeight;
+
+        if (
+          window.scrollY >= sectionTop &&
+          window.scrollY < sectionTop + sectionHeight
+        ) {
+          setActiveSection(section.id);
         }
       });
 
@@ -41,12 +41,9 @@ function Navbar() {
     };
 
     window.addEventListener("scroll", handleScroll);
-
     handleScroll();
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -67,16 +64,12 @@ function Navbar() {
         }`}
       >
         {/* LOGO */}
-        <a href="#home" className="group flex items-center gap-3">
-          <div className="relative">
-            <div className="absolute inset-0 rounded-full bg-blue-500/10 blur-md transition group-hover:bg-purple-500/20" />
-
-            <img
-              src={profileImg}
-              alt="Faith Njeri"
-              className="relative h-10 w-10 rounded-full border border-white/10 object-cover transition duration-300 group-hover:scale-105"
-            />
-          </div>
+        <a href="#hero" className="group flex items-center gap-3">
+          <img
+            src={profileImg}
+            alt="Profile"
+            className="h-10 w-10 rounded-full border border-white/10 object-cover"
+          />
 
           <div className="flex flex-col leading-none">
             <span className="text-[0.95rem] font-bold text-white">
@@ -94,48 +87,34 @@ function Navbar() {
 
         {/* DESKTOP NAV */}
         <ul className="hidden items-center gap-8 md:flex">
-          {navItems.map((item) => {
-            const sectionId = item.toLowerCase();
-
-            return (
-              <li key={item}>
-                <a
-                  href={`#${sectionId}`}
-                  className={`group relative text-sm font-medium transition duration-300 ${
-                    activeSection === sectionId
-                      ? "text-white"
-                      : "text-slate-400 hover:text-white"
-                  }`}
-                >
-                  {item}
-
-                  <span
-                    className={`absolute -bottom-2 left-0 h-[2px] bg-gradient-to-r from-blue-400 to-purple-400 transition-all duration-300 ${
-                      activeSection === sectionId
-                        ? "w-full"
-                        : "w-0 group-hover:w-full"
-                    }`}
-                  />
-                </a>
-              </li>
-            );
-          })}
+          {navItems.map((item) => (
+            <li key={item}>
+              <a
+                href={`#${item}`}
+                className={`text-sm font-medium transition ${
+                  activeSection === item
+                    ? "text-white"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                {item.charAt(0).toUpperCase() + item.slice(1)}
+              </a>
+            </li>
+          ))}
         </ul>
 
-        {/* RIGHT SIDE */}
+        {/* CTA + MOBILE */}
         <div className="flex items-center gap-4">
-          {/* CTA */}
           <a
             href="#contact"
-            className="hidden rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 px-5 py-2.5 text-sm font-semibold text-white transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/30 md:block"
+            className="hidden rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 px-5 py-2.5 text-sm font-semibold text-white md:block"
           >
             Reach out
           </a>
 
-          {/* MOBILE MENU BUTTON */}
           <button
             onClick={() => setMobileMenu(!mobileMenu)}
-            className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white backdrop-blur-md transition hover:bg-white/10 md:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white md:hidden"
           >
             {mobileMenu ? <FaTimes /> : <FaBars />}
           </button>
@@ -147,37 +126,28 @@ function Navbar() {
         <motion.div
           initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -15 }}
-          className="mx-auto mt-4 max-w-6xl rounded-2xl border border-white/10 bg-black/80 p-6 backdrop-blur-2xl md:hidden"
+          className="mx-auto mt-4 max-w-6xl rounded-2xl border border-white/10 bg-black/80 p-6 md:hidden"
         >
           <ul className="flex flex-col gap-5">
-            {navItems.map((item) => {
-              const sectionId = item.toLowerCase();
-
-              return (
-                <li key={item}>
-                  <a
-                    href={`#${sectionId}`}
-                    onClick={() => setMobileMenu(false)}
-                    className={`text-sm font-medium transition ${
-                      activeSection === sectionId
-                        ? "text-white"
-                        : "text-slate-400"
-                    }`}
-                  >
-                    {item}
-                  </a>
-                </li>
-              );
-            })}
+            {navItems.map((item) => (
+              <li key={item}>
+                <a
+                  href={`#${item}`}
+                  onClick={() => setMobileMenu(false)}
+                  className="text-sm text-slate-400 hover:text-white"
+                >
+                  {item.charAt(0).toUpperCase() + item.slice(1)}
+                </a>
+              </li>
+            ))}
           </ul>
 
           <a
             href="#contact"
             onClick={() => setMobileMenu(false)}
-            className="mt-6 flex items-center justify-center rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 px-5 py-3 text-sm font-semibold text-white"
+            className="mt-6 flex justify-center rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 px-5 py-3 text-sm font-semibold text-white"
           >
-            Hire Me
+            Reach out
           </a>
         </motion.div>
       )}
