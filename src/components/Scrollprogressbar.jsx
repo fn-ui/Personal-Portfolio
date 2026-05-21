@@ -13,4 +13,4 @@ function ScrollProgressBar() {
   );
 }
 
-export default ScrollProgressBar;
+export default Scrollprogressbar;
