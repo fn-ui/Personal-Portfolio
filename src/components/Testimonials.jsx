@@ -2,62 +2,79 @@ import { motion } from "framer-motion";
 import { FaStar } from "react-icons/fa";
 import { useState, useEffect } from "react";
 
+import {
+  collection,
+  addDoc,
+  getDocs,
+} from "firebase/firestore";
+
+import { db } from "../firebase";
+
 // AVATARS
 import johnImg from "../assets/testimonials/john.png";
 import graceImg from "../assets/testimonials/grace.png";
 import brianImg from "../assets/testimonials/brian.png";
 
 function Testimonials() {
-  const [feedbacks, setFeedbacks] = useState(() => {
-    const saved = localStorage.getItem("feedbacks");
-
-    const parsed = saved ? JSON.parse(saved) : null;
-
-    if (parsed) {
-      return parsed.map((item) => ({
-        ...item,
-        rating: item.rating ?? 5,
-      }));
-    }
-
-    return [
-      {
-        name: "John Mwangi",
-        role: "Frontend Developer",
-        image: johnImg,
-        feedback:
-          "Faith created a clean and responsive interface with smooth animations and great attention to detail.",
-        rating: 5,
-      },
-      {
-        name: "Grace Wanjiru",
-        role: "UI/UX Designer",
-        image: graceImg,
-        feedback:
-          "Very professional work with modern design principles and excellent responsiveness across devices.",
-        rating: 5,
-      },
-      {
-        name: "Brian Otieno",
-        role: "Project Collaborator",
-        image: brianImg,
-        feedback:
-          "Great communication, fast delivery, and impressive frontend development skills.",
-        rating: 5,
-      },
-    ];
-  });
-
-  useEffect(() => {
-    localStorage.setItem("feedbacks", JSON.stringify(feedbacks));
-  }, [feedbacks]);
+  const [feedbacks, setFeedbacks] = useState([
+    {
+      name: "John Mwangi",
+      role: "Frontend Developer",
+      image: johnImg,
+      feedback:
+        "Faith created a clean and responsive interface with smooth animations and great attention to detail.",
+      rating: 5,
+    },
+    {
+      name: "Grace Wanjiru",
+      role: "UI/UX Designer",
+      image: graceImg,
+      feedback:
+        "Very professional work with modern design principles and excellent responsiveness across devices.",
+      rating: 5,
+    },
+    {
+      name: "Brian Otieno",
+      role: "Project Collaborator",
+      image: brianImg,
+      feedback:
+        "Great communication, fast delivery, and impressive frontend development skills.",
+      rating: 5,
+    },
+  ]);
 
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
   const [message, setMessage] = useState("");
   const [rating, setRating] = useState(5);
 
-  const handleSubmit = (e) => {
+  // FETCH TESTIMONIALS FROM FIREBASE
+  useEffect(() => {
+    const fetchFeedbacks = async () => {
+      try {
+        const querySnapshot = await getDocs(
+          collection(db, "feedbacks")
+        );
+
+        const firebaseFeedbacks = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        setFeedbacks((prev) => [
+          ...firebaseFeedbacks,
+          ...prev,
+        ]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchFeedbacks();
+  }, []);
+
+  // SUBMIT FEEDBACK
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newFeedback = {
@@ -65,15 +82,32 @@ function Testimonials() {
       role,
       feedback: message,
       rating,
-      image: "https://ui-avatars.com/api/?name=" + name,
+      image:
+        "https://ui-avatars.com/api/?name=" +
+        encodeURIComponent(name),
     };
 
-    setFeedbacks((prev) => [newFeedback, ...prev]);
+    try {
+      // SAVE TO FIREBASE
+      await addDoc(
+        collection(db, "feedbacks"),
+        newFeedback
+      );
 
-    setName("");
-    setRole("");
-    setMessage("");
-    setRating(5);
+      // UPDATE UI
+      setFeedbacks((prev) => [
+        newFeedback,
+        ...prev,
+      ]);
+
+      // CLEAR FORM
+      setName("");
+      setRole("");
+      setMessage("");
+      setRating(5);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -106,7 +140,7 @@ function Testimonials() {
           <div className="mx-auto mt-4 h-1 w-24 rounded-full bg-gradient-to-r from-blue-500 to-purple-500" />
         </motion.div>
 
-        {/* Testimonials Grid (smaller gap) */}
+        {/* Testimonials */}
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
 
           {feedbacks.map((item, index) => (
@@ -114,15 +148,20 @@ function Testimonials() {
               key={index}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
+              transition={{
+                duration: 0.6,
+                delay: index * 0.1,
+              }}
               viewport={{ once: true }}
-              whileHover={{ y: -6, scale: 1.02 }}
+              whileHover={{
+                y: -6,
+                scale: 1.02,
+              }}
               className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl transition-all duration-300 hover:border-purple-500/30 hover:bg-white/[0.07]"
             >
-              {/* Content */}
-              <div className="relative z-10">
+              <div>
 
-                {/* Quote (smaller) */}
+                {/* Quote */}
                 <div className="mb-3 text-3xl leading-none text-purple-400/60">
                   “
                 </div>
@@ -134,7 +173,7 @@ function Testimonials() {
                       key={i}
                       size={13}
                       className={
-                        i < (item.rating || 5)
+                        i < item.rating
                           ? "text-yellow-400"
                           : "text-gray-600"
                       }
@@ -149,7 +188,7 @@ function Testimonials() {
               </div>
 
               {/* User */}
-              <div className="relative z-10 flex items-center gap-3 border-t border-white/10 pt-4">
+              <div className="flex items-center gap-3 border-t border-white/10 pt-4">
 
                 <img
                   src={item.image}
@@ -172,7 +211,7 @@ function Testimonials() {
 
         </div>
 
-        {/* Feedback Form */}
+        {/* Form */}
         <motion.form
           onSubmit={handleSubmit}
           initial={{ opacity: 0, y: 40 }}
@@ -191,7 +230,9 @@ function Testimonials() {
               type="text"
               placeholder="Your Name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) =>
+                setName(e.target.value)
+              }
               required
               className="w-full rounded-2xl border border-white/10 bg-black/30 p-4 text-white outline-none focus:border-purple-500"
             />
@@ -200,7 +241,9 @@ function Testimonials() {
               type="text"
               placeholder="Your Role"
               value={role}
-              onChange={(e) => setRole(e.target.value)}
+              onChange={(e) =>
+                setRole(e.target.value)
+              }
               required
               className="w-full rounded-2xl border border-white/10 bg-black/30 p-4 text-white outline-none focus:border-purple-500"
             />
@@ -209,7 +252,9 @@ function Testimonials() {
               rows="5"
               placeholder="Write your feedback..."
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={(e) =>
+                setMessage(e.target.value)
+              }
               required
               className="w-full rounded-2xl border border-white/10 bg-black/30 p-4 text-white outline-none focus:border-purple-500"
             />
@@ -219,11 +264,13 @@ function Testimonials() {
               {[1, 2, 3, 4, 5].map((star) => (
                 <FaStar
                   key={star}
-                  onClick={() => setRating(star)}
+                  onClick={() =>
+                    setRating(star)
+                  }
                   className={
                     star <= rating
-                      ? "text-yellow-400 cursor-pointer"
-                      : "text-gray-600 cursor-pointer"
+                      ? "cursor-pointer text-yellow-400"
+                      : "cursor-pointer text-gray-600"
                   }
                 />
               ))}
