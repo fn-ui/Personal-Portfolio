@@ -1,60 +1,218 @@
 import { motion } from "framer-motion";
+import {
+  FaReact,
+  FaNodeJs,
+  FaGitAlt,
+  FaHtml5,
+  FaCss3Alt,
+  FaJs,
+} from "react-icons/fa";
+
+import {
+  SiTailwindcss,
+  SiExpress,
+  SiMongodb,
+  SiVercel,
+} from "react-icons/si";
 
 function Skills() {
   const skills = [
     {
-      title: "Frontend Technologies",
+      icon: <FaReact />,
+      title: "Frontend Development",
       description:
-        "I build modern and interactive user interfaces using React.js, JavaScript, Tailwind CSS, HTML5, and CSS3. I focus on creating responsive, scalable, and visually appealing web applications with smooth user experiences.",
+        "I build modern and responsive user interfaces using React.js, JavaScript, Tailwind CSS, HTML5, and CSS3 with strong focus on clean design and smooth user experiences.",
     },
     {
-      title: "Backend & API Development",
+      icon: <FaNodeJs />,
+      title: "Backend Development",
       description:
-        "I work with Node.js, Express.js, and RESTful APIs to develop dynamic web applications. I integrate external services, manage asynchronous data, and create seamless communication between frontend and backend systems.",
+        "I develop scalable backend systems and REST APIs using Node.js and Express.js while handling asynchronous data and application logic efficiently.",
     },
     {
+      icon: <FaGitAlt />,
       title: "Tools & Workflow",
       description:
-        "I use Git and GitHub for version control, Visual Studio Code for development, and modern deployment platforms like Vercel. I follow clean coding practices and organized workflows to improve productivity and maintainability.",
+        "I use Git, GitHub, VS Code, and deployment platforms like Vercel to maintain organized workflows, collaboration, and clean code practices.",
     },
     {
-      title: "Responsive & Performance Optimization",
+      icon: <SiTailwindcss />,
+      title: "Responsive Design",
       description:
-        "I develop fully responsive websites optimized for desktop, tablet, and mobile devices. I also focus on performance optimization, accessibility, and smooth animations to create fast and engaging user experiences.",
+        "I create fully responsive websites optimized for mobile, tablet, and desktop while improving accessibility, performance, and animations.",
+    },
+  ];
+
+  const technologies = [
+    {
+      icon: <FaHtml5 />,
+      name: "HTML5",
+    },
+    {
+      icon: <FaCss3Alt />,
+      name: "CSS3",
+    },
+    {
+      icon: <FaJs />,
+      name: "JavaScript",
+    },
+    {
+      icon: <FaReact />,
+      name: "React",
+    },
+    {
+      icon: <SiTailwindcss />,
+      name: "Tailwind",
+    },
+    {
+      icon: <FaNodeJs />,
+      name: "Node.js",
+    },
+    {
+      icon: <SiExpress />,
+      name: "Express",
+    },
+    {
+      icon: <SiMongodb />,
+      name: "MongoDB",
+    },
+    {
+      icon: <FaGitAlt />,
+      name: "Git",
+    },
+    {
+      icon: <SiVercel />,
+      name: "Vercel",
     },
   ];
 
   return (
-    <section id="skills" className="relative bg-black px-6 py-24 text-white">
-      {/* Heading */}
-      <div className="mx-auto mb-20 max-w-3xl text-center">
-        <h2 className="mb-4 text-5xl font-bold">My Skills</h2>
+    <section
+      id="skills"
+      className="relative overflow-hidden bg-white px-6 py-28 text-slate-900"
+    >
+      {/* Background Decorations */}
+      <div className="absolute left-0 top-0 h-72 w-72 rounded-full bg-blue-100 blur-3xl" />
+      <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-sky-100 blur-3xl" />
 
-        <p className="text-gray-400">
-          Technical expertise and technologies I use to build modern web applications.
-        </p>
-      </div>
+      {/* Grid Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:6rem_6rem] opacity-40" />
 
-      {/* Skills */}
-      <div className="mx-auto max-w-4xl space-y-14">
-        {skills.map((skill, index) => (
-          <motion.div
-            key={skill.title}   // ✅ better than index
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: index * 0.2 }}
-            viewport={{ once: true }}
-            className="border-b border-white/10 pb-10 text-center"
-          >
-            <h3 className="mb-5 text-3xl font-semibold">
-              {skill.title}
+      <div className="relative z-10 mx-auto max-w-7xl">
+
+        {/* HEADER */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+          className="mx-auto mb-20 max-w-3xl text-center"
+        >
+
+          <p className="mb-4 inline-block rounded-full bg-blue-100 px-5 py-2 text-sm font-semibold text-blue-700">
+            My Skills
+          </p>
+
+          <h2 className="text-5xl font-black md:text-6xl">
+            Technologies &
+            <span className="block bg-gradient-to-r from-blue-600 to-sky-400 bg-clip-text text-transparent">
+              Expertise
+            </span>
+          </h2>
+
+          <p className="mt-6 text-lg leading-8 text-slate-600">
+            Technical expertise and modern technologies I use to
+            design, develop, and deploy high-quality web applications.
+          </p>
+
+        </motion.div>
+
+        {/* SKILLS GRID */}
+        <div className="grid gap-8 md:grid-cols-2">
+
+          {skills.map((skill, index) => (
+            <motion.div
+              key={skill.title}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.6,
+                delay: index * 0.15,
+              }}
+              viewport={{ once: true }}
+              whileHover={{ y: -8 }}
+              className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm transition hover:border-blue-200 hover:shadow-xl"
+            >
+
+              {/* ICON */}
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-100 text-3xl text-blue-600">
+                {skill.icon}
+              </div>
+
+              {/* TITLE */}
+              <h3 className="mb-4 text-2xl font-bold">
+                {skill.title}
+              </h3>
+
+              {/* DESCRIPTION */}
+              <p className="leading-8 text-slate-600">
+                {skill.description}
+              </p>
+
+            </motion.div>
+          ))}
+
+        </div>
+
+        {/* TECHNOLOGY STACK */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+          className="mt-24"
+        >
+
+          <div className="mb-12 text-center">
+
+            <h3 className="text-4xl font-black">
+              Tech Stack
             </h3>
 
-            <p className="mx-auto max-w-3xl text-lg leading-relaxed text-gray-400">
-              {skill.description}
+            <p className="mt-4 text-slate-600">
+              Tools and technologies I work with regularly.
             </p>
-          </motion.div>
-        ))}
+
+          </div>
+
+          {/* TECH ICONS */}
+          <div className="flex flex-wrap justify-center gap-5">
+
+            {technologies.map((tech) => (
+              <motion.div
+                key={tech.name}
+                whileHover={{
+                  y: -6,
+                  scale: 1.05,
+                }}
+                className="flex min-w-[120px] flex-col items-center rounded-3xl border border-slate-200 bg-white px-6 py-6 shadow-sm transition hover:border-blue-200 hover:shadow-lg"
+              >
+
+                <div className="mb-3 text-4xl text-blue-600">
+                  {tech.icon}
+                </div>
+
+                <p className="font-semibold text-slate-700">
+                  {tech.name}
+                </p>
+
+              </motion.div>
+            ))}
+
+          </div>
+
+        </motion.div>
+
       </div>
     </section>
   );

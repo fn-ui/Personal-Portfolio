@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from "react";
+
 import {
   FaRobot,
   FaTimes,
   FaPaperPlane,
-  FaUserCircle,
   FaMinus,
   FaTrash,
+  FaMagic, // ✅ FIX: replaced FaSparkles
 } from "react-icons/fa";
 
 import { motion, AnimatePresence } from "framer-motion";
 
-/* Time Formatter */
+/* TIME FORMAT */
 const getTime = () => {
   return new Date().toLocaleTimeString([], {
     hour: "2-digit",
@@ -18,7 +19,7 @@ const getTime = () => {
   });
 };
 
-/* Initial Messages */
+/* INITIAL MESSAGES */
 const initialMessages = [
   {
     sender: "bot",
@@ -32,7 +33,7 @@ const initialMessages = [
   },
 ];
 
-/* FAQ System */
+/* FAQ */
 const faq = [
   {
     keywords: ["skills", "tech", "stack"],
@@ -52,7 +53,7 @@ const faq = [
     keywords: ["contact", "email", "github", "linkedin"],
     responses: [
       "You can contact Faith through the contact section or social links.",
-      "Reach out using the contact form below or via GitHub and LinkedIn.",
+      "Reach out using the contact form or via GitHub and LinkedIn.",
     ],
   },
   {
@@ -87,7 +88,6 @@ function ChatBot() {
 
   const messagesEndRef = useRef(null);
 
-  /* Safe localStorage (Vercel fix) */
   const [messages, setMessages] = useState(() => {
     if (typeof window === "undefined") return initialMessages;
 
@@ -95,21 +95,18 @@ function ChatBot() {
     return saved ? JSON.parse(saved) : initialMessages;
   });
 
-  /* Save Messages */
   useEffect(() => {
     if (typeof window !== "undefined") {
       localStorage.setItem("portfolio-chat", JSON.stringify(messages));
     }
   }, [messages]);
 
-  /* Auto Scroll */
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({
       behavior: "smooth",
     });
   }, [messages, typing]);
 
-  /* Hide Popup */
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowPopup(false);
@@ -122,7 +119,6 @@ function ChatBot() {
     return responses[Math.floor(Math.random() * responses.length)];
   };
 
-  /* Handle Send */
   const handleSend = () => {
     if (!input.trim()) return;
 
@@ -135,6 +131,7 @@ function ChatBot() {
     };
 
     setMessages((prev) => [...prev, userMessage]);
+
     setInput("");
     setTyping(true);
 
@@ -156,34 +153,34 @@ function ChatBot() {
       };
 
       setMessages((prev) => [...prev, botMessage]);
+
       setTyping(false);
-    }, 1000);
+    }, 900);
   };
 
   const clearChat = () => {
     if (typeof window !== "undefined") {
       localStorage.removeItem("portfolio-chat");
     }
+
     setMessages(initialMessages);
   };
 
   return (
     <>
-      {/* Popup */}
       <AnimatePresence>
         {showPopup && !open && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed bottom-24 right-4 z-50 rounded-2xl border border-white/10 bg-[#0b1120]/90 px-4 py-3 text-sm text-white shadow-xl backdrop-blur-xl"
+            className="fixed bottom-24 right-5 z-50 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-700 shadow-2xl"
           >
             👋 Need help? Chat with me!
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Button */}
       <motion.button
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
@@ -191,77 +188,101 @@ function ChatBot() {
           setOpen(!open);
           setMinimized(false);
         }}
-        className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-[0_0_35px_rgba(59,130,246,0.35)]"
+        className="fixed bottom-5 right-5 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r from-blue-600 to-sky-500 text-white shadow-[0_15px_40px_rgba(37,99,235,0.35)]"
       >
-        {open ? <FaTimes size={18} /> : <FaRobot size={20} />}
+        {open ? <FaTimes size={20} /> : <FaRobot size={22} />}
       </motion.button>
 
-      {/* Chat Window */}
       <AnimatePresence>
         {open && !minimized && (
           <motion.div
             initial={{ opacity: 0, y: 40, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.95 }}
-            className="fixed bottom-20 right-4 z-[9999] flex flex-col overflow-hidden h-[360px] w-[260px] sm:h-[380px] sm:w-[280px] max-w-[90vw] max-h-[70vh] rounded-2xl border border-white/10 bg-[#0b1120]/95 shadow-2xl shadow-black/50 backdrop-blur-2xl"
+            className="fixed bottom-24 right-5 z-[9999] flex h-[500px] w-[340px] max-w-[92vw] flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-2xl"
           >
-            {/* Header */}
-            <div className="flex items-center justify-between border-b border-white/10 bg-white/[0.03] px-3 py-2">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white">
-                  <FaRobot size={16} />
+            {/* HEADER */}
+            <div className="relative overflow-hidden border-b border-slate-200 bg-gradient-to-r from-blue-600 to-sky-500 p-5 text-white">
+              <div className="relative z-10 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-md">
+                    <FaRobot size={18} />
+                  </div>
+
+                  <div>
+                    <h3 className="font-bold">Portfolio Assistant</h3>
+                    <div className="flex items-center gap-2 text-sm text-blue-100">
+                      <span className="h-2 w-2 animate-pulse rounded-full bg-green-300" />
+                      Online
+                    </div>
+                  </div>
                 </div>
 
-                <div>
-                  <h3 className="text-sm font-semibold text-white">
-                    Portfolio Assistant
-                  </h3>
-                  <p className="text-xs text-green-400">Online</p>
-                </div>
-              </div>
+                <div className="flex items-center gap-3 text-sm text-blue-100">
+                  <button onClick={() => setMinimized(true)}>
+                    <FaMinus />
+                  </button>
 
-              <div className="flex items-center gap-3 text-sm text-slate-400">
-                <button onClick={() => setMinimized(true)}>
-                  <FaMinus />
-                </button>
-                <button onClick={clearChat}>
-                  <FaTrash />
-                </button>
+                  <button onClick={clearChat}>
+                    <FaTrash />
+                  </button>
+                </div>
               </div>
             </div>
 
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+            {/* MESSAGES */}
+            <div className="flex-1 space-y-5 overflow-y-auto bg-slate-50 px-4 py-5">
               {messages.map((msg, index) => (
-                <div key={index} className="flex items-end gap-2">
+                <div
+                  key={index}
+                  className={`flex ${
+                    msg.sender === "user" ? "justify-end" : "justify-start"
+                  }`}
+                >
                   <div
-                    className={`max-w-[180px] rounded-2xl px-4 py-3 text-[11px] ${
+                    className={`max-w-[85%] rounded-3xl px-4 py-3 text-sm shadow-sm ${
                       msg.sender === "user"
-                        ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white ml-auto"
-                        : "bg-white/10 text-slate-200"
+                        ? "bg-gradient-to-r from-blue-600 to-sky-500 text-white"
+                        : "border border-slate-200 bg-white text-slate-700"
                     }`}
                   >
-                    {msg.text}
+                    <p>{msg.text}</p>
+                    <span className="mt-2 block text-[10px] opacity-60">
+                      {msg.time}
+                    </span>
                   </div>
                 </div>
               ))}
 
+              {/* TYPING */}
+              {typing && (
+                <div className="flex justify-start">
+                  <div className="rounded-3xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-500 shadow-sm flex items-center gap-2">
+                    <FaMagic className="text-blue-500" /> {/* ✅ FIX HERE */}
+                    Typing...
+                  </div>
+                </div>
+              )}
+
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input */}
-            <div className="border-t border-white/10 p-3">
-              <div className="flex gap-2">
+            {/* INPUT */}
+            <div className="border-t border-slate-200 bg-white p-4">
+              <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
                 <input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                  className="flex-1 bg-transparent text-white outline-none"
+                  className="flex-1 bg-transparent text-sm outline-none"
                   placeholder="Ask something..."
                 />
 
-                <button onClick={handleSend}>
-                  <FaPaperPlane />
+                <button
+                  onClick={handleSend}
+                  className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white"
+                >
+                  <FaPaperPlane size={13} />
                 </button>
               </div>
             </div>
