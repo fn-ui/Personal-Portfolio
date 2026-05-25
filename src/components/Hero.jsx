@@ -15,12 +15,12 @@ function Hero() {
       id="hero"
       className="relative overflow-hidden bg-white px-6 pt-36 text-slate-900"
     >
-      {/* Background Decorations */}
+      {/* Background Decorations (keep these — they look good) */}
       <div className="absolute left-0 top-0 h-72 w-72 rounded-full bg-blue-100 blur-3xl" />
       <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-sky-100 blur-3xl" />
 
-      {/* Grid Effect */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:6rem_6rem] opacity-40" />
+      {/* CLEAN BACKGROUND (REPLACED GRID - FIXED) */}
+      <div className="absolute inset-0 bg-gradient-to-b from-white to-slate-50" />
 
       {/* Content */}
       <motion.div
@@ -189,7 +189,6 @@ function Hero() {
               <p className="text-sm font-medium text-slate-500">
                 Experience
               </p>
-
               <h3 className="mt-1 text-2xl font-bold text-slate-900">
                 2+ Years
               </h3>

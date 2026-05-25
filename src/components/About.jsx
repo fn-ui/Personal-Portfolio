@@ -8,12 +8,11 @@ function About() {
       id="about"
       className="relative overflow-hidden bg-slate-50 px-6 py-28 text-slate-900"
     >
-      {/* Background Decorations */}
+      {/* Background Decorations (KEEP THESE - THEY LOOK GOOD) */}
       <div className="absolute left-0 top-0 h-72 w-72 rounded-full bg-blue-100 blur-3xl" />
       <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-sky-100 blur-3xl" />
 
-      {/* Grid Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:6rem_6rem] opacity-30" />
+      {/* ❌ REMOVED GRID PATTERN (this was causing squares) */}
 
       <div className="relative z-10 mx-auto max-w-7xl">
 
@@ -25,7 +24,6 @@ function About() {
           viewport={{ once: true }}
           className="mb-24 text-center"
         >
-
           <p className="mb-4 inline-block rounded-full bg-blue-100 px-5 py-2 text-sm font-semibold text-blue-700">
             About Me
           </p>
@@ -41,7 +39,6 @@ function About() {
             I create clean, scalable, and user-focused web applications
             using modern technologies and strong design principles.
           </p>
-
         </motion.div>
 
         {/* CONTENT */}
@@ -55,7 +52,6 @@ function About() {
             viewport={{ once: true }}
             className="relative flex justify-center"
           >
-
             {/* Decorative Shape */}
             <div className="absolute top-8 h-[450px] w-[380px] rounded-[3rem] bg-gradient-to-br from-blue-100 to-sky-50" />
 
@@ -68,13 +64,11 @@ function About() {
               transition={{ duration: 6, repeat: Infinity }}
               className="relative z-10 overflow-hidden rounded-[2.5rem] border border-slate-200 bg-white shadow-2xl"
             >
-
               <img
                 src={profileImg}
                 alt="Faith Maina"
                 className="h-[520px] w-[400px] object-cover"
               />
-
             </motion.div>
 
             {/* Floating Experience Card */}
@@ -83,17 +77,13 @@ function About() {
               transition={{ duration: 5, repeat: Infinity }}
               className="absolute -bottom-6 left-0 z-20 rounded-2xl border border-slate-200 bg-white p-5 shadow-xl"
             >
-
               <p className="text-sm font-medium text-slate-500">
                 Experience
               </p>
-
               <h3 className="mt-1 text-2xl font-bold text-slate-900">
-                1+ Years
+                2+ Years
               </h3>
-
             </motion.div>
-
           </motion.div>
 
           {/* TEXT SIDE */}
@@ -103,13 +93,12 @@ function About() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-blue-600">
               Who I Am
             </p>
 
             <h3 className="mb-6 text-4xl font-black leading-tight md:text-5xl">
-              Creating Modern &
+              Creating Modern &{" "}
               <span className="block bg-gradient-to-r from-blue-600 to-sky-400 bg-clip-text text-transparent">
                 Responsive Experiences
               </span>
@@ -132,12 +121,9 @@ function About() {
 
               <motion.div
                 whileHover={{ y: -6 }}
-                className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition"
+                className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
               >
-                <h4 className="text-3xl font-black text-blue-600">
-                  01+
-                </h4>
-
+                <h4 className="text-3xl font-black text-blue-600">01+</h4>
                 <p className="mt-2 text-sm text-slate-500">
                   Years Learning
                 </p>
@@ -145,12 +131,9 @@ function About() {
 
               <motion.div
                 whileHover={{ y: -6 }}
-                className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition"
+                className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
               >
-                <h4 className="text-3xl font-black text-blue-600">
-                  05+
-                </h4>
-
+                <h4 className="text-3xl font-black text-blue-600">05+</h4>
                 <p className="mt-2 text-sm text-slate-500">
                   Technologies
                 </p>
@@ -158,12 +141,9 @@ function About() {
 
               <motion.div
                 whileHover={{ y: -6 }}
-                className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition"
+                className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
               >
-                <h4 className="text-3xl font-black text-blue-600">
-                  100%
-                </h4>
-
+                <h4 className="text-3xl font-black text-blue-600">100%</h4>
                 <p className="mt-2 text-sm text-slate-500">
                   Responsive
                 </p>
@@ -173,7 +153,6 @@ function About() {
 
             {/* SKILLS */}
             <div className="mb-10 flex flex-wrap gap-4">
-
               {[
                 "HTML",
                 "JavaScript",
@@ -189,7 +168,6 @@ function About() {
                   {skill}
                 </motion.span>
               ))}
-
             </div>
 
             {/* BUTTON */}
@@ -202,11 +180,9 @@ function About() {
               Let’s Work Together
               <FaArrowRight />
             </motion.a>
-
           </motion.div>
 
         </div>
-
       </div>
     </section>
   );

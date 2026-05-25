@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaBars, FaTimes } from "react-icons/fa";
 import profileImg from "../assets/profile.png";
@@ -7,47 +7,37 @@ function Navbar() {
   const [activeSection, setActiveSection] = useState("home");
   const [mobileMenu, setMobileMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
-  // ✅ NEW: controls visibility
   const [showNavbar, setShowNavbar] = useState(true);
+
+  const lastScrollY = useRef(0); // ✅ FIX: stable scroll memory
 
   const navItems = ["about", "services", "projects", "contact"];
 
   useEffect(() => {
-    let lastScrollY = window.scrollY;
-
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
       setScrolled(currentScrollY > 30);
 
-      // ✅ SHOW/HIDE LOGIC
-      if (currentScrollY > lastScrollY && currentScrollY > 80) {
-        // scrolling DOWN → hide navbar
-        setShowNavbar(false);
-      } else {
-        // scrolling UP → show navbar
-        setShowNavbar(true);
+      // ✅ FIXED: prevent flicker with threshold
+      if (currentScrollY > lastScrollY.current + 5 && currentScrollY > 100) {
+        setShowNavbar(false); // scrolling down
+      } else if (currentScrollY < lastScrollY.current - 5) {
+        setShowNavbar(true); // scrolling up
       }
 
-      lastScrollY = currentScrollY;
+      lastScrollY.current = currentScrollY;
 
       // SECTION TRACKING
-      const sections = navItems.map((item) =>
-        document.getElementById(item)
-      );
-
-      sections.forEach((section) => {
+      navItems.forEach((item) => {
+        const section = document.getElementById(item);
         if (!section) return;
 
         const sectionTop = section.offsetTop - 120;
-        const sectionHeight = section.offsetHeight;
+        const sectionBottom = sectionTop + section.offsetHeight;
 
-        if (
-          currentScrollY >= sectionTop &&
-          currentScrollY < sectionTop + sectionHeight
-        ) {
-          setActiveSection(section.id);
+        if (currentScrollY >= sectionTop && currentScrollY < sectionBottom) {
+          setActiveSection(item);
         }
       });
 
@@ -56,7 +46,8 @@ function Navbar() {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -67,7 +58,7 @@ function Navbar() {
           initial={{ y: -80, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -80, opacity: 0 }}
-          transition={{ duration: 0.25 }}
+          transition={{ duration: 0.25, ease: "easeInOut" }}
           className="fixed left-0 top-0 z-50 w-full"
         >
           <nav
