@@ -4,14 +4,7 @@ import { FaArrowRight, FaGithub } from "react-icons/fa";
 
 import { motion } from "framer-motion";
 
-import {
-  collection,
-  getDocs,
-  query,
-  orderBy,
-} from "firebase/firestore";
-
-import { db } from "../firebase";
+import API from "../api/axios";
 
 function Projects() {
 
@@ -20,7 +13,7 @@ function Projects() {
 
   const [loading, setLoading] = useState(true);
 
-  // FETCH PROJECTS FROM FIREBASE
+  // FETCH PROJECTS FROM MONGODB
   useEffect(() => {
 
     const fetchProjects = async () => {
@@ -29,20 +22,9 @@ function Projects() {
 
         setLoading(true);
 
-        // ORDER LATEST PROJECTS FIRST
-        const q = query(
-          collection(db, "projects"),
-          orderBy("createdAt", "desc")
-        );
+        const res = await API.get("/projects");
 
-        const querySnapshot = await getDocs(q);
-
-        const projectsData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        setProjects(projectsData);
+        setProjects(res.data);
 
       } catch (error) {
 
@@ -132,7 +114,7 @@ function Projects() {
             {projects.map((project, index) => (
 
               <motion.div
-                key={project.id}
+                key={project._id}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{
@@ -145,12 +127,12 @@ function Projects() {
               >
 
                 {/* IMAGE */}
-                {project.imageUrl && (
+                {project.image && (
 
                   <div className="overflow-hidden">
 
                     <img
-                      src={project.imageUrl}
+                      src={project.image}
                       alt={project.title}
                       className="h-72 w-full object-cover transition duration-700 group-hover:scale-105"
                     />
@@ -215,10 +197,10 @@ function Projects() {
                     )}
 
                     {/* GITHUB */}
-                    {project.github && (
+                    {project.githubLink && (
 
                       <a
-                        href={project.github}
+                        href={project.githubLink}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:text-blue-600"
