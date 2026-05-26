@@ -17,8 +17,6 @@ import Dashboard from "./pages/admin/Dashboard";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminProjects from "./pages/admin/Projects";
 
-
-
 function HomePage() {
   return (
     <>
@@ -43,6 +41,7 @@ function HomePage() {
 function App() {
   return (
     <BrowserRouter>
+
       <ScrollProgressBar />
 
       <Routes>
@@ -55,11 +54,20 @@ function App() {
 
         {/* ADMIN ROUTES */}
         <Route path="/admin" element={<AdminLayout />}>
+
+          {/* DEFAULT ADMIN PAGE */}
+          <Route index element={<Dashboard />} />
+
+          {/* DASHBOARD */}
           <Route path="dashboard" element={<Dashboard />} />
+
+          {/* PROJECTS */}
           <Route path="projects" element={<AdminProjects />} />
+
         </Route>
 
       </Routes>
+
     </BrowserRouter>
   );
 }
