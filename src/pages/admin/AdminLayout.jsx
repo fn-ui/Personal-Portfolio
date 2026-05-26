@@ -46,6 +46,9 @@ function AdminLayout() {
           >
             Testimonials
           </Link>
+          <Link to="/admin/settings">
+            Settings
+          </Link>
 
         </nav>
 

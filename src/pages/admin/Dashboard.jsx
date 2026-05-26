@@ -1,32 +1,99 @@
-import { signOut } from "firebase/auth";
-import { auth } from "../../firebase";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import API from "../../api/axios";
 
 function Dashboard() {
-  const navigate = useNavigate();
+  const [stats, setStats] = useState({
+    projects: 0,
+    messages: 0,
+    testimonials: 0,
+  });
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    navigate("/admin");
-  };
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboardStats = async () => {
+      try {
+        setLoading(true);
+
+        // FETCH ALL DATA
+        const [
+          projectsRes,
+          messagesRes,
+          testimonialsRes,
+        ] = await Promise.all([
+          API.get("/projects"),
+          API.get("/messages"),
+          API.get("/testimonials"),
+        ]);
+
+        setStats({
+          projects: projectsRes.data.length,
+          messages: messagesRes.data.length,
+          testimonials:
+            testimonialsRes.data.length,
+        });
+      } catch (error) {
+        console.log(
+          "DASHBOARD ERROR:",
+          error
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardStats();
+  }, []);
 
   return (
-    <div className="min-h-screen bg-slate-100 p-10">
-      <div className="mx-auto max-w-4xl rounded-2xl bg-white p-8 shadow-xl">
-        <h1 className="text-3xl font-bold mb-6">
-          Admin Dashboard
+    <div>
+      {/* HEADER */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-slate-800">
+          Dashboard
         </h1>
 
-        <p className="mb-6 text-slate-600">
-          You are now logged in. This is your control center.
+        <p className="mt-2 text-slate-500">
+          Welcome to your portfolio admin panel.
         </p>
+      </div>
 
-        <button
-          onClick={handleLogout}
-          className="rounded-xl bg-red-500 px-6 py-3 text-white"
-        >
-          Logout
-        </button>
+      {/* STATS */}
+      <div className="grid gap-6 md:grid-cols-3">
+        {/* PROJECTS */}
+        <div className="rounded-3xl bg-white p-6 shadow-sm">
+          <p className="text-slate-500">
+            Total Projects
+          </p>
+
+          <h2 className="mt-4 text-4xl font-bold text-blue-600">
+            {loading ? "..." : stats.projects}
+          </h2>
+        </div>
+
+        {/* MESSAGES */}
+        <div className="rounded-3xl bg-white p-6 shadow-sm">
+          <p className="text-slate-500">
+            Total Messages
+          </p>
+
+          <h2 className="mt-4 text-4xl font-bold text-green-600">
+            {loading ? "..." : stats.messages}
+          </h2>
+        </div>
+
+        {/* TESTIMONIALS */}
+        <div className="rounded-3xl bg-white p-6 shadow-sm">
+          <p className="text-slate-500">
+            Total Testimonials
+          </p>
+
+          <h2 className="mt-4 text-4xl font-bold text-purple-600">
+            {loading
+              ? "..."
+              : stats.testimonials}
+          </h2>
+        </div>
       </div>
     </div>
   );

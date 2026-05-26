@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
+import { useState } from "react";
+import API from "../api/axios";
 
 import {
   FaUser,
@@ -11,38 +11,54 @@ import {
 import { motion } from "framer-motion";
 
 function Contact() {
-  const form = useRef();
 
+  // FORM STATES
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+
+  // UI STATES
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const sendEmail = (e) => {
+  // SEND MESSAGE
+  const sendMessage = async (e) => {
+
     e.preventDefault();
 
     setLoading(true);
     setSuccess(false);
     setErrorMessage("");
 
-    emailjs
-      .sendForm(
-        "service_8rknec7",
-        "template_omxv3up",
-        form.current,
-        "almnacznM-FrvnXgy"
-      )
-      .then(
-        () => {
-          setSuccess(true);
-          setLoading(false);
-          e.target.reset();
-        },
-        (error) => {
-          setErrorMessage("Failed to send message.");
-          console.log(error.text);
-          setLoading(false);
-        }
+    try {
+
+      // SAVE TO MONGODB
+      await API.post("/messages", {
+        name,
+        email,
+        message,
+      });
+
+      setSuccess(true);
+
+      // RESET FORM
+      setName("");
+      setEmail("");
+      setMessage("");
+
+    } catch (error) {
+
+      console.log(error);
+
+      setErrorMessage(
+        "Failed to send message."
       );
+
+    } finally {
+
+      setLoading(false);
+    }
   };
 
   return (
@@ -50,8 +66,10 @@ function Contact() {
       id="contact"
       className="relative overflow-hidden bg-white px-6 py-28 text-slate-900"
     >
-      {/* Background Decorations ONLY */}
+
+      {/* BACKGROUND DECORATION */}
       <div className="absolute left-0 top-0 h-72 w-72 rounded-full bg-blue-100 blur-3xl" />
+
       <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-sky-100 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-5xl">
@@ -64,15 +82,18 @@ function Contact() {
           viewport={{ once: true }}
           className="mx-auto mb-20 max-w-3xl text-center"
         >
+
           <p className="mb-4 inline-block rounded-full bg-blue-100 px-5 py-2 text-sm font-semibold text-blue-700">
             Contact Me
           </p>
 
           <h2 className="text-5xl font-black md:text-6xl">
             Let’s Build{" "}
+
             <span className="block bg-gradient-to-r from-blue-600 to-sky-400 bg-clip-text text-transparent">
               Something Great
             </span>
+
           </h2>
 
           <p className="mt-6 text-lg leading-8 text-slate-600">
@@ -81,14 +102,18 @@ function Contact() {
           </p>
 
           <div className="mt-6 flex items-center justify-center gap-3">
+
             <span className="h-3 w-3 animate-pulse rounded-full bg-green-500" />
+
             <p className="font-medium text-green-600">
               Available for freelance & collaborations
             </p>
+
           </div>
+
         </motion.div>
 
-        {/* CARD */}
+        {/* CONTACT CARD */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -96,15 +121,18 @@ function Contact() {
           viewport={{ once: true }}
           className="overflow-hidden rounded-[2.5rem] border border-slate-200 bg-white shadow-2xl"
         >
+
           <div className="grid lg:grid-cols-2">
 
             {/* LEFT SIDE */}
             <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 to-sky-500 p-10 text-white">
 
               <div className="absolute -right-10 top-10 h-40 w-40 rounded-full bg-white/10" />
+
               <div className="absolute bottom-0 left-0 h-56 w-56 rounded-full bg-white/5" />
 
               <div className="relative z-10">
+
                 <p className="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-blue-100">
                   Get In Touch
                 </p>
@@ -120,103 +148,150 @@ function Contact() {
                 <div className="mt-10 space-y-5">
 
                   <div className="flex items-center gap-4">
+
                     <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15">
                       <FaEnvelope />
                     </div>
+
                     <div>
-                      <p className="text-sm text-blue-100">Email</p>
+                      <p className="text-sm text-blue-100">
+                        Email
+                      </p>
+
                       <h4 className="font-semibold">
                         fn0740839@gmail.com
                       </h4>
                     </div>
+
                   </div>
 
                   <div className="flex items-center gap-4">
+
                     <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15">
                       <FaCommentDots />
                     </div>
+
                     <div>
                       <p className="text-sm text-blue-100">
                         Response Time
                       </p>
+
                       <h4 className="font-semibold">
                         Within 24 hours
                       </h4>
                     </div>
+
                   </div>
 
                 </div>
+
               </div>
+
             </div>
 
             {/* RIGHT SIDE */}
             <div className="p-8 md:p-10">
 
-              <form ref={form} onSubmit={sendEmail} className="space-y-6">
+              <form
+                onSubmit={sendMessage}
+                className="space-y-6"
+              >
 
+                {/* NAME */}
                 <div>
+
                   <label className="mb-2 block text-sm font-semibold">
                     Full Name
                   </label>
 
                   <div className="relative">
+
                     <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+
                     <input
                       type="text"
-                      name="user_name"
                       required
+                      value={name}
+                      onChange={(e) =>
+                        setName(e.target.value)
+                      }
                       className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pl-12 pr-4 outline-none focus:border-blue-400"
                     />
+
                   </div>
+
                 </div>
 
+                {/* EMAIL */}
                 <div>
+
                   <label className="mb-2 block text-sm font-semibold">
                     Email
                   </label>
 
                   <div className="relative">
+
                     <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+
                     <input
                       type="email"
-                      name="user_email"
                       required
+                      value={email}
+                      onChange={(e) =>
+                        setEmail(e.target.value)
+                      }
                       className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pl-12 pr-4 outline-none focus:border-blue-400"
                     />
+
                   </div>
+
                 </div>
 
+                {/* MESSAGE */}
                 <div>
+
                   <label className="mb-2 block text-sm font-semibold">
                     Message
                   </label>
 
                   <textarea
                     rows="5"
-                    name="message"
                     required
+                    value={message}
+                    onChange={(e) =>
+                      setMessage(e.target.value)
+                    }
                     className="w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 outline-none focus:border-blue-400"
                   />
+
                 </div>
 
+                {/* SUCCESS */}
                 {success && (
                   <p className="rounded-xl bg-green-100 p-3 text-green-700">
                     Message sent successfully!
                   </p>
                 )}
 
+                {/* ERROR */}
                 {errorMessage && (
                   <p className="rounded-xl bg-red-100 p-3 text-red-700">
                     {errorMessage}
                   </p>
                 )}
 
+                {/* BUTTON */}
                 <button
                   disabled={loading}
-                  className="flex w-full items-center justify-center gap-3 rounded-2xl bg-blue-600 py-4 font-semibold text-white hover:bg-blue-700"
+                  className="flex w-full items-center justify-center gap-3 rounded-2xl bg-blue-600 py-4 font-semibold text-white transition hover:bg-blue-700 disabled:opacity-60"
                 >
+
                   <FaPaperPlane />
-                  {loading ? "Sending..." : "Send Message"}
+
+                  {loading
+                    ? "Sending..."
+                    : "Send Message"}
+
                 </button>
 
               </form>
@@ -224,9 +299,11 @@ function Contact() {
             </div>
 
           </div>
+
         </motion.div>
 
       </div>
+
     </section>
   );
 }

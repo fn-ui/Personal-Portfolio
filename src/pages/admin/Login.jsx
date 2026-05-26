@@ -17,8 +17,20 @@ function Login() {
     setError("");
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate("/admin/dashboard");
+      const userCredential =
+  await signInWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
+
+// SAVE TOKEN
+const token =
+  await userCredential.user.getIdToken();
+
+localStorage.setItem("token", token);
+
+navigate("/admin/dashboard");
     } catch (err) {
       setError("Invalid email or password");
     }
