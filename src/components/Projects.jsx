@@ -7,13 +7,18 @@ import { motion } from "framer-motion";
 import {
   collection,
   getDocs,
+  query,
+  orderBy,
 } from "firebase/firestore";
 
 import { db } from "../firebase";
 
 function Projects() {
 
+  // STATES
   const [projects, setProjects] = useState([]);
+
+  const [loading, setLoading] = useState(true);
 
   // FETCH PROJECTS FROM FIREBASE
   useEffect(() => {
@@ -22,9 +27,15 @@ function Projects() {
 
       try {
 
-        const querySnapshot = await getDocs(
-          collection(db, "projects")
+        setLoading(true);
+
+        // ORDER LATEST PROJECTS FIRST
+        const q = query(
+          collection(db, "projects"),
+          orderBy("createdAt", "desc")
         );
+
+        const querySnapshot = await getDocs(q);
 
         const projectsData = querySnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -34,7 +45,12 @@ function Projects() {
         setProjects(projectsData);
 
       } catch (error) {
+
         console.log(error);
+
+      } finally {
+
+        setLoading(false);
       }
     };
 
@@ -48,7 +64,7 @@ function Projects() {
       className="relative overflow-hidden bg-white px-6 py-28 text-slate-900"
     >
 
-      {/* Background Decorations */}
+      {/* BACKGROUND DECORATIONS */}
       <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-blue-100 blur-3xl" />
 
       <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-sky-100 blur-3xl" />
@@ -76,92 +92,154 @@ function Projects() {
           </h2>
 
           <p className="mt-6 text-lg leading-8 text-slate-600">
-            A selection of projects showcasing my skills in frontend development,
-            responsive design, and modern web technologies.
+            A selection of projects showcasing my skills in frontend
+            development, responsive design, and modern web technologies.
           </p>
 
         </motion.div>
 
+        {/* LOADING STATE */}
+        {loading && (
+
+          <div className="flex justify-center">
+
+            <p className="text-lg text-slate-500">
+              Loading projects...
+            </p>
+
+          </div>
+
+        )}
+
+        {/* EMPTY STATE */}
+        {!loading && projects.length === 0 && (
+
+          <div className="flex justify-center">
+
+            <p className="text-lg text-slate-500">
+              No projects available yet.
+            </p>
+
+          </div>
+
+        )}
+
         {/* PROJECT GRID */}
-        <div className="grid gap-10 md:grid-cols-2">
+        {!loading && projects.length > 0 && (
 
-          {projects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.6,
-                delay: index * 0.15,
-              }}
-              viewport={{ once: true }}
-              whileHover={{ y: -10 }}
-              className="group overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:border-blue-200 hover:shadow-2xl"
-            >
+          <div className="grid gap-10 md:grid-cols-2">
 
-              {/* IMAGE */}
-              {project.imageUrl && (
-                <div className="overflow-hidden">
+            {projects.map((project, index) => (
 
-                  <img
-                    src={project.imageUrl}
-                    alt={project.title}
-                    className="h-72 w-full object-cover transition duration-700 group-hover:scale-105"
-                  />
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.6,
+                  delay: index * 0.15,
+                }}
+                viewport={{ once: true }}
+                whileHover={{ y: -10 }}
+                className="group overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:border-blue-200 hover:shadow-2xl"
+              >
 
-                </div>
-              )}
+                {/* IMAGE */}
+                {project.imageUrl && (
 
-              {/* CONTENT */}
-              <div className="p-8">
+                  <div className="overflow-hidden">
 
-                <h3 className="mb-4 text-3xl font-black text-slate-900">
-                  {project.title}
-                </h3>
+                    <img
+                      src={project.imageUrl}
+                      alt={project.title}
+                      className="h-72 w-full object-cover transition duration-700 group-hover:scale-105"
+                    />
 
-                <p className="mb-8 text-lg leading-8 text-slate-600">
-                  {project.description}
-                </p>
+                  </div>
 
-                {/* BUTTONS */}
-                <div className="flex items-center gap-4">
+                )}
 
-                  {project.liveDemo && (
-                    <a
-                      href={project.liveDemo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group/button inline-flex items-center gap-3 rounded-2xl bg-blue-600 px-7 py-4 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-blue-700"
-                    >
+                {/* CONTENT */}
+                <div className="p-8">
 
-                      View Project
+                  {/* TITLE */}
+                  <h3 className="mb-4 text-3xl font-black text-slate-900">
+                    {project.title}
+                  </h3>
 
-                      <FaArrowRight className="transition-transform duration-300 group-hover/button:translate-x-1" />
+                  {/* DESCRIPTION */}
+                  <p className="mb-6 text-lg leading-8 text-slate-600">
+                    {project.description}
+                  </p>
 
-                    </a>
+                  {/* TECH STACK */}
+                  {project.techStack && (
+
+                    <div className="mb-8 flex flex-wrap gap-3">
+
+                      {project.techStack
+                        .split(",")
+                        .map((tech, index) => (
+
+                          <span
+                            key={index}
+                            className="rounded-full bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700"
+                          >
+                            {tech.trim()}
+                          </span>
+
+                        ))}
+                    </div>
+
                   )}
 
-                  {project.github && (
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:text-blue-600"
-                    >
+                  {/* BUTTONS */}
+                  <div className="flex items-center gap-4">
 
-                      <FaGithub size={22} />
+                    {/* LIVE DEMO */}
+                    {project.liveDemo && (
 
-                    </a>
-                  )}
+                      <a
+                        href={project.liveDemo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/button inline-flex items-center gap-3 rounded-2xl bg-blue-600 px-7 py-4 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-blue-700"
+                      >
+
+                        View Project
+
+                        <FaArrowRight className="transition-transform duration-300 group-hover/button:translate-x-1" />
+
+                      </a>
+
+                    )}
+
+                    {/* GITHUB */}
+                    {project.github && (
+
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:text-blue-600"
+                      >
+
+                        <FaGithub size={22} />
+
+                      </a>
+
+                    )}
+
+                  </div>
 
                 </div>
 
-              </div>
+              </motion.div>
+            ))}
 
-            </motion.div>
-          ))}
+          </div>
 
-        </div>
+        )}
 
         {/* VIEW ALL */}
         <motion.div
