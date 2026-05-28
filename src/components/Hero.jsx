@@ -13,142 +13,179 @@ function Hero() {
   return (
     <section
       id="hero"
-      className="relative overflow-hidden bg-white px-6 pt-36 text-slate-900"
+      className="relative overflow-hidden bg-white px-6 pt-32 pb-20 text-slate-900"
     >
-      {/* SOFT BACKGROUND LAYERS */}
+      {/* BACKGROUND */}
       <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50 to-white" />
 
-      {/* Animated Glow Orbs (more intentional placement) */}
+      {/* GLOWS */}
       <div className="absolute -top-40 left-[-100px] h-[500px] w-[500px] rounded-full bg-blue-200/40 blur-[120px]" />
+
       <div className="absolute bottom-[-120px] right-[-120px] h-[500px] w-[500px] rounded-full bg-sky-200/40 blur-[120px]" />
 
-      {/* Subtle radial spotlight */}
+      {/* SPOTLIGHT */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.08),transparent_60%)]" />
 
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="relative z-10 mx-auto flex min-h-[85vh] max-w-6xl items-center"
+        className="relative z-10 mx-auto max-w-7xl"
       >
-        <div className="grid w-full items-center gap-16 lg:grid-cols-2">
+        {/* MAIN GLASS CARD */}
+        <div className="relative overflow-hidden rounded-[3rem] border border-slate-200/70 bg-white/70 shadow-[0_20px_80px_rgba(0,0,0,0.08)] backdrop-blur-2xl">
 
-          {/* LEFT SIDE */}
-          <div className="relative">
+          {/* INNER GLOW */}
+          <div className="absolute right-0 top-0 h-[500px] w-[500px] rounded-full bg-blue-100/40 blur-3xl" />
 
-            {/* Glass panel behind text (key upgrade) */}
-            <div className="absolute -left-6 top-[-40px] h-[120%] w-[120%] rounded-[3rem] bg-white/60 backdrop-blur-xl shadow-xl border border-slate-100" />
+          <div className="relative grid items-center gap-16 px-8 py-12 lg:grid-cols-2 lg:px-16 lg:py-16">
 
-            <div className="relative z-10">
+            {/* LEFT CONTENT */}
+            <div>
 
-              {/* Badge */}
-              <motion.p
+              {/* BADGE */}
+              <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="mb-6 inline-flex items-center gap-2 rounded-full bg-blue-100 px-5 py-2 text-sm font-semibold text-blue-700"
+                className="mb-7 inline-flex items-center gap-2 rounded-full bg-blue-100 px-5 py-2 text-sm font-semibold text-blue-700"
               >
                 ✨ Full-Stack Developer
-              </motion.p>
+              </motion.div>
 
-              {/* Heading */}
+              {/* HEADING */}
               <motion.h1
-                initial={{ opacity: 0, y: 15 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="mb-6 text-5xl font-black leading-tight sm:text-6xl lg:text-7xl"
+                className="text-5xl font-black leading-[1] sm:text-6xl lg:text-7xl"
               >
                 Building{" "}
-                <span className="bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-400 bg-clip-text text-transparent">
-                  modern web experiences
+                <span className="bg-gradient-to-r from-blue-700 via-sky-500 to-cyan-400 bg-clip-text text-transparent">
+                  modern web
                 </span>
-                {" "}that feel alive.
+                <br />
+                experiences
+                <br />
+                that feel alive.
               </motion.h1>
 
-              {/* Description */}
-              <p className="max-w-xl text-lg leading-relaxed text-slate-600">
-                I design and build fast, responsive and interactive web apps
-                using React, Tailwind CSS, and modern frontend tools.
-              </p>
+              {/* DESCRIPTION */}
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="mt-8 max-w-xl text-lg leading-relaxed text-slate-600"
+              >
+                I design and build fast, responsive and interactive web
+                applications using React, Tailwind CSS and modern frontend
+                technologies.
+              </motion.p>
 
-              {/* Tech pills (improved visual weight) */}
-              <div className="mt-7 flex flex-wrap gap-3">
-                {["React", "Tailwind", "JavaScript", "Node.js", "MongoDB"].map((tech) => (
+              {/* TECH STACK */}
+              <div className="mt-8 flex flex-wrap gap-3">
+                {[
+                  "React",
+                  "Tailwind",
+                  "JavaScript",
+                  "Node.js",
+                  "MongoDB",
+                ].map((tech) => (
                   <span
                     key={tech}
-                    className="rounded-full border border-slate-200 bg-white/80 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm backdrop-blur"
+                    className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:text-blue-600"
                   >
                     {tech}
                   </span>
                 ))}
               </div>
 
-              {/* Buttons */}
+              {/* BUTTONS */}
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-                <a
+
+                <motion.a
+                  whileHover={{ y: -4 }}
+                  whileTap={{ scale: 0.98 }}
                   href="#projects"
-                  className="flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-8 py-4 font-semibold text-white shadow-lg transition hover:-translate-y-1 hover:bg-blue-700"
+                  className="group flex items-center justify-center gap-3 rounded-2xl bg-blue-600 px-8 py-4 font-semibold text-white shadow-[0_15px_40px_rgba(37,99,235,0.35)] transition"
                 >
                   View My Work
-                  <FaArrowRight />
-                </a>
 
-                <a
+                  <FaArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+                </motion.a>
+
+                <motion.a
+                  whileHover={{ y: -4 }}
+                  whileTap={{ scale: 0.98 }}
                   href="#contact"
                   className="rounded-2xl border border-slate-200 bg-white px-8 py-4 font-semibold text-slate-800 shadow-sm transition hover:border-blue-200 hover:text-blue-600"
                 >
                   Contact Me
-                </a>
+                </motion.a>
+
               </div>
 
-              {/* Socials */}
+              {/* SOCIALS */}
               <div className="mt-10 flex items-center gap-5">
+
                 {[FaGithub, FaLinkedin, FaEnvelope].map((Icon, i) => (
-                  <a
+                  <motion.a
+                    whileHover={{ y: -5 }}
                     key={i}
                     href="#"
-                    className="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:-translate-y-1 hover:border-blue-300 hover:text-blue-600"
+                    className="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-blue-300 hover:text-blue-600"
                   >
                     <Icon />
-                  </a>
+                  </motion.a>
                 ))}
+
               </div>
 
             </div>
-          </div>
 
-          {/* RIGHT SIDE */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="relative flex justify-center"
-          >
-
-            {/* Floating glow ring */}
-            <div className="absolute h-[450px] w-[450px] rounded-full bg-gradient-to-br from-blue-100 to-sky-100 blur-2xl" />
-
-            {/* Decorative orbit */}
-            <div className="absolute left-10 top-10 h-24 w-24 rounded-full border border-blue-200/60" />
-
-            {/* Image */}
-            <motion.img
-              animate={{ y: [0, -12, 0] }}
-              transition={{ duration: 6, repeat: Infinity }}
-              src={profileImg}
-              alt="profile"
-              className="relative z-10 h-[420px] w-[420px] rounded-full object-cover shadow-2xl border-4 border-white"
-            />
-
-            {/* Floating card */}
+            {/* RIGHT CONTENT */}
             <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 5, repeat: Infinity }}
-              className="absolute -bottom-6 left-0 rounded-2xl border border-slate-200 bg-white p-5 shadow-xl"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 }}
+              className="relative flex justify-center"
             >
-              <p className="text-sm text-slate-500">Experience</p>
-              <h3 className="text-2xl font-bold">2+ Years</h3>
-            </motion.div>
 
-          </motion.div>
+              {/* IMAGE WRAPPER */}
+              <div className="relative">
+
+                {/* GLOW */}
+                <div className="absolute inset-0 scale-110 rounded-full bg-gradient-to-br from-blue-200/30 to-cyan-200/30 blur-3xl" />
+
+                {/* IMAGE */}
+                <motion.img
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 6, repeat: Infinity }}
+                  src={profileImg}
+                  alt="profile"
+                  className="relative z-10 h-[340px] w-[340px] rounded-full border-[10px] border-white object-cover shadow-[0_30px_80px_rgba(0,0,0,0.18)] sm:h-[420px] sm:w-[420px]"
+                />
+
+                {/* EXPERIENCE CARD */}
+                <motion.div
+                  animate={{ y: [0, 10, 0] }}
+                  transition={{ duration: 5, repeat: Infinity }}
+                  className="absolute -bottom-6 -left-6 z-20 rounded-3xl border border-white/60 bg-white/90 px-6 py-5 shadow-2xl backdrop-blur-xl"
+                >
+                  <p className="text-sm text-slate-500">
+                    Experience
+                  </p>
+
+                  <h3 className="text-3xl font-black text-slate-900">
+                    2+ Years
+                  </h3>
+                </motion.div>
+
+               
+
+              </div>
+
+            </motion.div>
+          </div>
         </div>
       </motion.div>
     </section>

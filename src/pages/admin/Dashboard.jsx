@@ -22,6 +22,10 @@ import {
   CartesianGrid,
   AreaChart,
   Area,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
 } from "recharts";
 
 function Dashboard() {
@@ -94,7 +98,21 @@ function Dashboard() {
       views: 57,
     },
   ];
+const techStackData = [
+  { name: "React", value: 35 },
+  { name: "Tailwind", value: 25 },
+  { name: "Node.js", value: 15 },
+  { name: "MongoDB", value: 10 },
+  { name: "Others", value: 15 },
+];
 
+const COLORS = [
+  "#3b82f6",
+  "#22c55e",
+  "#a855f7",
+  "#f97316",
+  "#94a3b8",
+];
   // =========================
   // FETCH DATA
   // =========================
@@ -662,41 +680,58 @@ function Dashboard() {
             </div>
           </div>
 
-          {/* TECH STACK */}
+                  {/* TECH STACK */}
           <div className="bg-white dark:bg-gray-900 rounded-[2rem] p-6 border border-gray-100 dark:border-gray-800 shadow-sm">
+
             <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
               Top Tech Stack
             </h3>
 
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-500">React</span>
-                <span className="font-semibold text-blue-600">35%</span>
-              </div>
+            <div className="w-full h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
 
-              <div className="flex items-center justify-between">
-                <span className="text-gray-500">Tailwind</span>
-                <span className="font-semibold text-green-600">25%</span>
-              </div>
+                <PieChart>
 
-              <div className="flex items-center justify-between">
-                <span className="text-gray-500">Node.js</span>
-                <span className="font-semibold text-purple-600">15%</span>
-              </div>
+                  <Pie
+                    data={techStackData}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={100}
+                    innerRadius={60}
+                    paddingAngle={3}
+                    label={({ name, percent }) =>
+                      `${name} ${(percent * 100).toFixed(0)}%`
+                    }
+                  >
 
-              <div className="flex items-center justify-between">
-                <span className="text-gray-500">MongoDB</span>
-                <span className="font-semibold text-orange-500">10%</span>
-              </div>
+                    {techStackData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+
+                  </Pie>
+
+                  <Tooltip />
+
+                  <Legend />
+
+                </PieChart>
+
+              </ResponsiveContainer>
             </div>
+
           </div>
+
         </div>
       </div>
-
       {/* RECENT SECTION */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-12">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-12">
         {/* RECENT MESSAGES */}
-        <div className="bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
+        <div className="xl:col-span-2 bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-gray-100 dark:border-gray-800">
             <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
               Recent Messages
