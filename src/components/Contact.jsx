@@ -64,13 +64,13 @@ function Contact() {
   return (
     <section
       id="contact"
-      className="relative overflow-hidden bg-white px-6 py-28 text-slate-900"
+      className="relative overflow-hidden bg-white px-6 py-28 text-slate-900 dark:bg-[#020617] dark:text-white"
     >
 
       {/* BACKGROUND DECORATION */}
-      <div className="absolute left-0 top-0 h-72 w-72 rounded-full bg-blue-100 blur-3xl" />
+      <div className="absolute left-0 top-0 h-72 w-72 rounded-full bg-blue-100 blur-3xl dark:bg-blue-500/10" />
 
-      <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-sky-100 blur-3xl" />
+      <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-sky-100 blur-3xl dark:bg-cyan-500/10" />
 
       <div className="relative z-10 mx-auto max-w-5xl">
 
@@ -83,7 +83,7 @@ function Contact() {
           className="mx-auto mb-20 max-w-3xl text-center"
         >
 
-          <p className="mb-4 inline-block rounded-full bg-blue-100 px-5 py-2 text-sm font-semibold text-blue-700">
+          <p className="mb-4 inline-block rounded-full bg-blue-100 px-5 py-2 text-sm font-semibold text-blue-700 dark:bg-blue-500/10 dark:text-blue-300">
             Contact Me
           </p>
 
@@ -96,7 +96,7 @@ function Contact() {
 
           </h2>
 
-          <p className="mt-6 text-lg leading-8 text-slate-600">
+          <p className="mt-6 text-lg leading-8 text-slate-600 dark:text-slate-400">
             Have a project idea or collaboration opportunity?
             Feel free to reach out.
           </p>
@@ -105,7 +105,7 @@ function Contact() {
 
             <span className="h-3 w-3 animate-pulse rounded-full bg-green-500" />
 
-            <p className="font-medium text-green-600">
+            <p className="font-medium text-green-600 dark:text-green-400">
               Available for freelance & collaborations
             </p>
 
@@ -119,7 +119,7 @@ function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
           viewport={{ once: true }}
-          className="overflow-hidden rounded-[2.5rem] border border-slate-200 bg-white shadow-2xl"
+          className="overflow-hidden rounded-[2.5rem] border border-slate-200 bg-white shadow-2xl dark:border-white/10 dark:bg-white/5 dark:backdrop-blur-xl"
         >
 
           <div className="grid lg:grid-cols-2">
@@ -190,7 +190,7 @@ function Contact() {
             </div>
 
             {/* RIGHT SIDE */}
-            <div className="p-8 md:p-10">
+            <div className="p-8 md:p-10 dark:bg-transparent">
 
               <form
                 onSubmit={sendMessage}
@@ -200,13 +200,13 @@ function Contact() {
                 {/* NAME */}
                 <div>
 
-                  <label className="mb-2 block text-sm font-semibold">
+                  <label className="mb-2 block text-sm font-semibold dark:text-slate-200">
                     Full Name
                   </label>
 
                   <div className="relative">
 
-                    <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
 
                     <input
                       type="text"
@@ -215,7 +215,7 @@ function Contact() {
                       onChange={(e) =>
                         setName(e.target.value)
                       }
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pl-12 pr-4 outline-none focus:border-blue-400"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pl-12 pr-4 outline-none transition focus:border-blue-400 dark:border-white/10 dark:bg-[#0f172a] dark:text-white dark:placeholder:text-slate-500"
                     />
 
                   </div>
@@ -225,13 +225,13 @@ function Contact() {
                 {/* EMAIL */}
                 <div>
 
-                  <label className="mb-2 block text-sm font-semibold">
+                  <label className="mb-2 block text-sm font-semibold dark:text-slate-200">
                     Email
                   </label>
 
                   <div className="relative">
 
-                    <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
 
                     <input
                       type="email"
@@ -240,7 +240,7 @@ function Contact() {
                       onChange={(e) =>
                         setEmail(e.target.value)
                       }
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pl-12 pr-4 outline-none focus:border-blue-400"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-4 pl-12 pr-4 outline-none transition focus:border-blue-400 dark:border-white/10 dark:bg-[#0f172a] dark:text-white dark:placeholder:text-slate-500"
                     />
 
                   </div>
@@ -250,7 +250,7 @@ function Contact() {
                 {/* MESSAGE */}
                 <div>
 
-                  <label className="mb-2 block text-sm font-semibold">
+                  <label className="mb-2 block text-sm font-semibold dark:text-slate-200">
                     Message
                   </label>
 
@@ -261,21 +261,21 @@ function Contact() {
                     onChange={(e) =>
                       setMessage(e.target.value)
                     }
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 outline-none focus:border-blue-400"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 outline-none transition focus:border-blue-400 dark:border-white/10 dark:bg-[#0f172a] dark:text-white dark:placeholder:text-slate-500"
                   />
 
                 </div>
 
                 {/* SUCCESS */}
                 {success && (
-                  <p className="rounded-xl bg-green-100 p-3 text-green-700">
+                  <p className="rounded-xl bg-green-100 p-3 text-green-700 dark:bg-green-500/10 dark:text-green-400">
                     Message sent successfully!
                   </p>
                 )}
 
                 {/* ERROR */}
                 {errorMessage && (
-                  <p className="rounded-xl bg-red-100 p-3 text-red-700">
+                  <p className="rounded-xl bg-red-100 p-3 text-red-700 dark:bg-red-500/10 dark:text-red-400">
                     {errorMessage}
                   </p>
                 )}

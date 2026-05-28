@@ -43,6 +43,7 @@ function Testimonials() {
   const [message, setMessage] = useState("");
   const [rating, setRating] = useState(5);
 
+  // FETCH FIREBASE FEEDBACKS
   useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
@@ -62,6 +63,7 @@ function Testimonials() {
     fetchFeedbacks();
   }, []);
 
+  // SUBMIT
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -92,14 +94,17 @@ function Testimonials() {
   return (
     <section
       id="testimonials"
-      className="relative overflow-hidden bg-slate-50 px-6 py-28 text-slate-900"
+      className="relative overflow-hidden bg-slate-50 px-6 py-28 text-slate-900 transition-colors duration-300 dark:bg-[#020617] dark:text-white"
     >
-      {/* Background Decorations (kept clean) */}
-      <div className="absolute left-0 top-0 h-72 w-72 rounded-full bg-blue-100 blur-3xl" />
-      <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-sky-100 blur-3xl" />
+      {/* BACKGROUND */}
+      <div className="absolute left-0 top-0 h-72 w-72 rounded-full bg-blue-100 blur-3xl dark:bg-blue-500/10" />
+
+      <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-sky-100 blur-3xl dark:bg-cyan-500/10" />
+
+      {/* GRID */}
+      <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:70px_70px]" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
-
         {/* HEADER */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -108,7 +113,7 @@ function Testimonials() {
           viewport={{ once: true }}
           className="mx-auto mb-20 max-w-3xl text-center"
         >
-          <p className="mb-4 inline-block rounded-full bg-blue-100 px-5 py-2 text-sm font-semibold text-blue-700">
+          <p className="mb-4 inline-block rounded-full bg-blue-100 px-5 py-2 text-sm font-semibold text-blue-700 dark:bg-blue-500/10 dark:text-blue-300">
             Testimonials
           </p>
 
@@ -118,9 +123,14 @@ function Testimonials() {
               Say About Me
             </span>
           </h2>
+
+          <p className="mt-6 text-lg leading-8 text-slate-600 dark:text-slate-400">
+            Feedback from collaborators, clients, and developers I’ve worked
+            with on different projects and experiences.
+          </p>
         </motion.div>
 
-        {/* CARDS */}
+        {/* TESTIMONIALS */}
         <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
           {feedbacks.map((item, index) => (
             <motion.div
@@ -132,13 +142,17 @@ function Testimonials() {
                 delay: index * 0.1,
               }}
               viewport={{ once: true }}
-              whileHover={{ y: -8 }}
-              className="flex flex-col justify-between rounded-[2rem] border border-slate-200 bg-white p-7 shadow-sm hover:shadow-xl"
+              whileHover={{ y: -10 }}
+              className="group flex flex-col justify-between rounded-[2rem] border border-slate-200 bg-white/90 p-7 shadow-sm backdrop-blur-xl transition-all duration-500 hover:border-blue-200 hover:shadow-[0_20px_60px_rgba(37,99,235,0.15)] dark:border-slate-800 dark:bg-slate-900/80 dark:hover:border-blue-500/30"
             >
               <div>
-                <FaQuoteLeft className="mb-5 text-4xl text-blue-200" />
+                {/* ICON */}
+                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-100 text-3xl text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
+                  <FaQuoteLeft />
+                </div>
 
-                <div className="mb-4 flex gap-1">
+                {/* STARS */}
+                <div className="mb-5 flex gap-1">
                   {[...Array(5)].map((_, i) => (
                     <FaStar
                       key={i}
@@ -146,29 +160,32 @@ function Testimonials() {
                       className={
                         i < item.rating
                           ? "text-yellow-400"
-                          : "text-slate-300"
+                          : "text-slate-300 dark:text-slate-700"
                       }
                     />
                   ))}
                 </div>
 
-                <p className="text-[15px] leading-8 text-slate-600">
+                {/* MESSAGE */}
+                <p className="text-[15px] leading-8 text-slate-600 dark:text-slate-400">
                   {item.feedback}
                 </p>
               </div>
 
-              <div className="mt-8 flex items-center gap-4 border-t border-slate-100 pt-5">
+              {/* USER */}
+              <div className="mt-8 flex items-center gap-4 border-t border-slate-100 pt-5 dark:border-slate-800">
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="h-14 w-14 rounded-full object-cover"
+                  className="h-14 w-14 rounded-full border-2 border-white object-cover shadow-lg dark:border-slate-700"
                 />
 
                 <div>
-                  <h3 className="font-bold text-slate-900">
+                  <h3 className="font-bold text-slate-900 dark:text-white">
                     {item.name}
                   </h3>
-                  <p className="text-sm text-slate-500">
+
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
                     {item.role}
                   </p>
                 </div>
@@ -180,55 +197,80 @@ function Testimonials() {
         {/* FORM */}
         <motion.form
           onSubmit={handleSubmit}
-          className="mx-auto mt-20 max-w-4xl rounded-[2.5rem] border border-slate-200 bg-white p-10 shadow-xl"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+          className="relative mx-auto mt-24 max-w-4xl overflow-hidden rounded-[2.5rem] border border-slate-200 bg-white/90 p-10 shadow-[0_20px_60px_rgba(0,0,0,0.08)] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/80"
         >
-          <h3 className="mb-6 text-center text-4xl font-black">
-            Leave Feedback
-          </h3>
+          {/* INNER GLOW */}
+          <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-blue-100/40 blur-3xl dark:bg-blue-500/10" />
 
-          <div className="grid gap-6 md:grid-cols-2">
-            <input
-              placeholder="Your Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="rounded-2xl border border-slate-200 bg-slate-50 p-4 outline-none focus:border-blue-400"
-            />
+          <div className="relative z-10">
+            <h3 className="text-center text-4xl font-black dark:text-white">
+              Leave Feedback
+            </h3>
 
-            <input
-              placeholder="Your Role"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className="rounded-2xl border border-slate-200 bg-slate-50 p-4 outline-none focus:border-blue-400"
-            />
-          </div>
+            <p className="mt-4 text-center text-slate-600 dark:text-slate-400">
+              Share your experience and thoughts about working with me.
+            </p>
 
-          <textarea
-            rows="6"
-            placeholder="Write feedback..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            className="mt-6 w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 outline-none focus:border-blue-400"
-          />
-
-          <div className="mt-8 flex justify-center gap-3">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <FaStar
-                key={star}
-                onClick={() => setRating(star)}
-                className={
-                  star <= rating
-                    ? "cursor-pointer text-yellow-400"
-                    : "cursor-pointer text-slate-300"
-                }
-                size={26}
+            {/* INPUTS */}
+            <div className="mt-10 grid gap-6 md:grid-cols-2">
+              <input
+                placeholder="Your Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
               />
-            ))}
-          </div>
 
-          <div className="mt-10 flex justify-center">
-            <button className="rounded-2xl bg-blue-600 px-10 py-4 font-semibold text-white hover:bg-blue-700">
-              Submit Feedback
-            </button>
+              <input
+                placeholder="Your Role"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
+              />
+            </div>
+
+            {/* TEXTAREA */}
+            <textarea
+              rows="6"
+              placeholder="Write feedback..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="mt-6 w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
+            />
+
+            {/* STARS */}
+            <div className="mt-8 flex justify-center gap-3">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <motion.div
+                  whileHover={{ scale: 1.2 }}
+                  key={star}
+                >
+                  <FaStar
+                    onClick={() => setRating(star)}
+                    className={
+                      star <= rating
+                        ? "cursor-pointer text-yellow-400"
+                        : "cursor-pointer text-slate-300 dark:text-slate-700"
+                    }
+                    size={28}
+                  />
+                </motion.div>
+              ))}
+            </div>
+
+            {/* BUTTON */}
+            <div className="mt-10 flex justify-center">
+              <motion.button
+                whileHover={{ y: -4 }}
+                whileTap={{ scale: 0.98 }}
+                className="rounded-2xl bg-blue-600 px-10 py-4 font-semibold text-white shadow-[0_15px_40px_rgba(37,99,235,0.35)] transition hover:bg-blue-700"
+              >
+                Submit Feedback
+              </motion.button>
+            </div>
           </div>
         </motion.form>
       </div>
