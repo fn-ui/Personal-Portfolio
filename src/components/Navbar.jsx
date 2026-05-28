@@ -1,24 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  FaBars,
-  FaTimes,
-  FaMoon,
-  FaSun,
-} from "react-icons/fa";
+import { FaBars, FaTimes, FaMoon, FaSun } from "react-icons/fa";
 
 import profileImg from "../assets/profile.png";
 
-function Navbar() {
+function Navbar({ darkMode, setDarkMode }) {
   const [activeSection, setActiveSection] = useState("home");
   const [mobileMenu, setMobileMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
-
-  // DARK MODE
-  const [darkMode, setDarkMode] = useState(
-    localStorage.getItem("theme") === "dark"
-  );
 
   const lastScrollY = useRef(0);
 
@@ -42,7 +32,6 @@ function Navbar() {
 
       setScrolled(currentScrollY > 30);
 
-      // SHOW / HIDE NAVBAR
       if (currentScrollY > lastScrollY.current + 5 && currentScrollY > 100) {
         setShowNavbar(false);
       } else if (currentScrollY < lastScrollY.current - 5) {
@@ -51,19 +40,14 @@ function Navbar() {
 
       lastScrollY.current = currentScrollY;
 
-      // ACTIVE SECTION
       navItems.forEach((item) => {
         const section = document.getElementById(item);
-
         if (!section) return;
 
         const sectionTop = section.offsetTop - 120;
         const sectionBottom = sectionTop + section.offsetHeight;
 
-        if (
-          currentScrollY >= sectionTop &&
-          currentScrollY < sectionBottom
-        ) {
+        if (currentScrollY >= sectionTop && currentScrollY < sectionBottom) {
           setActiveSection(item);
         }
       });
@@ -73,12 +57,9 @@ function Navbar() {
       }
     };
 
-    window.addEventListener("scroll", handleScroll, {
-      passive: true,
-    });
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
-    return () =>
-      window.removeEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -88,8 +69,8 @@ function Navbar() {
           initial={{ y: -80, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -80, opacity: 0 }}
-          transition={{ duration: 0.25, ease: "easeInOut" }}
-          className="fixed left-0 top-0 z-50 w-full"
+          transition={{ duration: 0.25 }}
+          className="fixed top-0 left-0 z-50 w-full"
         >
           <nav
             className={`mx-auto mt-3 flex max-w-6xl items-center justify-between rounded-2xl border px-6 py-4 backdrop-blur-xl transition-all duration-300 ${
@@ -103,25 +84,21 @@ function Navbar() {
               <img
                 src={profileImg}
                 alt="Profile"
-                className="h-11 w-11 rounded-full border border-slate-200 object-cover dark:border-slate-700"
+                className="h-11 w-11 rounded-full border object-cover"
               />
 
               <div className="flex flex-col leading-none">
-                <span className="text-[0.95rem] font-bold text-slate-900 dark:text-white">
-                  Faith{" "}
-                  <span className="bg-gradient-to-r from-blue-600 to-sky-400 bg-clip-text text-transparent">
-                    Njeri
-                  </span>
+                <span className="font-bold dark:text-white">
+                  Faith <span className="text-blue-500">Njeri</span>
                 </span>
-
-                <span className="text-[9px] uppercase tracking-[0.28em] text-slate-400 dark:text-slate-500">
+                <span className="text-[10px] uppercase tracking-widest text-gray-400">
                   Full-Stack Developer
                 </span>
               </div>
             </a>
 
             {/* DESKTOP NAV */}
-            <ul className="hidden items-center gap-8 md:flex">
+            <ul className="hidden md:flex items-center gap-8">
               {navItems.map((item) => (
                 <li key={item}>
                   <a
@@ -129,7 +106,7 @@ function Navbar() {
                     className={`text-sm font-medium transition ${
                       activeSection === item
                         ? "text-blue-600"
-                        : "text-slate-600 hover:text-blue-500 dark:text-slate-300 dark:hover:text-blue-400"
+                        : "text-slate-600 dark:text-slate-300"
                     }`}
                   >
                     {item.charAt(0).toUpperCase() + item.slice(1)}
@@ -141,11 +118,11 @@ function Navbar() {
             {/* RIGHT SIDE */}
             <div className="flex items-center gap-3">
 
-              {/* DARK MODE TOGGLE */}
+              {/* DARK MODE TOGGLE (ONLY ONE BUTTON) */}
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setDarkMode(!darkMode)}
-                className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-300 hover:text-blue-600 dark:border-slate-700 dark:bg-slate-800 dark:text-yellow-400 dark:hover:border-slate-600"
+                className="flex h-11 w-11 items-center justify-center rounded-xl border"
               >
                 {darkMode ? <FaSun /> : <FaMoon />}
               </motion.button>
@@ -153,15 +130,15 @@ function Navbar() {
               {/* CTA */}
               <a
                 href="#contact"
-                className="hidden rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-blue-700 md:block"
+                className="hidden md:block rounded-xl bg-blue-600 px-5 py-2.5 text-white"
               >
                 Reach out
               </a>
 
-              {/* MOBILE BUTTON */}
+              {/* MOBILE MENU */}
               <button
                 onClick={() => setMobileMenu(!mobileMenu)}
-                className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 transition dark:border-slate-700 dark:bg-slate-800 dark:text-white md:hidden"
+                className="md:hidden flex h-11 w-11 items-center justify-center rounded-xl border"
               >
                 {mobileMenu ? <FaTimes /> : <FaBars />}
               </button>
@@ -170,18 +147,14 @@ function Navbar() {
 
           {/* MOBILE MENU */}
           {mobileMenu && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mx-auto mt-4 max-w-6xl rounded-2xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-700 dark:bg-slate-900 md:hidden"
-            >
+            <motion.div className="mx-auto mt-4 max-w-6xl rounded-2xl border bg-white p-6 md:hidden dark:bg-slate-900">
               <ul className="flex flex-col gap-5">
                 {navItems.map((item) => (
                   <li key={item}>
                     <a
                       href={`#${item}`}
                       onClick={() => setMobileMenu(false)}
-                      className="text-sm font-medium text-slate-700 transition hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400"
+                      className="text-sm"
                     >
                       {item.charAt(0).toUpperCase() + item.slice(1)}
                     </a>

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import ScrollProgressBar from "./components/ScrollProgressBar";
@@ -21,10 +22,10 @@ import Messages from "./pages/admin/Messages";
 import AdminTestimonials from "./pages/admin/Testimonials";
 import Settings from "./pages/admin/Settings";
 
-function HomePage() {
+function HomePage({ darkMode, setDarkMode }) {
   return (
     <>
-      <Navbar />
+      <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
 
       <main>
         <Hero />
@@ -43,24 +44,39 @@ function HomePage() {
 }
 
 function App() {
+  // ✅ FIX 1: proper initial theme loading (no flicker)
+  const [darkMode, setDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme) {
+      return savedTheme === "dark";
+    }
+
+    // fallback to system preference
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
+
+  // ✅ FIX 2: single source of truth for DOM + storage
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", darkMode);
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
+  }, [darkMode]);
+
   return (
     <BrowserRouter>
-
       <ScrollProgressBar />
 
       <Routes>
-
         {/* PUBLIC WEBSITE */}
         <Route
           path="/"
-          element={<HomePage />}
+          element={
+            <HomePage darkMode={darkMode} setDarkMode={setDarkMode} />
+          }
         />
 
         {/* LOGIN */}
-        <Route
-          path="/login"
-          element={<Login />}
-        />
+        <Route path="/login" element={<Login />} />
 
         {/* ADMIN ROUTES */}
         <Route
@@ -71,47 +87,14 @@ function App() {
             </ProtectedRoute>
           }
         >
-
-          {/* DEFAULT ADMIN PAGE */}
-          <Route
-            index
-            element={<Dashboard />}
-          />
-
-          {/* DASHBOARD */}
-          <Route
-            path="dashboard"
-            element={<Dashboard />}
-          />
-
-          {/* PROJECTS */}
-          <Route
-            path="projects"
-            element={<AdminProjects />}
-          />
-
-          {/* MESSAGES */}
-          <Route
-            path="messages"
-            element={<Messages />}
-          />
-
-          {/* TESTIMONIALS */}
-          <Route
-            path="testimonials"
-            element={<AdminTestimonials />}
-          />
-
-          {/* SETTINGS */}
-          <Route
-            path="settings"
-            element={<Settings />}
-          />
-
+          <Route index element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="projects" element={<AdminProjects />} />
+          <Route path="messages" element={<Messages />} />
+          <Route path="testimonials" element={<AdminTestimonials />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
-
       </Routes>
-
     </BrowserRouter>
   );
 }
