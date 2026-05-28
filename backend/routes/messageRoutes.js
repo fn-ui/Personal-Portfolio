@@ -1,61 +1,150 @@
 const express = require("express");
 const router = express.Router();
+
 const Message = require("../models/Message");
-const sendEmail = require("../utils/sendEmail"); // ✅ MISSING FIX
+const sendEmail = require("../utils/sendEmail");
 
+// ==========================
 // CREATE MESSAGE
+// ==========================
 router.post("/", async (req, res) => {
-  const msg = new Message(req.body);
-  const saved = await msg.save();
-  res.json(saved);
-});
-
-// GET MESSAGES
-router.get("/", async (req, res) => {
-  const messages = await Message.find().sort({ createdAt: -1 });
-  res.json(messages);
-});
-
-// DELETE
-router.delete("/:id", async (req, res) => {
-  await Message.findByIdAndDelete(req.params.id);
-  res.json({ message: "deleted" });
-});
-
-// REPLY
-router.post("/:id/reply", async (req, res) => {
   try {
-    console.log("🔥 REPLY ROUTE HIT");
+    const msg = new Message(req.body);
+    const saved = await msg.save();
 
-    const { message } = req.body;
-    console.log("MESSAGE:", message);
+    // 🔥 SOCKET: emit new message
+    const io = req.app.get("io");
+    if (io) io.emit("new_message", saved);
 
-    const msg = await Message.findById(req.params.id);
+    res.json(saved);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to create message",
+    });
+  }
+});
 
-    if (!msg) {
-      return res.status(404).json({ message: "Message not found" });
+// ==========================
+// GET ALL MESSAGES
+// ==========================
+router.get("/", async (req, res) => {
+  try {
+    const messages = await Message.find().sort({ createdAt: -1 });
+    res.json(messages);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch messages",
+    });
+  }
+});
+
+// ==========================
+// DELETE MESSAGE
+// ==========================
+router.delete("/:id", async (req, res) => {
+  try {
+    await Message.findByIdAndDelete(req.params.id);
+
+    // 🔥 SOCKET: emit delete event
+    const io = req.app.get("io");
+    if (io) io.emit("delete_message", req.params.id);
+
+    res.json({
+      success: true,
+      message: "Message deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete message",
+    });
+  }
+});
+
+// ==========================
+// UPDATE MESSAGE STATUS
+// ==========================
+router.put("/:id", async (req, res) => {
+  try {
+    const updatedMessage = await Message.findByIdAndUpdate(
+      req.params.id,
+      {
+        status: req.body.status,
+      },
+      { new: true }
+    );
+
+    // 🔥 SOCKET: emit update
+    const io = req.app.get("io");
+    if (io) io.emit("message_updated", updatedMessage);
+
+    res.json(updatedMessage);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to update message",
+    });
+  }
+});
+
+// ==========================
+// REPLY TO MESSAGE
+// ==========================
+router.post("/reply/:id", async (req, res) => {
+  try {
+    const { subject, message } = req.body;
+
+    const existingMessage = await Message.findById(req.params.id);
+
+    if (!existingMessage) {
+      return res.status(404).json({
+        success: false,
+        message: "Message not found",
+      });
     }
 
-    console.log("FOUND USER:", msg.email);
-
-    // SAVE REPLY (optional but recommended)
-    msg.replies.push({ message });
-    await msg.save();
-
-    // SEND EMAIL
+    // Send email
     await sendEmail({
-      to: msg.email,
-      subject: "Reply from Portfolio",
-      text: message,
+      to: existingMessage.email,
+      subject,
+      message,
     });
 
-    console.log("📧 EMAIL FUNCTION CALLED");
+    // Save reply
+    existingMessage.replies.push({
+      subject,
+      message,
+    });
 
-    res.json({ message: "Reply sent successfully" });
+    // Update status
+    existingMessage.status = "Replied";
+
+    const updated = await existingMessage.save();
+
+    // 🔥 SOCKET: emit updated message
+    const io = req.app.get("io");
+    if (io) io.emit("message_updated", updated);
+
+    console.log("📧 EMAIL SENT + MESSAGE UPDATED");
+
+    res.json({
+      success: true,
+      message: "Reply sent successfully",
+    });
 
   } catch (error) {
-    console.log("❌ ERROR:", error);
-    res.status(500).json({ message: "Server error" });
+    console.log("❌ EMAIL ERROR:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to send reply",
+    });
   }
 });
 

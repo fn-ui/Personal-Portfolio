@@ -1,19 +1,46 @@
 const mongoose = require("mongoose");
 
+const replySchema = new mongoose.Schema({
+  subject: String,
+
+  message: String,
+
+  sentAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 const messageSchema = new mongoose.Schema(
   {
-    name: String,
-    email: String,
-    message: String,
-    isRead: { type: Boolean, default: false },
-    replies: [
-      {
-        message: String,
-        date: { type: Date, default: Date.now },
-      },
-    ],
+    name: {
+      type: String,
+      required: true,
+    },
+
+    email: {
+      type: String,
+      required: true,
+    },
+
+    message: {
+      type: String,
+      required: true,
+    },
+
+    // MESSAGE STATUS
+    status: {
+      type: String,
+      enum: ["New", "Replied", "Closed"],
+      default: "New",
+    },
+
+    // ADMIN REPLIES
+    replies: [replySchema],
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 module.exports = mongoose.model("Message", messageSchema);
