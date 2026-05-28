@@ -183,20 +183,7 @@ function Hero() {
                   </h3>
                 </motion.div>
 
-                {/* STATUS CARD */}
-                <motion.div
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity }}
-                  className="absolute -right-6 top-10 z-20 rounded-3xl border border-white/60 bg-white/90 px-6 py-5 shadow-2xl backdrop-blur-xl dark:border-slate-700 dark:bg-slate-900/90"
-                >
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
-                    Status
-                  </p>
-
-                  <h3 className="text-xl font-black text-green-500">
-                    Available
-                  </h3>
-                </motion.div>
+                
 
               </div>
 

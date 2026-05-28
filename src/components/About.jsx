@@ -88,20 +88,7 @@ function About() {
                 </h3>
               </motion.div>
 
-              {/* PROJECT CARD */}
-              <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 4, repeat: Infinity }}
-                className="absolute -right-4 top-10 rounded-3xl border border-slate-200 bg-white/90 px-6 py-5 shadow-2xl backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/80"
-              >
-                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                  Projects
-                </p>
-
-                <h3 className="mt-1 text-3xl font-black text-blue-600 dark:text-blue-400">
-                  15+
-                </h3>
-              </motion.div>
+              
             </motion.div>
           </motion.div>
 
