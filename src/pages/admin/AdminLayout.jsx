@@ -53,7 +53,7 @@ function AdminLayout() {
   // LOGOUT
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/admin/login");
+    navigate("/");
   };
 
   // NAVIGATION LINKS

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import API from "./api/axios";
 
 import ScrollProgressBar from "./components/ScrollProgressBar";
 import Navbar from "./components/Navbar";
@@ -44,7 +45,7 @@ function HomePage({ darkMode, setDarkMode }) {
 }
 
 function App() {
-  // ✅ FIX 1: proper initial theme loading (no flicker)
+  
   const [darkMode, setDarkMode] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
 
@@ -61,7 +62,18 @@ function App() {
     document.documentElement.classList.toggle("dark", darkMode);
     localStorage.setItem("theme", darkMode ? "dark" : "light");
   }, [darkMode]);
+    //portfolio view counter//
+  useEffect(() => {
+      const incrementViews = async () => {
+        try {
+          await API.post("/views/increment");
+        } catch (err) {
+          console.log(err);
+        }
+      };
 
+      incrementViews();
+    }, []);
   return (
     <BrowserRouter>
       <ScrollProgressBar />
@@ -76,7 +88,7 @@ function App() {
         />
 
         {/* LOGIN */}
-        <Route path="/login" element={<Login />} />
+        <Route path="admin/login" element={<Login />} />
 
         {/* ADMIN ROUTES */}
         <Route

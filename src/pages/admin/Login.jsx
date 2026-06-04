@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
@@ -13,71 +11,101 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     setLoading(true);
     setError("");
 
     try {
-      const userCredential =
-  await signInWithEmailAndPassword(
-    auth,
-    email,
-    password
-  );
+      const response = await fetch(
+        "http://localhost:5000/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        }
+      );
 
-// SAVE TOKEN
-const token =
-  await userCredential.user.getIdToken();
+      const data = await response.json();
 
-localStorage.setItem("token", token);
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
 
-navigate("/admin/dashboard");
+      // SAVE JWT TOKEN
+      localStorage.setItem("token", data.token);
+
+      // REDIRECT
+      navigate("/admin/dashboard");
+
     } catch (err) {
-      setError("Invalid email or password");
+      setError(err.message || "Invalid email or password");
     }
 
     setLoading(false);
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-[#0f172a] px-6">
+
       <form
         onSubmit={handleLogin}
-        className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl"
+        className="w-full max-w-md rounded-3xl bg-white dark:bg-[#111827] p-8 shadow-2xl border border-gray-100 dark:border-gray-800"
       >
-        <h2 className="mb-6 text-center text-3xl font-bold">
-          Admin Login
-        </h2>
+
+        <div className="mb-8 text-center">
+
+          <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
+            Admin Login
+          </h2>
+
+          <p className="mt-2 text-gray-500 dark:text-gray-400">
+            Access your portfolio dashboard
+          </p>
+
+        </div>
 
         {error && (
-          <p className="mb-4 rounded-lg bg-red-100 p-3 text-sm text-red-600">
+          <p className="mb-4 rounded-xl bg-red-100 border border-red-200 p-3 text-sm text-red-600">
             {error}
           </p>
         )}
 
+        {/* EMAIL */}
         <input
           type="email"
-          placeholder="Email"
-          className="mb-4 w-full rounded-xl border p-3 outline-none focus:border-blue-400"
+          placeholder="Email address"
+          className="mb-4 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 outline-none focus:border-blue-500 dark:text-white"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
 
+        {/* PASSWORD */}
         <input
           type="password"
           placeholder="Password"
-          className="mb-6 w-full rounded-xl border p-3 outline-none focus:border-blue-400"
+          className="mb-6 w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 outline-none focus:border-blue-500 dark:text-white"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
 
+        {/* BUTTON */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-xl bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:opacity-60"
+          className="w-full rounded-2xl bg-blue-600 py-4 font-semibold text-white transition-all hover:bg-blue-700 disabled:opacity-60 shadow-lg shadow-blue-500/20"
         >
           {loading ? "Logging in..." : "Login"}
         </button>
+
       </form>
+
     </div>
   );
 }

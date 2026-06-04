@@ -2,8 +2,7 @@ import { motion } from "framer-motion";
 import { FaStar, FaQuoteLeft } from "react-icons/fa";
 import { useState, useEffect } from "react";
 
-import { collection, addDoc, getDocs } from "firebase/firestore";
-import { db } from "../firebase";
+import API from "../api/axios";
 
 // AVATARS
 import johnImg from "../assets/testimonials/john.png";
@@ -45,51 +44,51 @@ function Testimonials() {
 
   // FETCH FIREBASE FEEDBACKS
   useEffect(() => {
-    const fetchFeedbacks = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "feedbacks"));
+  fetchTestimonials();
+}, []);
 
-        const firebaseFeedbacks = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+const fetchTestimonials = async () => {
+  try {
+    const res = await API.get("/testimonials");
 
-        setFeedbacks((prev) => [...firebaseFeedbacks, ...prev]);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    const approvedTestimonials =
+      res.data.filter(
+        (item) =>
+          item.status === "approved"
+      );
 
-    fetchFeedbacks();
-  }, []);
+    setFeedbacks(approvedTestimonials);
+
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   // SUBMIT
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const newFeedback = {
+  try {
+    await API.post("/testimonials", {
       name,
       role,
-      feedback: message,
+      message,
       rating,
       image:
         "https://ui-avatars.com/api/?name=" +
         encodeURIComponent(name),
-    };
+    });
 
-    try {
-      await addDoc(collection(db, "feedbacks"), newFeedback);
+    // optional: refresh list or give feedback
+    setName("");
+    setRole("");
+    setMessage("");
+    setRating(5);
 
-      setFeedbacks((prev) => [newFeedback, ...prev]);
-
-      setName("");
-      setRole("");
-      setMessage("");
-      setRating(5);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   return (
     <section
@@ -101,8 +100,7 @@ function Testimonials() {
 
       <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-sky-100 blur-3xl dark:bg-cyan-500/10" />
 
-      {/* GRID */}
-      <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:70px_70px]" />
+      
 
       <div className="relative z-10 mx-auto max-w-7xl">
         {/* HEADER */}
@@ -174,11 +172,13 @@ function Testimonials() {
 
               {/* USER */}
               <div className="mt-8 flex items-center gap-4 border-t border-slate-100 pt-5 dark:border-slate-800">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="h-14 w-14 rounded-full border-2 border-white object-cover shadow-lg dark:border-slate-700"
-                />
+                <div className="h-14 w-14 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold shadow-lg">
+            {item.name
+              ?.split(" ")
+              .map((n) => n[0])
+              .join("")
+              .toUpperCase()}
+          </div>
 
                 <div>
                   <h3 className="font-bold text-slate-900 dark:text-white">
@@ -264,12 +264,13 @@ function Testimonials() {
             {/* BUTTON */}
             <div className="mt-10 flex justify-center">
               <motion.button
-                whileHover={{ y: -4 }}
-                whileTap={{ scale: 0.98 }}
-                className="rounded-2xl bg-blue-600 px-10 py-4 font-semibold text-white shadow-[0_15px_40px_rgba(37,99,235,0.35)] transition hover:bg-blue-700"
-              >
-                Submit Feedback
-              </motion.button>
+          type="submit"
+          whileHover={{ y: -4 }}
+          whileTap={{ scale: 0.98 }}
+          className="rounded-2xl bg-blue-600 px-10 py-4 font-semibold text-white shadow-[0_15px_40px_rgba(37,99,235,0.35)] transition hover:bg-blue-700"
+        >
+          Submit Feedback
+        </motion.button>
             </div>
           </div>
         </motion.form>

@@ -41,9 +41,6 @@ function Projects() {
 
       <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-sky-100 blur-3xl dark:bg-cyan-500/10" />
 
-      {/* GRID */}
-      <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:70px_70px]" />
-
       <div className="relative z-10 mx-auto max-w-7xl">
         {/* SECTION HEADING */}
         <motion.div
@@ -109,7 +106,21 @@ function Projects() {
                 }}
                 viewport={{ once: true }}
                 whileHover={{ y: -10 }}
-                className="group overflow-hidden rounded-[2rem] border border-slate-200 bg-white/90 shadow-sm backdrop-blur-xl transition-all duration-500 hover:border-blue-200 hover:shadow-[0_20px_60px_rgba(37,99,235,0.15)] dark:border-slate-800 dark:bg-slate-900/80 dark:hover:border-blue-500/30"
+                className="
+                  group
+                  overflow-hidden
+                  rounded-[2rem]
+                  border border-slate-200
+                  bg-white/90
+                  shadow-sm
+                  backdrop-blur-xl
+                  transition-all duration-500
+                  hover:border-blue-200
+                  hover:shadow-[0_20px_60px_rgba(37,99,235,0.15)]
+                  dark:border-slate-800
+                  dark:bg-slate-900/80
+                  dark:hover:border-blue-500/30
+                "
               >
                 {/* IMAGE */}
                 {project.image && (
@@ -150,7 +161,23 @@ function Projects() {
                         .map((tech, index) => (
                           <span
                             key={index}
-                            className="rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:-translate-y-1 hover:bg-blue-600 hover:text-white dark:border-blue-500/20 dark:bg-blue-500/10 dark:text-blue-300 dark:hover:bg-blue-600 dark:hover:text-white"
+                            className="
+                              rounded-full
+                              border border-blue-100
+                              bg-blue-50
+                              px-4 py-2
+                              text-sm font-medium
+                              text-blue-700
+                              transition
+                              hover:-translate-y-1
+                              hover:bg-blue-600
+                              hover:text-white
+                              dark:border-blue-500/20
+                              dark:bg-blue-500/10
+                              dark:text-blue-300
+                              dark:hover:bg-blue-600
+                              dark:hover:text-white
+                            "
                           >
                             {tech.trim()}
                           </span>
@@ -166,7 +193,21 @@ function Projects() {
                         href={project.liveDemo}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group/button inline-flex items-center gap-3 rounded-2xl bg-blue-600 px-7 py-4 font-semibold text-white shadow-[0_10px_30px_rgba(37,99,235,0.35)] transition-all duration-300 hover:-translate-y-1 hover:bg-blue-700"
+                        className="
+                          group/button
+                          inline-flex
+                          items-center
+                          gap-3
+                          rounded-2xl
+                          bg-blue-600
+                          px-7 py-4
+                          font-semibold
+                          text-white
+                          shadow-[0_10px_30px_rgba(37,99,235,0.35)]
+                          transition-all duration-300
+                          hover:-translate-y-1
+                          hover:bg-blue-700
+                        "
                       >
                         View Project
 
@@ -180,7 +221,27 @@ function Projects() {
                         href={project.githubLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:text-blue-600 hover:shadow-lg dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-blue-500/30 dark:hover:text-blue-400"
+                        className="
+                          flex
+                          h-14
+                          w-14
+                          items-center
+                          justify-center
+                          rounded-2xl
+                          border border-slate-200
+                          bg-white
+                          text-slate-700
+                          transition-all duration-300
+                          hover:-translate-y-1
+                          hover:border-blue-200
+                          hover:text-blue-600
+                          hover:shadow-lg
+                          dark:border-slate-700
+                          dark:bg-slate-800
+                          dark:text-slate-300
+                          dark:hover:border-blue-500/30
+                          dark:hover:text-blue-400
+                        "
                       >
                         <FaGithub size={22} />
                       </a>
@@ -204,7 +265,29 @@ function Projects() {
             href="https://github.com/fn-ui"
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center gap-3 rounded-full border border-slate-200 bg-white px-8 py-4 text-lg font-semibold text-slate-800 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:text-blue-600 hover:shadow-xl dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-blue-500/30 dark:hover:text-blue-400"
+            className="
+              group
+              flex
+              items-center
+              gap-3
+              rounded-full
+              border border-slate-200
+              bg-white
+              px-8 py-4
+              text-lg font-semibold
+              text-slate-800
+              shadow-sm
+              transition-all duration-300
+              hover:-translate-y-1
+              hover:border-blue-200
+              hover:text-blue-600
+              hover:shadow-xl
+              dark:border-slate-700
+              dark:bg-slate-900
+              dark:text-slate-200
+              dark:hover:border-blue-500/30
+              dark:hover:text-blue-400
+            "
           >
             View All Projects
 

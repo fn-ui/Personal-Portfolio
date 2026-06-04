@@ -6,7 +6,7 @@ import {
 } from "react-icons/fa";
 
 import { motion } from "framer-motion";
-
+import { Link } from "react-router-dom";
 function Footer() {
   const linkClass =
     "text-slate-500 transition-all duration-300 hover:text-blue-600 hover:translate-x-1 dark:text-slate-400 dark:hover:text-blue-400";
@@ -112,6 +112,11 @@ function Footer() {
                   Resume
                 </a>
               </li>
+              <li>
+        <Link to="/admin/login" className={linkClass}>
+          Admin
+        </Link>
+      </li>
             </ul>
           </div>
 
