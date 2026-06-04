@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import API from "../../api/axios";
 import { Link } from "react-router-dom";
 import CountUp from "react-countup";
@@ -12,7 +12,6 @@ import {
   Activity,
   ArrowUpRight,
   Sparkles,
-  Bell,
 } from "lucide-react";
 
 import {
@@ -53,11 +52,9 @@ function Dashboard() {
 
   const [recentMessages, setRecentMessages] = useState([]);
   const [recentProjects, setRecentProjects] = useState([]);
-  const [notifications, setNotifications] = useState([]);
-  const [showNotifications, setShowNotifications] = useState(false);
   const [loading, setLoading] = useState(true);
   const [views, setViews] = useState(0);
-  
+
   // =========================
   // FETCH FUNCTIONS
   // =========================
@@ -86,44 +83,10 @@ function Dashboard() {
     }
   };
 
-  const fetchNotifications = async () => {
-    try {
-      const [messages, testimonials] = await Promise.all([
-        API.get("/messages"),
-        API.get("/testimonials"),
-      ]);
-
-      const newNotifications = [];
-
-      messages.data.slice(0, 5).forEach((msg) => {
-        newNotifications.push({
-          id: msg._id,
-          type: "message",
-          text: `New message from ${msg.name}`,
-        });
-      });
-
-      testimonials.data
-        .filter((t) => t.status === "pending")
-        .forEach((t) => {
-          newNotifications.push({
-            id: t._id,
-            type: "testimonial",
-            text: `New testimonial from ${t.name}`,
-          });
-        });
-
-      setNotifications(newNotifications);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   // =========================
   // USE EFFECTS
   // =========================
 
-  // increment views once
   useEffect(() => {
     const incrementViews = async () => {
       try {
@@ -136,7 +99,6 @@ function Dashboard() {
     incrementViews();
   }, []);
 
-  // fetch views
   useEffect(() => {
     const fetchViews = async () => {
       try {
@@ -150,20 +112,8 @@ function Dashboard() {
     fetchViews();
   }, []);
 
-  // dashboard stats
   useEffect(() => {
     fetchDashboardStats();
-  }, []);
-
-  // notifications with interval
-  useEffect(() => {
-    fetchNotifications();
-
-    const interval = setInterval(() => {
-      fetchNotifications();
-    }, 10000);
-
-    return () => clearInterval(interval);
   }, []);
 
   // =========================
@@ -239,125 +189,56 @@ function Dashboard() {
       </div>
     );
   }
-    const dropdownRef = useRef(null);
 
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-          setShowNotifications(false);
-        }
-      };
+  return (
+    <div>
+      {/* HERO */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 rounded-[2rem] p-8 md:p-12 mb-12 text-white">
 
-      document.addEventListener("mousedown", handleClickOutside);
+        {/* Background icon */}
+        <div className="absolute top-0 right-0 opacity-10">
+          <Sparkles size={220} />
+        </div>
 
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, []);
-  
- return (
-  <div>
-    {/* HERO */}
-    <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 rounded-[2rem] p-8 md:p-12 mb-12 text-white">
-      
-      {/* Background icon */}
-      <div className="absolute top-0 right-0 opacity-10">
-        <Sparkles size={220} />
-      </div>
+        <div className="relative z-10">
 
-      <div className="relative z-10">
+          {/* BADGE TITLE */}
+          <span className="bg-white/20 px-4 py-2 rounded-full text-sm backdrop-blur-md">
+            Portfolio Analytics
+          </span>
 
-        {/* TOP BAR */}
-        <div className="flex items-center justify-between mb-4">
+          {/* TITLE */}
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight mt-4">
+            {greeting}, Admin 👋
+          </h1>
 
-          {/* LEFT ICON */}
-          <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-md">
-            <Activity size={28} />
-          </div>
+          {/* DESCRIPTION */}
+          <p className="text-blue-100 text-lg max-w-2xl leading-relaxed">
+            Track your portfolio growth, manage projects, monitor messages,
+            and control your entire admin system from one dashboard.
+          </p>
 
-          {/* RIGHT SIDE (NOTIFICATIONS) */}
-          <div ref={dropdownRef} className="relative z-50">
+          {/* BUTTONS */}
+          <div className="flex flex-wrap gap-4 mt-8">
 
-            <button
-              onClick={() => setShowNotifications(!showNotifications)}
-              className="relative bg-white/20 p-3 rounded-2xl backdrop-blur-md hover:bg-white/30 transition"
+            <Link
+              to="/admin/projects"
+              className="bg-white text-blue-700 shadow-2xl px-6 py-4 rounded-2xl font-semibold hover:scale-105 transition-all duration-300"
             >
-              <Bell size={24} />
+              Manage Projects
+            </Link>
 
-              {/* BADGE */}
-              {notifications.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-                  {notifications.length}
-                </span>
-              )}
-            </button>
-
-            {/* DROPDOWN */}
-            {showNotifications && (
-              <div className="absolute right-0 mt-3 w-80 bg-white dark:bg-gray-900 shadow-2xl rounded-2xl border border-gray-200 dark:border-gray-700 z-[999]">
-
-                <div className="p-4 border-b font-bold">
-                  Notifications
-                </div>
-
-                <div className="max-h-80 overflow-y-auto">
-                  {notifications.length === 0 ? (
-                    <p className="p-4 text-gray-500">No notifications</p>
-                  ) : (
-                    notifications.map((n) => (
-                      <div
-                        key={n.id}
-                        className="p-4 border-b hover:bg-gray-50 dark:hover:bg-gray-800"
-                      >
-                        {n.text}
-                      </div>
-                    ))
-                  )}
-                </div>
-
-              </div>
-            )}
+            <Link
+              to="/admin/messages"
+              className="bg-white/15 border border-white/20 backdrop-blur-xl px-6 py-4 rounded-2xl font-semibold hover:bg-white/30 transition-all duration-300"
+            >
+              View Messages
+            </Link>
 
           </div>
-        </div>
-
-        {/* BADGE TITLE */}
-        <span className="bg-white/20 px-4 py-2 rounded-full text-sm backdrop-blur-md">
-          Portfolio Analytics
-        </span>
-
-        {/* TITLE */}
-        <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight mt-4">
-          {greeting}, Admin 👋
-        </h1>
-
-        {/* DESCRIPTION */}
-        <p className="text-blue-100 text-lg max-w-2xl leading-relaxed">
-          Track your portfolio growth, manage projects, monitor messages,
-          and control your entire admin system from one dashboard.
-        </p>
-
-        {/* BUTTONS */}
-        <div className="flex flex-wrap gap-4 mt-8">
-
-          <Link
-            to="/admin/projects"
-            className="bg-white text-blue-700 shadow-2xl px-6 py-4 rounded-2xl font-semibold hover:scale-105 transition-all duration-300"
-          >
-            Manage Projects
-          </Link>
-
-          <Link
-            to="/admin/messages"
-            className="bg-white/15 border border-white/20 backdrop-blur-xl px-6 py-4 rounded-2xl font-semibold hover:bg-white/30 transition-all duration-300"
-          >
-            View Messages
-          </Link>
 
         </div>
-
       </div>
-    </div>
 
       {/* STATS */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">

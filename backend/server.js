@@ -12,6 +12,7 @@ const messageRoutes = require("./routes/messageRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const testimonialRoutes = require("./routes/testimonialRoutes");
 const viewRoutes = require("./routes/viewRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 
 const app = express();
 const server = http.createServer(app);
@@ -23,7 +24,7 @@ app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 // ==========================
-// SOCKET SETUP
+// SOCKET.IO SETUP
 // ==========================
 const io = new Server(server, {
   cors: { origin: "*" },
@@ -31,11 +32,19 @@ const io = new Server(server, {
 
 app.set("io", io);
 
+// ==========================
+// SOCKET CONNECTION
+// ==========================
 io.on("connection", (socket) => {
   console.log("🔌 Client connected:", socket.id);
 
+  // Optional: send a handshake event
+  socket.emit("socket:connected", {
+    message: "Connected to notification server",
+  });
+
   socket.on("disconnect", () => {
-    console.log("❌ Client disconnected");
+    console.log("❌ Client disconnected:", socket.id);
   });
 });
 
@@ -48,6 +57,9 @@ app.use("/api/projects", projectRoutes);
 app.use("/api/testimonials", testimonialRoutes);
 app.use("/api/views", viewRoutes);
 
+// 🔔 NOTIFICATIONS ROUTE (PRODUCTION READY)
+app.use("/api/notifications", notificationRoutes);
+
 // ==========================
 // HEALTH CHECK
 // ==========================
@@ -56,7 +68,7 @@ app.get("/", (req, res) => {
 });
 
 // ==========================
-// DATABASE
+// DATABASE CONNECTION
 // ==========================
 mongoose
   .connect(process.env.MONGO_URI)
