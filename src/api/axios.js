@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://personal-portfolio-tw0b.onrender.com/api",
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 export default API;

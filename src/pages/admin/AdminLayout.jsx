@@ -27,11 +27,15 @@ import {
 } from "lucide-react";
 
 // =========================
+// SOCKET CONNECTION
+// =========================
+console.log(
+  "ENV:",
+  import.meta.env.VITE_SOCKET_URL
+);
+
 const socket = io(
-  import.meta.env.VITE_SOCKET_URL,
-  {
-    transports: ["polling", "websocket"],
-  }
+  import.meta.env.VITE_SOCKET_URL
 );
 
 function AdminLayout() {
@@ -42,27 +46,48 @@ function AdminLayout() {
   // =========================
   // STATE
   // =========================
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
+  const [sidebarOpen, setSidebarOpen] =
+    useState(false);
 
-  const [darkMode, setDarkMode] = useState(
-    localStorage.getItem("theme") === "dark"
-  );
+  const [collapsed, setCollapsed] =
+    useState(false);
 
-  const [showNotifications, setShowNotifications] = useState(false);
+  const [darkMode, setDarkMode] =
+    useState(
+      localStorage.getItem("theme") ===
+        "dark"
+    );
 
-  const [notifications, setNotifications] = useState([]);
+  const [
+    showNotifications,
+    setShowNotifications,
+  ] = useState(false);
+
+  const [notifications, setNotifications] =
+    useState([]);
 
   // =========================
   // DARK MODE
   // =========================
   useEffect(() => {
     if (darkMode) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
+      document.documentElement.classList.add(
+        "dark"
+      );
+
+      localStorage.setItem(
+        "theme",
+        "dark"
+      );
     } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
+      document.documentElement.classList.remove(
+        "dark"
+      );
+
+      localStorage.setItem(
+        "theme",
+        "light"
+      );
     }
   }, [darkMode]);
 
@@ -77,15 +102,21 @@ function AdminLayout() {
   // =========================
   // FETCH NOTIFICATIONS
   // =========================
-  const fetchNotifications = async () => {
-    try {
-      const res = await API.get("/notifications");
+  const fetchNotifications =
+    async () => {
+      try {
+        const res = await API.get(
+          "/notifications"
+        );
 
-      setNotifications(res.data || []);
-    } catch (err) {
-      console.log("❌ Notification fetch error:", err);
-    }
-  };
+        setNotifications(res.data || []);
+      } catch (err) {
+        console.log(
+          "❌ Notification fetch error:",
+          err
+        );
+      }
+    };
 
   useEffect(() => {
     fetchNotifications();
@@ -95,19 +126,38 @@ function AdminLayout() {
   // SOCKET EVENTS
   // =========================
   useEffect(() => {
-    // CONNECTED
+    // CONNECT
     socket.on("connect", () => {
-      console.log("🟢 Socket connected:", socket.id);
+      console.log(
+        "🟢 Socket connected:",
+        socket.id
+      );
     });
 
+    // CONNECTION ERROR
+    socket.on(
+      "connect_error",
+      (err) => {
+        console.log(
+          "❌ SOCKET ERROR:",
+          err.message
+        );
+      }
+    );
+
     // NEW NOTIFICATION
-    const handleNewNotification = (notification) => {
-      console.log("🔔 New notification received:", notification);
+    const handleNewNotification = (
+      notification
+    ) => {
+      console.log(
+        "🔔 New notification:",
+        notification
+      );
 
       setNotifications((prev) => {
-        // prevent duplicates
         const exists = prev.some(
-          (n) => n._id === notification._id
+          (n) =>
+            n._id === notification._id
         );
 
         if (exists) return prev;
@@ -117,15 +167,19 @@ function AdminLayout() {
     };
 
     // UPDATED NOTIFICATION
-    const handleUpdatedNotification = (updated) => {
+    const handleUpdatedNotification = (
+      updated
+    ) => {
       setNotifications((prev) =>
         prev.map((n) =>
-          n._id === updated._id ? updated : n
+          n._id === updated._id
+            ? updated
+            : n
         )
       );
     };
 
-    // ALL READ
+    // MARK ALL READ
     const handleAllRead = () => {
       setNotifications((prev) =>
         prev.map((n) => ({
@@ -135,7 +189,11 @@ function AdminLayout() {
       );
     };
 
-    socket.on("notification:new", handleNewNotification);
+    // EVENTS
+    socket.on(
+      "notification:new",
+      handleNewNotification
+    );
 
     socket.on(
       "notification:updated",
@@ -147,7 +205,12 @@ function AdminLayout() {
       handleAllRead
     );
 
+    // CLEANUP
     return () => {
+      socket.off("connect");
+
+      socket.off("connect_error");
+
       socket.off(
         "notification:new",
         handleNewNotification
@@ -181,9 +244,14 @@ function AdminLayout() {
         )
       );
 
-      await API.patch(`/notifications/${id}/read`);
+      await API.patch(
+        `/notifications/${id}/read`
+      );
     } catch (err) {
-      console.log("❌ Mark as read error:", err);
+      console.log(
+        "❌ Mark as read error:",
+        err
+      );
     }
   };
 
@@ -192,7 +260,9 @@ function AdminLayout() {
   // =========================
   const markAllAsRead = async () => {
     try {
-      await API.patch("/notifications/mark-all-read");
+      await API.patch(
+        "/notifications/mark-all-read"
+      );
 
       setNotifications((prev) =>
         prev.map((n) => ({
@@ -201,7 +271,10 @@ function AdminLayout() {
         }))
       );
     } catch (err) {
-      console.log("❌ Mark all read error:", err);
+      console.log(
+        "❌ Mark all read error:",
+        err
+      );
     }
   };
 
@@ -212,7 +285,9 @@ function AdminLayout() {
     const handleClickOutside = (e) => {
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(e.target)
+        !dropdownRef.current.contains(
+          e.target
+        )
       ) {
         setShowNotifications(false);
       }
@@ -242,9 +317,10 @@ function AdminLayout() {
   // =========================
   // UNREAD COUNT
   // =========================
-  const unreadCount = notifications.filter(
-    (n) => !n.read
-  ).length;
+  const unreadCount =
+    notifications.filter(
+      (n) => !n.read
+    ).length;
 
   // =========================
   // NAV LINKS
@@ -253,12 +329,16 @@ function AdminLayout() {
     {
       name: "Dashboard",
       path: "/admin",
-      icon: <LayoutDashboard size={20} />,
+      icon: (
+        <LayoutDashboard size={20} />
+      ),
     },
     {
       name: "Projects",
       path: "/admin/projects",
-      icon: <FolderKanban size={20} />,
+      icon: (
+        <FolderKanban size={20} />
+      ),
     },
     {
       name: "Messages",
@@ -268,7 +348,9 @@ function AdminLayout() {
     {
       name: "Testimonials",
       path: "/admin/testimonials",
-      icon: <MessageSquareQuote size={20} />,
+      icon: (
+        <MessageSquareQuote size={20} />
+      ),
     },
     {
       name: "Settings",
@@ -284,7 +366,9 @@ function AdminLayout() {
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/40 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
+          onClick={() =>
+            setSidebarOpen(false)
+          }
         />
       )}
 
@@ -296,7 +380,11 @@ function AdminLayout() {
           border-r border-gray-200 dark:border-gray-800
           shadow-xl lg:shadow-sm
           transition-all duration-300 overflow-hidden
-          ${collapsed ? "w-20" : "w-72"}
+          ${
+            collapsed
+              ? "w-20"
+              : "w-72"
+          }
           bg-white dark:bg-[#0f172a]
           ${
             sidebarOpen
@@ -305,7 +393,6 @@ function AdminLayout() {
           }
         `}
       >
-
         {/* TOP */}
         <div>
 
@@ -325,7 +412,11 @@ function AdminLayout() {
             )}
 
             <button
-              onClick={() => setCollapsed(!collapsed)}
+              onClick={() =>
+                setCollapsed(
+                  !collapsed
+                )
+              }
               className="hidden lg:flex p-2 rounded-xl hover:bg-blue-50 dark:hover:bg-gray-800"
             >
               {collapsed ? (
@@ -336,7 +427,9 @@ function AdminLayout() {
             </button>
 
             <button
-              onClick={() => setSidebarOpen(false)}
+              onClick={() =>
+                setSidebarOpen(false)
+              }
               className="lg:hidden"
             >
               <X size={24} />
@@ -350,8 +443,13 @@ function AdminLayout() {
               <NavLink
                 key={link.name}
                 to={link.path}
-                end={link.path === "/admin"}
-                className={({ isActive }) =>
+                end={
+                  link.path ===
+                  "/admin"
+                }
+                className={({
+                  isActive,
+                }) =>
                   `flex items-center gap-3 px-4 py-3 rounded-2xl transition-all ${
                     isActive
                       ? "bg-blue-600 text-white"
@@ -362,7 +460,9 @@ function AdminLayout() {
                 {link.icon}
 
                 {!collapsed && (
-                  <span>{link.name}</span>
+                  <span>
+                    {link.name}
+                  </span>
                 )}
               </NavLink>
             ))}
@@ -374,7 +474,9 @@ function AdminLayout() {
         <div className="p-3 space-y-3">
 
           <button
-            onClick={() => setDarkMode(!darkMode)}
+            onClick={() =>
+              setDarkMode(!darkMode)
+            }
             className="w-full flex items-center justify-center gap-2 bg-gray-100 dark:bg-gray-800 py-3 rounded-2xl"
           >
             {darkMode ? (
@@ -395,7 +497,8 @@ function AdminLayout() {
           >
             <LogOut size={18} />
 
-            {!collapsed && "Logout"}
+            {!collapsed &&
+              "Logout"}
           </button>
 
         </div>
@@ -412,7 +515,9 @@ function AdminLayout() {
           <div className="flex gap-4 items-center">
 
             <button
-              onClick={() => setSidebarOpen(true)}
+              onClick={() =>
+                setSidebarOpen(true)
+              }
               className="lg:hidden"
             >
               <Menu size={24} />
@@ -473,12 +578,16 @@ function AdminLayout() {
                       Notifications
                     </h3>
 
-                    {notifications.length > 0 && (
+                    {notifications.length >
+                      0 && (
                       <button
-                        onClick={markAllAsRead}
+                        onClick={
+                          markAllAsRead
+                        }
                         className="text-xs text-blue-600 hover:underline"
                       >
-                        Mark all as read
+                        Mark all as
+                        read
                       </button>
                     )}
 
@@ -487,64 +596,75 @@ function AdminLayout() {
                   {/* LIST */}
                   <div className="max-h-[420px] overflow-y-auto">
 
-                    {notifications.length === 0 ? (
+                    {notifications.length ===
+                    0 ? (
                       <div className="p-6 text-center text-sm text-gray-500">
-                        No notifications yet
+                        No
+                        notifications
+                        yet
                       </div>
                     ) : (
-                      notifications.map((n) => (
-                        <div
-                          key={n._id}
-                          onClick={() =>
-                            markAsRead(n._id)
-                          }
-                          className={`
-                            p-4 border-b border-gray-100 dark:border-gray-800
-                            cursor-pointer transition
-                            hover:bg-gray-50 dark:hover:bg-gray-800
-                            ${
-                              !n.read
-                                ? "bg-blue-50/60 dark:bg-blue-500/10"
-                                : ""
+                      notifications.map(
+                        (n) => (
+                          <div
+                            key={n._id}
+                            onClick={() =>
+                              markAsRead(
+                                n._id
+                              )
                             }
-                          `}
-                        >
+                            className={`
+                              p-4 border-b border-gray-100 dark:border-gray-800
+                              cursor-pointer transition
+                              hover:bg-gray-50 dark:hover:bg-gray-800
+                              ${
+                                !n.read
+                                  ? "bg-blue-50/60 dark:bg-blue-500/10"
+                                  : ""
+                              }
+                            `}
+                          >
 
-                          <div className="flex items-start gap-3">
+                            <div className="flex items-start gap-3">
 
-                            <div
-                              className={`
-                                mt-1 w-2 h-2 rounded-full
-                                ${
-                                  n.read
-                                    ? "bg-gray-400"
-                                    : "bg-blue-500"
-                                }
-                              `}
-                            />
+                              <div
+                                className={`
+                                  mt-1 w-2 h-2 rounded-full
+                                  ${
+                                    n.read
+                                      ? "bg-gray-400"
+                                      : "bg-blue-500"
+                                  }
+                                `}
+                              />
 
-                            <div className="flex-1">
+                              <div className="flex-1">
 
-                              <h4 className="font-semibold text-sm text-gray-800 dark:text-white">
-                                {n.title}
-                              </h4>
+                                <h4 className="font-semibold text-sm text-gray-800 dark:text-white">
+                                  {
+                                    n.title
+                                  }
+                                </h4>
 
-                              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                                {n.message}
-                              </p>
+                                <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                                  {
+                                    n.message
+                                  }
+                                </p>
 
-                              <p className="text-xs text-gray-400 mt-2">
-                                {new Date(
-                                  n.createdAt
-                                ).toLocaleString()}
-                              </p>
+                                <p className="text-xs text-gray-400 mt-2">
+                                  {new Date(
+                                    n.createdAt
+                                  ).toLocaleString()}
+                                </p>
+
+                              </div>
 
                             </div>
 
                           </div>
-
-                        </div>
-                      ))
+                        )
+                      )
                     )}
 
                   </div>

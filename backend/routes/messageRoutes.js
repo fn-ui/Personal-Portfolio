@@ -10,9 +10,18 @@ const sendEmail = require("../utils/sendEmail");
 // ==========================
 router.post("/", async (req, res) => {
   try {
+    console.log("📩 Incoming message:", req.body);
+
     // CREATE MESSAGE
-    const msg = new Message(req.body);
+    const msg = new Message({
+      name: req.body.name,
+      email: req.body.email,
+      message: req.body.message,
+    });
+
     const saved = await msg.save();
+
+    console.log("✅ Message saved:", saved);
 
     // SOCKET INSTANCE
     const io = req.app.get("io");
@@ -22,33 +31,40 @@ router.post("/", async (req, res) => {
     // ==========================
     if (io) {
       io.emit("new_message", saved);
+      console.log("📡 new_message emitted");
     }
 
     // ==========================
     // CREATE NOTIFICATION
     // ==========================
     const notification = await Notification.create({
-      title: "New Contact Message",
-      message: `${saved.name} sent you a message`,
-      type: "message",
+      type: "info",
+      text: `${saved.name} sent you a message`,
       read: false,
     });
+
+    console.log("✅ Notification created:", notification);
 
     // ==========================
     // REALTIME NOTIFICATION EVENT
     // ==========================
     if (io) {
       io.emit("notification:new", notification);
+      console.log("📡 notification:new emitted");
     }
 
-    res.status(201).json(saved);
+    res.status(201).json({
+      success: true,
+      message: "Message sent successfully",
+      data: saved,
+    });
 
   } catch (error) {
     console.log("❌ CREATE MESSAGE ERROR:", error);
 
     res.status(500).json({
       success: false,
-      message: "Failed to create message",
+      error: error.message,
     });
   }
 });
@@ -87,6 +103,7 @@ router.delete("/:id", async (req, res) => {
     // REALTIME DELETE EVENT
     if (io) {
       io.emit("delete_message", req.params.id);
+      console.log("🗑️ delete_message emitted");
     }
 
     res.json({
@@ -123,6 +140,7 @@ router.put("/:id", async (req, res) => {
     // REALTIME UPDATE EVENT
     if (io) {
       io.emit("message_updated", updatedMessage);
+      console.log("✏️ message_updated emitted");
     }
 
     res.json(updatedMessage);
@@ -182,9 +200,8 @@ router.post("/reply/:id", async (req, res) => {
     // CREATE NOTIFICATION
     // ==========================
     const notification = await Notification.create({
-      title: "Message Replied",
-      message: `You replied to ${existingMessage.name}`,
-      type: "system",
+      type: "success",
+      text: `You replied to ${existingMessage.name}`,
       read: false,
     });
 
@@ -197,6 +214,9 @@ router.post("/reply/:id", async (req, res) => {
     if (io) {
       io.emit("message_updated", updated);
       io.emit("notification:new", notification);
+
+      console.log("📡 message_updated emitted");
+      console.log("📡 notification:new emitted");
     }
 
     console.log("📧 EMAIL SENT + MESSAGE UPDATED");
@@ -211,7 +231,7 @@ router.post("/reply/:id", async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Failed to send reply",
+      error: error.message,
     });
   }
 });
