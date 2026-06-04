@@ -82,40 +82,36 @@ function Dashboard() {
       setLoading(false);
     }
   };
+useEffect(() => {
+  const incrementViews = async () => {
+    try {
+      await API.post("/views/increment", {
+        source: "public",
+      });
+    } catch (err) {
+      console.log("INCREMENT VIEWS ERROR:", err);
+    }
+  };
 
-  // =========================
-  // USE EFFECTS
-  // =========================
+  incrementViews();
+}, []);
 
-  useEffect(() => {
-    const incrementViews = async () => {
-      try {
-        await API.post("/views/increment");
-      } catch (err) {
-        console.log(err);
-      }
-    };
+useEffect(() => {
+  const fetchViews = async () => {
+    try {
+      const res = await API.get("/views");
+      setViews(res.data.count);
+    } catch (err) {
+      console.log("FETCH VIEWS ERROR:", err);
+    }
+  };
 
-    incrementViews();
-  }, []);
+  fetchViews();
+}, []);
 
-  useEffect(() => {
-    const fetchViews = async () => {
-      try {
-        const res = await API.get("/views");
-        setViews(res.data.count);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    fetchViews();
-  }, []);
-
-  useEffect(() => {
-    fetchDashboardStats();
-  }, []);
-
+useEffect(() => {
+  fetchDashboardStats();
+}, []);
   // =========================
   // STATIC DATA
   // =========================

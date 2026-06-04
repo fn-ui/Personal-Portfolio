@@ -18,6 +18,11 @@ const app = express();
 const server = http.createServer(app);
 
 // ==========================
+// 🔥 IMPORTANT FIX (ADD THIS)
+// ==========================
+app.set("trust proxy", 1);
+
+// ==========================
 // MIDDLEWARE
 // ==========================
 app.use(cors({ origin: "*" }));
@@ -38,7 +43,6 @@ app.set("io", io);
 io.on("connection", (socket) => {
   console.log("🔌 Client connected:", socket.id);
 
-  // Optional: send a handshake event
   socket.emit("socket:connected", {
     message: "Connected to notification server",
   });
@@ -56,8 +60,6 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/testimonials", testimonialRoutes);
 app.use("/api/views", viewRoutes);
-
-// 🔔 NOTIFICATIONS ROUTE (PRODUCTION READY)
 app.use("/api/notifications", notificationRoutes);
 
 // ==========================

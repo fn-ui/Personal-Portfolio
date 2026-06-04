@@ -6,31 +6,51 @@ const getViews = async (req, res) => {
     let doc = await View.findOne();
 
     if (!doc) {
-      doc = await View.create({ count: 0, visitors: [] });
+      doc = await View.create({
+        count: 0,
+        visitors: [],
+      });
     }
 
     res.json(doc);
   } catch (error) {
+    console.error("GET VIEWS ERROR:", error);
     res.status(500).json({ message: error.message });
   }
 };
 
-// INCREMENT ONLY ONCE PER IP PER DAY
+// INCREMENT VIEWS
 const incrementViews = async (req, res) => {
   try {
     let doc = await View.findOne();
 
     if (!doc) {
-      doc = await View.create({ count: 0, visitors: [] });
+      doc = await View.create({
+        count: 0,
+        visitors: [],
+      });
     }
 
-    const ip =
+    const source = req.body?.source;
+
+    if (source !== "public") {
+      return res.json(doc);
+    }
+
+    const rawIp =
       req.headers["x-forwarded-for"] ||
-      req.socket.remoteAddress;
+      req.socket.remoteAddress ||
+      "";
+
+    const ip = rawIp.split(",")[0].trim();
 
     const today = new Date().toISOString().split("T")[0];
 
-    const alreadyVisited = doc.visitors.find(
+    if (!Array.isArray(doc.visitors)) {
+      doc.visitors = [];
+    }
+
+    const alreadyVisited = doc.visitors.some(
       (v) => v.ip === ip && v.date === today
     );
 
@@ -45,9 +65,13 @@ const incrementViews = async (req, res) => {
       await doc.save();
     }
 
-    res.json(doc);
+    return res.json(doc);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("INCREMENT VIEWS ERROR:", error);
+    res.status(500).json({
+      message: "Failed to increment views",
+      error: error.message,
+    });
   }
 };
 

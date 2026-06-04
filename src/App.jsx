@@ -23,7 +23,24 @@ import Messages from "./pages/admin/Messages";
 import AdminTestimonials from "./pages/admin/Testimonials";
 import Settings from "./pages/admin/Settings";
 
+// =========================
+// PUBLIC HOME PAGE
+// =========================
 function HomePage({ darkMode, setDarkMode }) {
+  
+  // ✅ VIEW TRACKING ONLY HERE (PUBLIC PAGE)
+  useEffect(() => {
+    const incrementViews = async () => {
+      try {
+        await API.post("/views/increment");
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    incrementViews();
+  }, []);
+
   return (
     <>
       <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
@@ -44,6 +61,9 @@ function HomePage({ darkMode, setDarkMode }) {
   );
 }
 
+// =========================
+// APP
+// =========================
 function App() {
   
   const [darkMode, setDarkMode] = useState(() => {
@@ -53,37 +73,29 @@ function App() {
       return savedTheme === "dark";
     }
 
-    // fallback to system preference
     return window.matchMedia("(prefers-color-scheme: dark)").matches;
   });
 
-  // ✅ FIX 2: single source of truth for DOM + storage
+  // DARK MODE SYNC
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
     localStorage.setItem("theme", darkMode ? "dark" : "light");
   }, [darkMode]);
-    //portfolio view counter//
-  useEffect(() => {
-      const incrementViews = async () => {
-        try {
-          await API.post("/views/increment");
-        } catch (err) {
-          console.log(err);
-        }
-      };
 
-      incrementViews();
-    }, []);
   return (
     <BrowserRouter>
       <ScrollProgressBar />
 
       <Routes>
+
         {/* PUBLIC WEBSITE */}
         <Route
           path="/"
           element={
-            <HomePage darkMode={darkMode} setDarkMode={setDarkMode} />
+            <HomePage
+              darkMode={darkMode}
+              setDarkMode={setDarkMode}
+            />
           }
         />
 
@@ -106,6 +118,7 @@ function App() {
           <Route path="testimonials" element={<AdminTestimonials />} />
           <Route path="settings" element={<Settings />} />
         </Route>
+
       </Routes>
     </BrowserRouter>
   );

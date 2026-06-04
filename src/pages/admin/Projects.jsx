@@ -258,15 +258,15 @@ function AdminProjects() {
   // =========================
   // FILTERED PROJECTS
   // =========================
-  const filteredProjects = projects.filter(
-    (project) =>
-      project.title
-        ?.toLowerCase()
-        .includes(search.toLowerCase()) ||
-      project.techStack
-        ?.toLowerCase()
-        .includes(search.toLowerCase())
+  const filteredProjects = projects.filter((project) => {
+  const query = search.toLowerCase().trim();
+
+  return (
+    project.title?.toLowerCase().includes(query) ||
+    project.techStack?.toLowerCase().includes(query) ||
+    project.description?.toLowerCase().includes(query)
   );
+});
 
   return (
     <div className="space-y-10">

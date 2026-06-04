@@ -166,8 +166,8 @@ const fetchTestimonials = async () => {
 
                 {/* MESSAGE */}
                 <p className="text-[15px] leading-8 text-slate-600 dark:text-slate-400">
-                  {item.feedback}
-                </p>
+                {item.message}
+              </p>
               </div>
 
               {/* USER */}
