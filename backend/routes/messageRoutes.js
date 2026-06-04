@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const Message = require("../models/Message");
+const Notification = require("../models/Notification");
 const sendEmail = require("../utils/sendEmail");
 
 // ==========================
@@ -9,16 +10,42 @@ const sendEmail = require("../utils/sendEmail");
 // ==========================
 router.post("/", async (req, res) => {
   try {
+    // CREATE MESSAGE
     const msg = new Message(req.body);
     const saved = await msg.save();
 
-    // 🔥 SOCKET: emit new message
+    // SOCKET INSTANCE
     const io = req.app.get("io");
-    if (io) io.emit("new_message", saved);
 
-    res.json(saved);
+    // ==========================
+    // REALTIME MESSAGE EVENT
+    // ==========================
+    if (io) {
+      io.emit("new_message", saved);
+    }
+
+    // ==========================
+    // CREATE NOTIFICATION
+    // ==========================
+    const notification = await Notification.create({
+      title: "New Contact Message",
+      message: `${saved.name} sent you a message`,
+      type: "message",
+      read: false,
+    });
+
+    // ==========================
+    // REALTIME NOTIFICATION EVENT
+    // ==========================
+    if (io) {
+      io.emit("notification:new", notification);
+    }
+
+    res.status(201).json(saved);
+
   } catch (error) {
-    console.log(error);
+    console.log("❌ CREATE MESSAGE ERROR:", error);
+
     res.status(500).json({
       success: false,
       message: "Failed to create message",
@@ -31,10 +58,15 @@ router.post("/", async (req, res) => {
 // ==========================
 router.get("/", async (req, res) => {
   try {
-    const messages = await Message.find().sort({ createdAt: -1 });
+    const messages = await Message.find().sort({
+      createdAt: -1,
+    });
+
     res.json(messages);
+
   } catch (error) {
-    console.log(error);
+    console.log("❌ FETCH MESSAGES ERROR:", error);
+
     res.status(500).json({
       success: false,
       message: "Failed to fetch messages",
@@ -49,16 +81,22 @@ router.delete("/:id", async (req, res) => {
   try {
     await Message.findByIdAndDelete(req.params.id);
 
-    // 🔥 SOCKET: emit delete event
+    // SOCKET INSTANCE
     const io = req.app.get("io");
-    if (io) io.emit("delete_message", req.params.id);
+
+    // REALTIME DELETE EVENT
+    if (io) {
+      io.emit("delete_message", req.params.id);
+    }
 
     res.json({
       success: true,
       message: "Message deleted successfully",
     });
+
   } catch (error) {
-    console.log(error);
+    console.log("❌ DELETE MESSAGE ERROR:", error);
+
     res.status(500).json({
       success: false,
       message: "Failed to delete message",
@@ -79,13 +117,19 @@ router.put("/:id", async (req, res) => {
       { new: true }
     );
 
-    // 🔥 SOCKET: emit update
+    // SOCKET INSTANCE
     const io = req.app.get("io");
-    if (io) io.emit("message_updated", updatedMessage);
+
+    // REALTIME UPDATE EVENT
+    if (io) {
+      io.emit("message_updated", updatedMessage);
+    }
 
     res.json(updatedMessage);
+
   } catch (error) {
-    console.log(error);
+    console.log("❌ UPDATE MESSAGE ERROR:", error);
+
     res.status(500).json({
       success: false,
       message: "Failed to update message",
@@ -100,8 +144,11 @@ router.post("/reply/:id", async (req, res) => {
   try {
     const { subject, message } = req.body;
 
-    const existingMessage = await Message.findById(req.params.id);
+    const existingMessage = await Message.findById(
+      req.params.id
+    );
 
+    // CHECK MESSAGE
     if (!existingMessage) {
       return res.status(404).json({
         success: false,
@@ -109,27 +156,48 @@ router.post("/reply/:id", async (req, res) => {
       });
     }
 
-    // Send email
+    // ==========================
+    // SEND EMAIL
+    // ==========================
     await sendEmail({
       to: existingMessage.email,
       subject,
       message,
     });
 
-    // Save reply
+    // ==========================
+    // SAVE REPLY
+    // ==========================
     existingMessage.replies.push({
       subject,
       message,
     });
 
-    // Update status
+    // UPDATE STATUS
     existingMessage.status = "Replied";
 
     const updated = await existingMessage.save();
 
-    // 🔥 SOCKET: emit updated message
+    // ==========================
+    // CREATE NOTIFICATION
+    // ==========================
+    const notification = await Notification.create({
+      title: "Message Replied",
+      message: `You replied to ${existingMessage.name}`,
+      type: "system",
+      read: false,
+    });
+
+    // SOCKET INSTANCE
     const io = req.app.get("io");
-    if (io) io.emit("message_updated", updated);
+
+    // ==========================
+    // REALTIME EVENTS
+    // ==========================
+    if (io) {
+      io.emit("message_updated", updated);
+      io.emit("notification:new", notification);
+    }
 
     console.log("📧 EMAIL SENT + MESSAGE UPDATED");
 

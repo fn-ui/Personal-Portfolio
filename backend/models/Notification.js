@@ -2,22 +2,21 @@ const mongoose = require("mongoose");
 
 const notificationSchema = new mongoose.Schema(
   {
-    title: {
+    // notification text
+    text: {
       type: String,
       required: true,
+      trim: true,
     },
 
-    message: {
-      type: String,
-      required: true,
-    },
-
+    // notification category
     type: {
       type: String,
-      enum: ["message", "project", "testimonial", "system"],
-      default: "system",
+      enum: ["info", "success", "warning", "error"],
+      default: "info",
     },
 
+    // read status
     read: {
       type: Boolean,
       default: false,
@@ -30,7 +29,9 @@ const notificationSchema = new mongoose.Schema(
       default: null,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 module.exports = mongoose.model("Notification", notificationSchema);

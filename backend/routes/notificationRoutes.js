@@ -8,16 +8,16 @@ const {
   markAllAsRead,
 } = require("../controllers/notificationsController");
 
-// GET
+// GET ALL NOTIFICATIONS
 router.get("/", getNotifications);
 
-// POST
+// CREATE NOTIFICATION
 router.post("/", createNotification);
 
-// PATCH single
+// MARK SINGLE AS READ
 router.patch("/:id/read", markAsRead);
 
-// PATCH all
+// MARK ALL AS READ
 router.patch("/mark-all-read", markAllAsRead);
 
 module.exports = router;

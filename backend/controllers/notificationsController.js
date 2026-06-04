@@ -1,56 +1,153 @@
 const Notification = require("../models/Notification");
 
-// GET ALL
+// ==========================
+// GET ALL NOTIFICATIONS
+// ==========================
 const getNotifications = async (req, res) => {
-  const notifications = await Notification.find()
-    .sort({ createdAt: -1 })
-    .limit(50);
+  try {
+    const notifications = await Notification.find()
+      .sort({ createdAt: -1 })
+      .limit(50);
 
-  res.json(notifications);
+    res.json(notifications);
+
+  } catch (error) {
+    console.log("❌ GET NOTIFICATIONS ERROR:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch notifications",
+    });
+  }
 };
 
-// CREATE
+// ==========================
+// CREATE NOTIFICATION
+// ==========================
 const createNotification = async (req, res) => {
-  const io = req.app.get("io");
+  try {
+    const io = req.app.get("io");
 
-  const { title, message, type } = req.body;
+    const {
+      text,
+      type = "info",
+    } = req.body;
 
-  const notification = await Notification.create({
-    title,
-    message,
-    type,
-  });
+    // VALIDATION
+    if (!text) {
+      return res.status(400).json({
+        success: false,
+        message: "Notification text is required",
+      });
+    }
 
-  // REALTIME PUSH
-  io.emit("notification:new", notification);
+    // CREATE
+    const notification = await Notification.create({
+      text,
+      type,
+      read: false,
+    });
 
-  res.status(201).json(notification);
+    // ==========================
+    // REAL-TIME PUSH
+    // ==========================
+    if (io) {
+      io.emit("notification:new", notification);
+    }
+
+    res.status(201).json(notification);
+
+  } catch (error) {
+    console.log("❌ CREATE NOTIFICATION ERROR:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to create notification",
+    });
+  }
 };
 
+// ==========================
 // MARK ONE AS READ
+// ==========================
 const markAsRead = async (req, res) => {
-  const io = req.app.get("io");
+  try {
+    const io = req.app.get("io");
 
-  const updated = await Notification.findByIdAndUpdate(
-    req.params.id,
-    { read: true },
-    { new: true }
-  );
+    const updated = await Notification.findByIdAndUpdate(
+      req.params.id,
+      {
+        read: true,
+      },
+      {
+        new: true,
+      }
+    );
 
-  io.emit("notification:updated", updated);
+    if (!updated) {
+      return res.status(404).json({
+        success: false,
+        message: "Notification not found",
+      });
+    }
 
-  res.json(updated);
+    // ==========================
+    // REAL-TIME UPDATE
+    // ==========================
+    if (io) {
+      io.emit("notification:updated", updated);
+    }
+
+    res.json(updated);
+
+  } catch (error) {
+    console.log("❌ MARK AS READ ERROR:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to update notification",
+    });
+  }
 };
 
+// ==========================
 // MARK ALL AS READ
+// ==========================
 const markAllAsRead = async (req, res) => {
-  const io = req.app.get("io");
+  try {
+    const io = req.app.get("io");
 
-  await Notification.updateMany({}, { read: true });
+    await Notification.updateMany(
+      {},
+      {
+        read: true,
+      }
+    );
 
-  io.emit("notification:all-read");
+    // FETCH UPDATED LIST
+    const notifications = await Notification.find()
+      .sort({ createdAt: -1 });
 
-  res.json({ message: "All marked as read" });
+    // ==========================
+    // REAL-TIME UPDATE
+    // ==========================
+    if (io) {
+      io.emit("notification:all-read", notifications);
+    }
+
+    res.json({
+      success: true,
+      message: "All notifications marked as read",
+    });
+
+  } catch (error) {
+    console.log("❌ MARK ALL AS READ ERROR:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to update notifications",
+    });
+  }
 };
 
 module.exports = {
