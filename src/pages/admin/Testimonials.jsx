@@ -56,7 +56,7 @@ function Testimonials() {
     try {
 
       const res = await API.get(
-        "/testimonials"
+        "/api/testimonials"
       );
 
       setTestimonials(res.data);

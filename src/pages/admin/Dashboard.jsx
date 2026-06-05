@@ -63,9 +63,9 @@ function Dashboard() {
       setLoading(true);
 
       const [projects, messages, testimonials] = await Promise.all([
-        API.get("/projects"),
-        API.get("/messages"),
-        API.get("/testimonials"),
+        API.get("api/projects"),
+        API.get("api/messages"),
+        API.get("api/testimonials"),
       ]);
 
       setStats({
@@ -85,7 +85,7 @@ function Dashboard() {
 useEffect(() => {
   const incrementViews = async () => {
     try {
-      await API.post("/views/increment", {
+      await API.post("/api/views/increment", {
         source: "public",
       });
     } catch (err) {
@@ -99,7 +99,7 @@ useEffect(() => {
 useEffect(() => {
   const fetchViews = async () => {
     try {
-      const res = await API.get("/views");
+      const res = await API.get("api/views");
       setViews(res.data.count);
     } catch (err) {
       console.log("FETCH VIEWS ERROR:", err);

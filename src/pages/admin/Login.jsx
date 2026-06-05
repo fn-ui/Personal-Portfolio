@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API from "../../api/axios";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -16,30 +17,26 @@ function Login() {
     setError("");
 
     try {
-      const API = import.meta.env.VITE_API_URL;
-
-      const response = await fetch(`${API}/api/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await API.post(
+        "/api/auth/login",
+        {
           email,
           password,
-        }),
-      });
+        }
+      );
 
-      const data = await response.json();
+      localStorage.setItem(
+        "token",
+        response.data.token
+      );
 
-      if (!response.ok) {
-        throw new Error(data.message || "Login failed");
-      }
-
-      localStorage.setItem("token", data.token);
       navigate("/admin/dashboard");
 
     } catch (err) {
-      setError(err.message || "Invalid email or password");
+      setError(
+        err.response?.data?.message ||
+        "Invalid email or password"
+      );
     }
 
     setLoading(false);
