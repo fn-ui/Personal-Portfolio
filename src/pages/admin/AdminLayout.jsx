@@ -34,9 +34,7 @@ console.log(
   import.meta.env.VITE_SOCKET_URL
 );
 
-const socket = io(
-  import.meta.env.VITE_SOCKET_URL
-);
+
 
 function AdminLayout() {
   const navigate = useNavigate();
@@ -127,6 +125,9 @@ function AdminLayout() {
   // =========================
   useEffect(() => {
     // CONNECT
+    const socket = io(
+  import.meta.env.VITE_SOCKET_URL
+    );
     socket.on("connect", () => {
       console.log(
         "🟢 Socket connected:",

@@ -16,19 +16,18 @@ function Login() {
     setError("");
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        }
-      );
+      const API = import.meta.env.VITE_API_URL;
+
+      const response = await fetch(`${API}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
 
       const data = await response.json();
 
@@ -36,10 +35,7 @@ function Login() {
         throw new Error(data.message || "Login failed");
       }
 
-      // SAVE JWT TOKEN
       localStorage.setItem("token", data.token);
-
-      // REDIRECT
       navigate("/admin/dashboard");
 
     } catch (err) {
@@ -58,7 +54,6 @@ function Login() {
       >
 
         <div className="mb-8 text-center">
-
           <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
             Admin Login
           </h2>
@@ -66,7 +61,6 @@ function Login() {
           <p className="mt-2 text-gray-500 dark:text-gray-400">
             Access your portfolio dashboard
           </p>
-
         </div>
 
         {error && (
@@ -75,7 +69,6 @@ function Login() {
           </p>
         )}
 
-        {/* EMAIL */}
         <input
           type="email"
           placeholder="Email address"
@@ -85,7 +78,6 @@ function Login() {
           required
         />
 
-        {/* PASSWORD */}
         <input
           type="password"
           placeholder="Password"
@@ -95,7 +87,6 @@ function Login() {
           required
         />
 
-        {/* BUTTON */}
         <button
           type="submit"
           disabled={loading}
