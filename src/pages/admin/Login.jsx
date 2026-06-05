@@ -15,10 +15,12 @@ function Login() {
 
     setLoading(true);
     setError("");
+   
 
     try {
+      console.log(email, password);
       const response = await API.post(
-        "/api/auth/login",
+        "/auth/login",
         {
           email,
           password,

@@ -35,7 +35,7 @@ function Messages() {
     try {
       setLoading(true);
 
-      const res = await API.get("api/messages");
+      const res = await API.get("/messages");
 
       // ✅ FIXED: backend returns array directly
       setMessages(Array.isArray(res.data) ? res.data : []);
@@ -81,7 +81,7 @@ function Messages() {
     if (!window.confirm("Delete this message?")) return;
 
     try {
-      await API.delete(`/api/messages/${id}`);
+      await API.delete(`/messages/${id}`);
       toast.success("Message deleted");
     } catch (err) {
       toast.error("Delete failed");

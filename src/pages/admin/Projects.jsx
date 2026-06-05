@@ -70,7 +70,7 @@ function AdminProjects() {
 
       setLoading(true);
 
-      const res = await API.get("api/projects");
+      const res = await API.get("projects");
 
       setProjects(res.data);
 
@@ -149,7 +149,7 @@ function AdminProjects() {
       if (editingId) {
 
         await API.put(
-          `/api/projects/${editingId}`,
+          `/projects/${editingId}`,
           formData
         );
 
@@ -162,7 +162,7 @@ function AdminProjects() {
       // CREATE
       else {
 
-        await API.post("/api/projects", formData);
+        await API.post("/projects", formData);
 
         toast.success(
           "Project added successfully"
@@ -209,7 +209,7 @@ function AdminProjects() {
     try {
 
       await API.delete(
-        `/api/projects/${projectToDelete}`
+        `/projects/${projectToDelete}`
       );
 
       toast.success(

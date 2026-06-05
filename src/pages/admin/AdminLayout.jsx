@@ -104,7 +104,7 @@ function AdminLayout() {
     async () => {
       try {
         const res = await API.get(
-          "api/notifications"
+          "notifications"
         );
 
         setNotifications(res.data || []);
@@ -246,7 +246,7 @@ function AdminLayout() {
       );
 
       await API.patch(
-        `/api/notifications/${id}/read`
+        `/notifications/${id}/read`
       );
     } catch (err) {
       console.log(
@@ -262,7 +262,7 @@ function AdminLayout() {
   const markAllAsRead = async () => {
     try {
       await API.patch(
-        "/api/notifications/mark-all-read"
+        "/notifications/mark-all-read"
       );
 
       setNotifications((prev) =>
