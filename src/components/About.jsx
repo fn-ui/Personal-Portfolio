@@ -56,12 +56,12 @@ function About() {
   return (
     <section
       id="about"
-      className="section-shell bg-[#fff8ef] px-6 py-20 text-[#241423] dark:bg-slate-900 dark:text-white"
+      className="section-shell bg-[#fff8ef] px-6 pb-20 pt-24 text-[#241423] before:hidden dark:bg-slate-950 dark:text-white lg:pt-28"
     >
-      <div className="pointer-events-none absolute left-1/2 top-8 hidden h-[calc(100%-2rem)] -translate-x-1/2 lg:block">
-        <div className="h-full w-px bg-[#eadccf]" />
-        <div className="absolute left-1/2 top-0 h-16 w-1 -translate-x-1/2 rounded-full bg-[#7c6a61]" />
-        <div className="absolute -top-4 left-1/2 grid h-8 w-8 -translate-x-1/2 place-items-center rounded-full border border-[#eadccf] bg-[#fff8ef] text-[#c65f4a] shadow-sm">
+      <div className="pointer-events-none absolute left-1/2 top-24 hidden h-[calc(100%-7rem)] -translate-x-1/2 lg:block">
+        <div className="h-full w-px bg-[#eadccf] dark:bg-slate-800" />
+        <div className="absolute left-1/2 top-10 h-16 w-1 -translate-x-1/2 rounded-full bg-[#7c6a61] dark:bg-slate-600" />
+        <div className="absolute top-0 left-1/2 grid h-8 w-8 -translate-x-1/2 place-items-center rounded-full border border-[#eadccf] bg-[#fff8ef] text-[#c65f4a] shadow-sm dark:border-slate-800 dark:bg-slate-950">
           <span className="h-1.5 w-1.5 rounded-full bg-current" />
         </div>
       </div>

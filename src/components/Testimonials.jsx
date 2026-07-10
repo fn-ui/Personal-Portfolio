@@ -97,7 +97,7 @@ function Testimonials() {
               Kind feedback from people I have worked with.
             </h2>
           </div>
-          <p className="max-w-md text-[#6d5b53]">
+          <p className="max-w-md text-[#6d5b53] dark:text-slate-400">
             The goal is always the same: calm collaboration, thoughtful
             execution, and a final product that feels considered.
           </p>
@@ -130,10 +130,10 @@ function Testimonials() {
                   <Quote className="h-7 w-7 text-[#c65f4a]/30" />
                 </div>
 
-                <p className="leading-8 text-[#6d5b53]">{item.message || item.feedback}</p>
+                <p className="leading-8 text-[#6d5b53] dark:text-slate-300">{item.message || item.feedback}</p>
               </div>
 
-              <div className="mt-8 flex items-center gap-4 border-t border-[#f1e4d8] pt-5">
+              <div className="mt-8 flex items-center gap-4 border-t border-[#f1e4d8] pt-5 dark:border-slate-800">
                 {item.image ? (
                   <img
                     src={item.image}
@@ -152,7 +152,7 @@ function Testimonials() {
                 )}
                 <div>
                   <h3 className="font-bold">{item.name}</h3>
-                  <p className="text-sm text-[#8b776d]">{item.role}</p>
+                  <p className="text-sm text-[#8b776d] dark:text-slate-400">{item.role}</p>
                 </div>
               </div>
             </motion.article>
@@ -165,11 +165,11 @@ function Testimonials() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45 }}
           viewport={{ once: true }}
-          className="mx-auto mt-14 max-w-4xl rounded-[1.75rem] border border-[#eadccf] bg-white/90 p-6 shadow-xl shadow-[#7a2e53]/5 backdrop-blur md:p-8"
+          className="mx-auto mt-14 max-w-4xl rounded-[1.75rem] border border-[#eadccf] bg-white/90 p-6 shadow-xl shadow-[#7a2e53]/5 backdrop-blur dark:border-slate-800 dark:bg-slate-950/90 md:p-8"
         >
           <div className="mb-6">
             <p className="section-eyebrow">Leave Feedback</p>
-            <h3 className="mt-2 text-2xl font-bold">Share your experience</h3>
+            <h3 className="mt-2 text-2xl font-bold text-[#241423] dark:text-white">Share your experience</h3>
           </div>
 
           <div className="grid gap-5 md:grid-cols-2">
@@ -183,7 +183,7 @@ function Testimonials() {
             placeholder="Write your feedback..."
             value={form.message}
             onChange={(event) => updateField("message", event.target.value)}
-            className="mt-5 w-full rounded-xl border border-[#eadccf] bg-[#fffaf3] p-4 outline-none focus:border-[#c65f4a] focus:ring-4 focus:ring-[#f3c8bb]/40"
+            className="mt-5 w-full rounded-xl border border-[#eadccf] bg-[#fffaf3] p-4 outline-none focus:border-[#c65f4a] focus:ring-4 focus:ring-[#f3c8bb]/40 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder:text-slate-500 dark:focus:ring-[#c65f4a]/20"
           />
 
           <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
@@ -210,7 +210,7 @@ function Testimonials() {
           </div>
 
           {notice && (
-            <p className="mt-5 rounded-xl bg-[#fff1e8] px-4 py-3 text-sm text-[#7a2e53]">
+            <p className="mt-5 rounded-xl bg-[#fff1e8] px-4 py-3 text-sm text-[#7a2e53] dark:bg-[#c65f4a]/10 dark:text-[#f4a391]">
               {notice}
             </p>
           )}
@@ -227,7 +227,7 @@ function Input({ value, onChange, placeholder }) {
       placeholder={placeholder}
       value={value}
       onChange={(event) => onChange(event.target.value)}
-      className="rounded-xl border border-[#eadccf] bg-[#fffaf3] p-4 outline-none focus:border-[#c65f4a] focus:ring-4 focus:ring-[#f3c8bb]/40"
+      className="rounded-xl border border-[#eadccf] bg-[#fffaf3] p-4 outline-none focus:border-[#c65f4a] focus:ring-4 focus:ring-[#f3c8bb]/40 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder:text-slate-500 dark:focus:ring-[#c65f4a]/20"
     />
   );
 }

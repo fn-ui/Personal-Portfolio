@@ -61,7 +61,7 @@ function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="rounded-[1.75rem] border border-[#eadccf] bg-[#241423] p-7 text-white shadow-xl shadow-[#7a2e53]/10"
+          className="rounded-[1.75rem] border border-[#eadccf] bg-[#241423] p-7 text-white shadow-xl shadow-[#7a2e53]/10 dark:border-slate-800 dark:bg-[#1f1020]"
         >
           <p className="section-eyebrow">Contact</p>
           <h2 className="mt-3 text-4xl font-bold tracking-tight md:text-5xl">
@@ -84,7 +84,7 @@ function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.08 }}
           viewport={{ once: true }}
-          className="rounded-[1.75rem] border border-[#eadccf] bg-white p-6 shadow-xl shadow-[#7a2e53]/5 md:p-8"
+          className="rounded-[1.75rem] border border-[#eadccf] bg-white p-6 shadow-xl shadow-[#7a2e53]/5 dark:border-slate-800 dark:bg-slate-950 md:p-8"
         >
           <div className="grid gap-5 md:grid-cols-2">
             <Field label="Full Name" icon={FaUser}>
@@ -111,7 +111,7 @@ function Contact() {
           </div>
 
           <div className="mt-5">
-            <label className="mb-2 block text-sm font-semibold text-[#5f4d55]">
+            <label className="mb-2 block text-sm font-semibold text-[#5f4d55] dark:text-slate-300">
               Message
             </label>
             <textarea
@@ -120,7 +120,7 @@ function Contact() {
               maxLength={1000}
               value={form.message}
               onChange={(event) => updateField("message", event.target.value)}
-              className="w-full rounded-xl border border-[#eadccf] bg-[#fffaf3] p-4 outline-none transition focus:border-[#c65f4a] focus:ring-4 focus:ring-[#f3c8bb]/40"
+              className="w-full rounded-xl border border-[#eadccf] bg-[#fffaf3] p-4 outline-none transition focus:border-[#c65f4a] focus:ring-4 focus:ring-[#f3c8bb]/40 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder:text-slate-500 dark:focus:ring-[#c65f4a]/20"
               placeholder="Tell me about your project, goals, timeline, or the role you are hiring for."
             />
           </div>
@@ -129,8 +129,8 @@ function Contact() {
             <p
               className={`mt-5 rounded-xl px-4 py-3 text-sm font-medium ${
                 notice.type === "success"
-                  ? "bg-emerald-50 text-emerald-700"
-                  : "bg-rose-50 text-rose-700"
+                  ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300"
+                  : "bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-300"
               }`}
             >
               {notice.text}
@@ -167,11 +167,11 @@ function ContactItem({ icon: Icon, label, value }) {
 function Field({ label, icon: Icon, children }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-sm font-semibold text-[#5f4d55]">
+      <span className="mb-2 block text-sm font-semibold text-[#5f4d55] dark:text-slate-300">
         {label}
       </span>
       <div className="relative">
-        <Icon className="absolute left-4 top-1/2 -translate-y-1/2 text-[#b4a095]" />
+        <Icon className="absolute left-4 top-1/2 -translate-y-1/2 text-[#b4a095] dark:text-slate-500" />
         {children}
       </div>
     </label>

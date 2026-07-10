@@ -19,7 +19,7 @@ function Hero() {
         className="absolute inset-0 h-full w-full object-cover"
       />
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(28,17,29,0.86)_0%,rgba(36,20,35,0.66)_34%,rgba(88,44,57,0.24)_62%,rgba(255,248,239,0.06)_100%)]" />
-      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-[linear-gradient(0deg,#fff8ef_0%,rgba(255,248,239,0.86)_26%,rgba(42,22,35,0.34)_62%,rgba(42,22,35,0)_100%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-[38%] bg-[linear-gradient(0deg,#fff8ef_0%,rgba(255,248,239,0.9)_22%,rgba(255,248,239,0.56)_43%,rgba(42,22,35,0.2)_72%,rgba(42,22,35,0)_100%)] dark:bg-[linear-gradient(0deg,#020617_0%,rgba(2,6,23,0.88)_22%,rgba(2,6,23,0.54)_43%,rgba(42,22,35,0.22)_72%,rgba(42,22,35,0)_100%)]" />
 
       <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col justify-between px-6 pb-6 pt-28 sm:px-8 lg:pt-32">
         <motion.div

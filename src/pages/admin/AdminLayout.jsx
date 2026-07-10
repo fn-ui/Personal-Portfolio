@@ -66,6 +66,9 @@ function AdminLayout() {
   const [notifications, setNotifications] =
     useState([]);
 
+  const [searchTerm, setSearchTerm] =
+    useState("");
+
   // =========================
   // DARK MODE
   // =========================
@@ -97,6 +100,7 @@ function AdminLayout() {
   useEffect(() => {
     setSidebarOpen(false);
     setShowNotifications(false);
+    setSearchTerm("");
   }, [location.pathname]);
 
   // =========================
@@ -446,6 +450,30 @@ function AdminLayout() {
     },
   ];
 
+  const searchResults = navLinks.filter(
+    (link) => {
+      const query =
+        searchTerm.toLowerCase().trim();
+
+      if (!query) return false;
+
+      return (
+        link.name
+          .toLowerCase()
+          .includes(query) ||
+        link.path
+          .replace("/admin/", "")
+          .replace("/admin", "dashboard")
+          .includes(query)
+      );
+    }
+  );
+
+  const handleSearchSelect = (path) => {
+    navigate(path);
+    setSearchTerm("");
+  };
+
   return (
     <div className="flex min-h-screen bg-[#fff8ef] text-[#241423] dark:bg-slate-950 dark:text-white">
 
@@ -620,14 +648,87 @@ function AdminLayout() {
           <div className="flex gap-4 items-center">
 
             {/* SEARCH */}
-            <div className="hidden md:flex items-center bg-white dark:bg-slate-900 px-4 py-2 rounded-2xl w-72 border border-[#eadccf] dark:border-slate-800">
+            <div className="relative hidden md:block w-72">
 
-              <Search size={18} />
+              <div className="flex items-center bg-white dark:bg-slate-900 px-4 py-2 rounded-2xl border border-[#eadccf] dark:border-slate-800 focus-within:border-[#c65f4a] focus-within:ring-4 focus-within:ring-[#f3c8bb]/35">
+                <Search
+                  size={18}
+                  className="text-[#7c6a61] dark:text-slate-400"
+                />
 
-              <input
-                className="bg-transparent outline-none ml-2 w-full text-sm"
-                placeholder="Search..."
-              />
+                <input
+                  value={searchTerm}
+                  onChange={(event) =>
+                    setSearchTerm(
+                      event.target.value
+                    )
+                  }
+                  onKeyDown={(event) => {
+                    if (
+                      event.key === "Enter" &&
+                      searchResults[0]
+                    ) {
+                      handleSearchSelect(
+                        searchResults[0].path
+                      );
+                    }
+                  }}
+                  className="bg-transparent outline-none ml-2 w-full text-sm text-[#241423] placeholder:text-[#9a897f] dark:text-white dark:placeholder:text-slate-500"
+                  placeholder="Search admin pages..."
+                />
+
+                {searchTerm && (
+                  <button
+                    type="button"
+                    aria-label="Clear search"
+                    onClick={() =>
+                      setSearchTerm("")
+                    }
+                    className="ml-2 rounded-full p-1 text-[#7c6a61] transition hover:bg-[#fbe3dc] hover:text-[#c65f4a] dark:text-slate-400 dark:hover:bg-slate-800"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+
+              {searchTerm && (
+                <div className="absolute left-0 right-0 top-full z-50 mt-3 overflow-hidden rounded-2xl border border-[#eadccf] bg-white shadow-2xl shadow-[#7a2e53]/10 dark:border-slate-800 dark:bg-slate-950">
+                  {searchResults.length > 0 ? (
+                    searchResults.map(
+                      ({
+                        name,
+                        path,
+                        icon,
+                      }) => (
+                        <button
+                          key={path}
+                          type="button"
+                          onMouseDown={(event) =>
+                            event.preventDefault()
+                          }
+                          onClick={() =>
+                            handleSearchSelect(
+                              path
+                            )
+                          }
+                          className="flex w-full items-center gap-3 border-b border-[#f1e4d8] px-4 py-3 text-left text-sm font-semibold text-[#5f4d55] transition last:border-b-0 hover:bg-[#fff8ef] dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-900"
+                        >
+                          <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#fbe3dc] text-[#c65f4a] dark:bg-[#c65f4a]/10">
+                            {icon}
+                          </span>
+                          <span>
+                            {name}
+                          </span>
+                        </button>
+                      )
+                    )
+                  ) : (
+                    <div className="px-4 py-5 text-sm text-[#7c6a61] dark:text-slate-400">
+                      No admin pages match your search.
+                    </div>
+                  )}
+                </div>
+              )}
 
             </div>
 

@@ -17,11 +17,11 @@
 
   .section-shell::before {
     content: "";
-    @apply pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#eadccf] to-transparent;
+    @apply pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#eadccf] to-transparent dark:via-slate-800;
   }
 
   .surface-card {
-    @apply rounded-[1.5rem] border border-[#eadccf] bg-white shadow-sm shadow-[#7a2e53]/5;
+    @apply rounded-[1.5rem] border border-[#eadccf] bg-white shadow-sm shadow-[#7a2e53]/5 dark:border-slate-800 dark:bg-slate-950;
   }
 
   .warm-panel {
@@ -52,6 +52,13 @@ body {
     radial-gradient(circle at 8% 18%, rgba(198, 95, 74, 0.08), transparent 28rem),
     radial-gradient(circle at 92% 48%, rgba(122, 46, 83, 0.06), transparent 30rem),
     #fff8ef;
+}
+
+.dark body {
+  background:
+    radial-gradient(circle at 8% 18%, rgba(198, 95, 74, 0.08), transparent 28rem),
+    radial-gradient(circle at 92% 48%, rgba(244, 163, 145, 0.05), transparent 30rem),
+    #020617;
 }
 
 body::-webkit-scrollbar {
