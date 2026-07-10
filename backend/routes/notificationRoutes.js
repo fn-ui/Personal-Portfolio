@@ -14,10 +14,10 @@ router.get("/", getNotifications);
 // CREATE NOTIFICATION
 router.post("/", createNotification);
 
-// MARK SINGLE AS READ
-router.patch("/:id/read", markAsRead);
-
 // MARK ALL AS READ
 router.patch("/mark-all-read", markAllAsRead);
+
+// MARK SINGLE AS READ
+router.patch("/:id/read", markAsRead);
 
 module.exports = router;

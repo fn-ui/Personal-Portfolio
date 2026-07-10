@@ -1,35 +1,16 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
+const authController = require("../controllers/authController");
+const { verifyToken } = require("../middleware/auth");
 
 const router = express.Router();
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+// POST /api/auth/login
+router.post("/login", authController.login);
 
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+// POST /api/auth/refresh
+router.post("/refresh", authController.refreshToken);
 
-  console.log("FROM FRONTEND:", email, password);
-  console.log("ENV:", ADMIN_EMAIL, ADMIN_PASSWORD);
-  console.log("JWT:", process.env.JWT_SECRET);
-
-
-  if (
-    email !== ADMIN_EMAIL ||
-    password !== ADMIN_PASSWORD
-  ) {
-    return res.status(401).json({
-      message: "Invalid credentials",
-    });
-  }
-
-  const token = jwt.sign(
-    { email },
-    process.env.JWT_SECRET,
-    { expiresIn: "7d" }
-  );
-
-  res.json({ token });
-});
+// GET /api/auth/verify
+router.get("/verify", verifyToken, authController.verify);
 
 module.exports = router;

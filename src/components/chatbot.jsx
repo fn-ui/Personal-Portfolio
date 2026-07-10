@@ -1,80 +1,67 @@
 import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { FaMagic, FaMinus, FaPaperPlane, FaRobot, FaTimes, FaTrash } from "react-icons/fa";
 
-import {
-  FaRobot,
-  FaTimes,
-  FaPaperPlane,
-  FaMinus,
-  FaTrash,
-  FaMagic, // ✅ FIX: replaced FaSparkles
-} from "react-icons/fa";
-
-import { motion, AnimatePresence } from "framer-motion";
-
-/* TIME FORMAT */
-const getTime = () => {
-  return new Date().toLocaleTimeString([], {
+const getTime = () =>
+  new Date().toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
   });
-};
 
-/* INITIAL MESSAGES */
 const initialMessages = [
   {
     sender: "bot",
-    text: "Hi 👋 I'm Faith's portfolio assistant.",
+    text: "Hi, I'm Faith's portfolio assistant.",
     time: getTime(),
   },
   {
     sender: "bot",
-    text: "Ask me about skills, projects, services, or internships.",
+    text: "Ask me about skills, projects, services, or availability.",
     time: getTime(),
   },
 ];
 
-/* FAQ */
 const faq = [
   {
     keywords: ["skills", "tech", "stack"],
     responses: [
-      "Faith specializes in React, Tailwind CSS, JavaScript, HTML, Python, and responsive frontend development.",
-      "Faith works with React, Tailwind CSS, JavaScript, HTML, and modern UI technologies.",
+      "Faith works with React, Tailwind CSS, JavaScript, Node.js, Express, and MongoDB.",
+      "Faith focuses on responsive interfaces, clean React structure, API integration, and admin dashboards.",
     ],
   },
   {
     keywords: ["projects", "portfolio", "work"],
     responses: [
-      "Faith has built a personal portfolio website and the Bellebliss fashion website.",
-      "Featured projects include a responsive portfolio and an e-commerce clothing website.",
+      "Featured work includes this portfolio system, admin dashboard workflows, and responsive business websites.",
+      "Faith builds polished project showcases, dashboards, and mobile-friendly web experiences.",
     ],
   },
   {
     keywords: ["contact", "email", "github", "linkedin"],
     responses: [
-      "You can contact Faith through the contact section or social links.",
-      "Reach out using the contact form or via GitHub and LinkedIn.",
+      "You can contact Faith through the contact form or by email at fn0740839@gmail.com.",
+      "Use the contact section for project inquiries, collaborations, or role opportunities.",
     ],
   },
   {
     keywords: ["services", "hire", "freelance"],
     responses: [
-      "Faith offers frontend web development and responsive UI design services.",
-      "Faith works on modern websites, portfolios, and responsive web applications.",
+      "Faith offers frontend development, admin dashboards, UI polish, and responsive builds.",
+      "Faith can help with professional websites, portfolios, landing pages, and connected web apps.",
     ],
   },
   {
-    keywords: ["internship", "available"],
+    keywords: ["internship", "available", "availability"],
     responses: [
-      "Faith is currently available for internships and collaborations.",
-      "Faith is open to internship opportunities and frontend projects.",
+      "Faith is open to selected projects, internships, and collaboration opportunities.",
+      "Faith is available for frontend and full-stack web opportunities.",
     ],
   },
   {
     keywords: ["hello", "hi", "hey"],
     responses: [
-      "Hello 👋 Nice to meet you!",
-      "Hi there 👋 Feel free to ask anything about the portfolio.",
+      "Hello. Nice to meet you.",
+      "Hi there. Feel free to ask anything about the portfolio.",
     ],
   },
 ];
@@ -84,8 +71,6 @@ function ChatBot() {
   const [minimized, setMinimized] = useState(false);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
-  const [showPopup, setShowPopup] = useState(true);
-
   const messagesEndRef = useRef(null);
 
   const [messages, setMessages] = useState(() => {
@@ -102,42 +87,29 @@ function ChatBot() {
   }, [messages]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({
-      behavior: "smooth",
-    });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, typing]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowPopup(false);
-    }, 5000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const getRandomReply = (responses) => {
-    return responses[Math.floor(Math.random() * responses.length)];
-  };
+  const getRandomReply = (responses) =>
+    responses[Math.floor(Math.random() * responses.length)];
 
   const handleSend = () => {
     if (!input.trim()) return;
 
     const text = input.toLowerCase();
-
     const userMessage = {
       sender: "user",
-      text: input,
+      text: input.trim(),
       time: getTime(),
     };
 
     setMessages((prev) => [...prev, userMessage]);
-
     setInput("");
     setTyping(true);
 
     setTimeout(() => {
       let botReply =
-        "I'm not sure how to answer that yet. Try asking about skills, projects, or contact information.";
+        "I am not sure how to answer that yet. Try asking about skills, projects, services, or contact information.";
 
       for (const item of faq) {
         if (item.keywords.some((keyword) => text.includes(keyword))) {
@@ -146,16 +118,16 @@ function ChatBot() {
         }
       }
 
-      const botMessage = {
-        sender: "bot",
-        text: botReply,
-        time: getTime(),
-      };
-
-      setMessages((prev) => [...prev, botMessage]);
-
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: "bot",
+          text: botReply,
+          time: getTime(),
+        },
+      ]);
       setTyping(false);
-    }, 900);
+    }, 700);
   };
 
   const clearChat = () => {
@@ -168,82 +140,61 @@ function ChatBot() {
 
   return (
     <>
-      <AnimatePresence>
-        {showPopup && !open && (
-          <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed bottom-24 right-5 z-50 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-700 shadow-2xl"
-          >
-            👋 Need help? Chat with me!
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <motion.button
-        whileHover={{ scale: 1.08 }}
+        whileHover={{ scale: 1.06 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => {
           setOpen(!open);
           setMinimized(false);
         }}
-        className="fixed bottom-5 right-5 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r from-blue-600 to-sky-500 text-white shadow-[0_15px_40px_rgba(37,99,235,0.35)]"
+        aria-label={open ? "Close portfolio assistant" : "Open portfolio assistant"}
+        className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#c65f4a] text-white shadow-lg shadow-[#c65f4a]/30 hover:bg-[#ad503e]"
       >
-        {open ? <FaTimes size={20} /> : <FaRobot size={22} />}
+        {open ? <FaTimes size={18} /> : <FaRobot size={20} />}
       </motion.button>
 
       <AnimatePresence>
         {open && !minimized && (
           <motion.div
-            initial={{ opacity: 0, y: 40, scale: 0.95 }}
+            initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 40, scale: 0.95 }}
-            className="fixed bottom-24 right-5 z-[9999] flex h-[500px] w-[340px] max-w-[92vw] flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-2xl"
+            exit={{ opacity: 0, y: 24, scale: 0.96 }}
+            className="fixed bottom-24 right-5 z-[9999] flex h-[500px] w-[340px] max-w-[92vw] flex-col overflow-hidden rounded-2xl border border-[#eadccf] bg-white shadow-2xl"
           >
-            {/* HEADER */}
-            <div className="relative overflow-hidden border-b border-slate-200 bg-gradient-to-r from-blue-600 to-sky-500 p-5 text-white">
-              <div className="relative z-10 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-md">
-                    <FaRobot size={18} />
+            <div className="border-b border-[#eadccf] bg-[#241423] p-4 text-white">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#c65f4a]">
+                    <FaRobot size={17} />
                   </div>
-
                   <div>
                     <h3 className="font-bold">Portfolio Assistant</h3>
-                    <div className="flex items-center gap-2 text-sm text-blue-100">
-                      <span className="h-2 w-2 animate-pulse rounded-full bg-green-300" />
-                      Online
-                    </div>
+                    <p className="text-xs text-[#d7c7ba]">Online</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 text-sm text-blue-100">
-                  <button onClick={() => setMinimized(true)}>
+                <div className="flex items-center gap-3 text-sm text-[#d7c7ba]">
+                  <button aria-label="Minimize chat" onClick={() => setMinimized(true)}>
                     <FaMinus />
                   </button>
-
-                  <button onClick={clearChat}>
+                  <button aria-label="Clear chat" onClick={clearChat}>
                     <FaTrash />
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* MESSAGES */}
-            <div className="flex-1 space-y-5 overflow-y-auto bg-slate-50 px-4 py-5">
+            <div className="flex-1 space-y-4 overflow-y-auto bg-[#fff8ef] px-4 py-5">
               {messages.map((msg, index) => (
                 <div
-                  key={index}
-                  className={`flex ${
-                    msg.sender === "user" ? "justify-end" : "justify-start"
-                  }`}
+                  key={`${msg.time}-${index}`}
+                  className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[85%] rounded-3xl px-4 py-3 text-sm shadow-sm ${
+                    className={`max-w-[85%] rounded-xl px-4 py-3 text-sm shadow-sm ${
                       msg.sender === "user"
-                        ? "bg-gradient-to-r from-blue-600 to-sky-500 text-white"
-                        : "border border-slate-200 bg-white text-slate-700"
+                        ? "bg-[#7a2e53] text-white"
+                        : "border border-[#eadccf] bg-white text-[#5f4d55]"
                     }`}
                   >
                     <p>{msg.text}</p>
@@ -254,11 +205,10 @@ function ChatBot() {
                 </div>
               ))}
 
-              {/* TYPING */}
               {typing && (
                 <div className="flex justify-start">
-                  <div className="rounded-3xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-500 shadow-sm flex items-center gap-2">
-                    <FaMagic className="text-blue-500" /> {/* ✅ FIX HERE */}
+                  <div className="flex items-center gap-2 rounded-xl border border-[#eadccf] bg-white px-4 py-3 text-sm text-[#6d5b53] shadow-sm">
+                    <FaMagic className="text-[#c65f4a]" />
                     Typing...
                   </div>
                 </div>
@@ -267,22 +217,21 @@ function ChatBot() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* INPUT */}
-            <div className="border-t border-slate-200 bg-white p-4">
-              <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+            <div className="border-t border-[#eadccf] bg-white p-4">
+              <div className="flex items-center gap-3 rounded-xl border border-[#eadccf] bg-[#fffaf3] px-4 py-3">
                 <input
                   value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                  onChange={(event) => setInput(event.target.value)}
+                  onKeyDown={(event) => event.key === "Enter" && handleSend()}
                   className="flex-1 bg-transparent text-sm outline-none"
                   placeholder="Ask something..."
                 />
-
                 <button
                   onClick={handleSend}
-                  className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white"
+                  aria-label="Send message"
+                  className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#c65f4a] text-white hover:bg-[#ad503e]"
                 >
-                  <FaPaperPlane size={13} />
+                  <FaPaperPlane size={12} />
                 </button>
               </div>
             </div>

@@ -1,3 +1,73 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .section-eyebrow {
+    @apply text-sm font-semibold uppercase tracking-wide text-[#c65f4a] dark:text-[#f4a391];
+  }
+
+  .section-title {
+    @apply max-w-4xl text-4xl font-bold tracking-tight text-[#241423] dark:text-white md:text-5xl;
+  }
+
+  .section-shell {
+    @apply relative overflow-hidden;
+  }
+
+  .section-shell::before {
+    content: "";
+    @apply pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#eadccf] to-transparent;
+  }
+
+  .surface-card {
+    @apply rounded-[1.5rem] border border-[#eadccf] bg-white shadow-sm shadow-[#7a2e53]/5;
+  }
+
+  .warm-panel {
+    @apply border border-[#eadccf] bg-[#fffaf3] shadow-sm shadow-[#7a2e53]/5;
+  }
+
+  .field-input {
+    @apply w-full rounded-lg border border-[#eadccf] bg-white py-4 pl-12 pr-4 outline-none transition focus:border-[#c65f4a] focus:ring-4 focus:ring-[#f3c8bb]/40 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:placeholder:text-slate-500 dark:focus:ring-[#c65f4a]/20;
+  }
+
+  .footer-heading {
+    @apply text-sm font-bold uppercase tracking-wide text-white;
+  }
+
+  .footer-link {
+    @apply text-[#d7c7ba] transition hover:text-[#f4a391];
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-color: #7c6a61 #fff8ef;
+  scrollbar-width: thin;
+}
+
+body {
+  background:
+    radial-gradient(circle at 8% 18%, rgba(198, 95, 74, 0.08), transparent 28rem),
+    radial-gradient(circle at 92% 48%, rgba(122, 46, 83, 0.06), transparent 30rem),
+    #fff8ef;
+}
+
+body::-webkit-scrollbar {
+  width: 12px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #fff8ef;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #7c6a61;
+  border: 3px solid #fff8ef;
+  border-radius: 999px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: #c65f4a;
+}

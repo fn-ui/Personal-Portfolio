@@ -1,281 +1,234 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { FaStar, FaQuoteLeft } from "react-icons/fa";
-import { useState, useEffect } from "react";
+import { FaStar } from "react-icons/fa";
+import { Quote } from "lucide-react";
 
 import API from "../api/axios";
-
-// AVATARS
 import johnImg from "../assets/testimonials/john.png";
 import graceImg from "../assets/testimonials/grace.png";
 import brianImg from "../assets/testimonials/brian.png";
 
+const defaultFeedbacks = [
+  {
+    name: "John Mwangi",
+    role: "Frontend Developer",
+    image: johnImg,
+    feedback:
+      "Faith created a clean, responsive interface with smooth interactions and strong attention to detail.",
+    rating: 5,
+  },
+  {
+    name: "Grace Wanjiru",
+    role: "UI/UX Designer",
+    image: graceImg,
+    feedback:
+      "Professional work, clear communication, and a polished result across desktop and mobile screens.",
+    rating: 5,
+  },
+  {
+    name: "Brian Otieno",
+    role: "Project Collaborator",
+    image: brianImg,
+    feedback:
+      "Reliable delivery and impressive frontend development skills. The final product felt modern and easy to use.",
+    rating: 5,
+  },
+];
+
 function Testimonials() {
-  const [feedbacks, setFeedbacks] = useState([
-    {
-      name: "John Mwangi",
-      role: "Frontend Developer",
-      image: johnImg,
-      feedback:
-        "Faith created a clean and responsive interface with smooth animations and strong attention to detail.",
-      rating: 5,
-    },
-    {
-      name: "Grace Wanjiru",
-      role: "UI/UX Designer",
-      image: graceImg,
-      feedback:
-        "Very professional work with modern design principles and excellent responsiveness across devices.",
-      rating: 5,
-    },
-    {
-      name: "Brian Otieno",
-      role: "Project Collaborator",
-      image: brianImg,
-      feedback:
-        "Great communication, fast delivery, and impressive frontend development skills.",
-      rating: 5,
-    },
-  ]);
+  const [feedbacks, setFeedbacks] = useState(defaultFeedbacks);
+  const [form, setForm] = useState({ name: "", role: "", message: "", rating: 5 });
+  const [notice, setNotice] = useState("");
 
-  const [name, setName] = useState("");
-  const [role, setRole] = useState("");
-  const [message, setMessage] = useState("");
-  const [rating, setRating] = useState(5);
-
-  // FETCH FIREBASE FEEDBACKS
   useEffect(() => {
-  fetchTestimonials();
-}, []);
+    const fetchTestimonials = async () => {
+      try {
+        const res = await API.get("/testimonials");
+        const items = Array.isArray(res.data?.data)
+          ? res.data.data
+          : Array.isArray(res.data)
+            ? res.data
+            : [];
+        const approvedTestimonials = items.filter((item) => item.status === "approved");
 
-const fetchTestimonials = async () => {
-  try {
-    const res = await API.get("/testimonials");
+        if (approvedTestimonials.length > 0) setFeedbacks(approvedTestimonials);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-    const approvedTestimonials =
-      res.data.filter(
-        (item) =>
-          item.status === "approved"
-      );
+    fetchTestimonials();
+  }, []);
 
-    setFeedbacks(approvedTestimonials);
+  const updateField = (field, value) => {
+    setForm((current) => ({ ...current, [field]: value }));
+  };
 
-  } catch (error) {
-    console.log(error);
-  }
-};
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  // SUBMIT
-  const handleSubmit = async (e) => {
-  e.preventDefault();
+    try {
+      await API.post("/testimonials", {
+        ...form,
+        name: form.name.trim(),
+        role: form.role.trim(),
+        message: form.message.trim(),
+        image: `https://ui-avatars.com/api/?name=${encodeURIComponent(form.name)}`,
+      });
 
-  try {
-    await API.post("/testimonials", {
-      name,
-      role,
-      message,
-      rating,
-      image:
-        "https://ui-avatars.com/api/?name=" +
-        encodeURIComponent(name),
-    });
-
-    // optional: refresh list or give feedback
-    setName("");
-    setRole("");
-    setMessage("");
-    setRating(5);
-
-  } catch (error) {
-    console.log(error);
-  }
-};
+      setForm({ name: "", role: "", message: "", rating: 5 });
+      setNotice("Thank you. Your feedback was submitted for review.");
+    } catch (error) {
+      console.log(error);
+      setNotice("Feedback could not be submitted right now.");
+    }
+  };
 
   return (
     <section
       id="testimonials"
-      className="relative overflow-hidden bg-slate-50 px-6 py-28 text-slate-900 transition-colors duration-300 dark:bg-[#020617] dark:text-white"
+      className="section-shell bg-[#fff8ef] px-6 py-24 text-[#241423] dark:bg-slate-900 dark:text-white"
     >
-      {/* BACKGROUND */}
-      <div className="absolute left-0 top-0 h-72 w-72 rounded-full bg-blue-100 blur-3xl dark:bg-blue-500/10" />
-
-      <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-sky-100 blur-3xl dark:bg-cyan-500/10" />
-
-      
-
-      <div className="relative z-10 mx-auto max-w-7xl">
-        {/* HEADER */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          viewport={{ once: true }}
-          className="mx-auto mb-20 max-w-3xl text-center"
-        >
-          <p className="mb-4 inline-block rounded-full bg-blue-100 px-5 py-2 text-sm font-semibold text-blue-700 dark:bg-blue-500/10 dark:text-blue-300">
-            Testimonials
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-14 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-3xl">
+            <p className="section-eyebrow">Client Words</p>
+            <h2 className="section-title mt-3">
+              Kind feedback from people I have worked with.
+            </h2>
+          </div>
+          <p className="max-w-md text-[#6d5b53]">
+            The goal is always the same: calm collaboration, thoughtful
+            execution, and a final product that feels considered.
           </p>
+        </div>
 
-          <h2 className="text-5xl font-black md:text-6xl">
-            What Clients{" "}
-            <span className="block bg-gradient-to-r from-blue-600 to-sky-400 bg-clip-text text-transparent">
-              Say About Me
-            </span>
-          </h2>
-
-          <p className="mt-6 text-lg leading-8 text-slate-600 dark:text-slate-400">
-            Feedback from collaborators, clients, and developers I’ve worked
-            with on different projects and experiences.
-          </p>
-        </motion.div>
-
-        {/* TESTIMONIALS */}
-        <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {feedbacks.map((item, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 40 }}
+            <motion.article
+              key={`${item.name}-${index}`}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.6,
-                delay: index * 0.1,
-              }}
+              transition={{ duration: 0.45, delay: index * 0.06 }}
               viewport={{ once: true }}
-              whileHover={{ y: -10 }}
-              className="group flex flex-col justify-between rounded-[2rem] border border-slate-200 bg-white/90 p-7 shadow-sm backdrop-blur-xl transition-all duration-500 hover:border-blue-200 hover:shadow-[0_20px_60px_rgba(37,99,235,0.15)] dark:border-slate-800 dark:bg-slate-900/80 dark:hover:border-blue-500/30"
+              className="surface-card flex min-h-[310px] flex-col justify-between p-6"
             >
               <div>
-                {/* ICON */}
-                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-100 text-3xl text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
-                  <FaQuoteLeft />
+                <div className="mb-5 flex items-center justify-between">
+                  <div className="flex gap-1">
+                    {Array.from({ length: 5 }).map((_, starIndex) => (
+                      <FaStar
+                        key={starIndex}
+                        className={
+                          starIndex < (item.rating || 5)
+                            ? "text-[#d7a23a]"
+                            : "text-[#eadccf]"
+                        }
+                      />
+                    ))}
+                  </div>
+                  <Quote className="h-7 w-7 text-[#c65f4a]/30" />
                 </div>
 
-                {/* STARS */}
-                <div className="mb-5 flex gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <FaStar
-                      key={i}
-                      size={14}
-                      className={
-                        i < item.rating
-                          ? "text-yellow-400"
-                          : "text-slate-300 dark:text-slate-700"
-                      }
-                    />
-                  ))}
-                </div>
-
-                {/* MESSAGE */}
-                <p className="text-[15px] leading-8 text-slate-600 dark:text-slate-400">
-                {item.message}
-              </p>
+                <p className="leading-8 text-[#6d5b53]">{item.message || item.feedback}</p>
               </div>
 
-              {/* USER */}
-              <div className="mt-8 flex items-center gap-4 border-t border-slate-100 pt-5 dark:border-slate-800">
-                <div className="h-14 w-14 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold shadow-lg">
-            {item.name
-              ?.split(" ")
-              .map((n) => n[0])
-              .join("")
-              .toUpperCase()}
-          </div>
-
+              <div className="mt-8 flex items-center gap-4 border-t border-[#f1e4d8] pt-5">
+                {item.image ? (
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="h-12 w-12 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#7a2e53] font-bold text-white">
+                    {item.name
+                      ?.split(" ")
+                      .map((part) => part[0])
+                      .join("")
+                      .slice(0, 2)
+                      .toUpperCase()}
+                  </div>
+                )}
                 <div>
-                  <h3 className="font-bold text-slate-900 dark:text-white">
-                    {item.name}
-                  </h3>
-
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
-                    {item.role}
-                  </p>
+                  <h3 className="font-bold">{item.name}</h3>
+                  <p className="text-sm text-[#8b776d]">{item.role}</p>
                 </div>
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
 
-        {/* FORM */}
         <motion.form
           onSubmit={handleSubmit}
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.45 }}
           viewport={{ once: true }}
-          className="relative mx-auto mt-24 max-w-4xl overflow-hidden rounded-[2.5rem] border border-slate-200 bg-white/90 p-10 shadow-[0_20px_60px_rgba(0,0,0,0.08)] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/80"
+          className="mx-auto mt-14 max-w-4xl rounded-[1.75rem] border border-[#eadccf] bg-white/90 p-6 shadow-xl shadow-[#7a2e53]/5 backdrop-blur md:p-8"
         >
-          {/* INNER GLOW */}
-          <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-blue-100/40 blur-3xl dark:bg-blue-500/10" />
+          <div className="mb-6">
+            <p className="section-eyebrow">Leave Feedback</p>
+            <h3 className="mt-2 text-2xl font-bold">Share your experience</h3>
+          </div>
 
-          <div className="relative z-10">
-            <h3 className="text-center text-4xl font-black dark:text-white">
-              Leave Feedback
-            </h3>
+          <div className="grid gap-5 md:grid-cols-2">
+            <Input value={form.name} onChange={(value) => updateField("name", value)} placeholder="Your name" />
+            <Input value={form.role} onChange={(value) => updateField("role", value)} placeholder="Your role" />
+          </div>
 
-            <p className="mt-4 text-center text-slate-600 dark:text-slate-400">
-              Share your experience and thoughts about working with me.
-            </p>
+          <textarea
+            required
+            rows="5"
+            placeholder="Write your feedback..."
+            value={form.message}
+            onChange={(event) => updateField("message", event.target.value)}
+            className="mt-5 w-full rounded-xl border border-[#eadccf] bg-[#fffaf3] p-4 outline-none focus:border-[#c65f4a] focus:ring-4 focus:ring-[#f3c8bb]/40"
+          />
 
-            {/* INPUTS */}
-            <div className="mt-10 grid gap-6 md:grid-cols-2">
-              <input
-                placeholder="Your Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
-              />
-
-              <input
-                placeholder="Your Role"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
-              />
-            </div>
-
-            {/* TEXTAREA */}
-            <textarea
-              rows="6"
-              placeholder="Write feedback..."
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              className="mt-6 w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 text-slate-900 outline-none transition focus:border-blue-400 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
-            />
-
-            {/* STARS */}
-            <div className="mt-8 flex justify-center gap-3">
+          <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((star) => (
-                <motion.div
-                  whileHover={{ scale: 1.2 }}
+                <button
                   key={star}
+                  type="button"
+                  aria-label={`${star} star rating`}
+                  onClick={() => updateField("rating", star)}
+                  className="text-2xl"
                 >
-                  <FaStar
-                    onClick={() => setRating(star)}
-                    className={
-                      star <= rating
-                        ? "cursor-pointer text-yellow-400"
-                        : "cursor-pointer text-slate-300 dark:text-slate-700"
-                    }
-                    size={28}
-                  />
-                </motion.div>
+                  <FaStar className={star <= form.rating ? "text-[#d7a23a]" : "text-[#eadccf]"} />
+                </button>
               ))}
             </div>
 
-            {/* BUTTON */}
-            <div className="mt-10 flex justify-center">
-              <motion.button
-          type="submit"
-          whileHover={{ y: -4 }}
-          whileTap={{ scale: 0.98 }}
-          className="rounded-2xl bg-blue-600 px-10 py-4 font-semibold text-white shadow-[0_15px_40px_rgba(37,99,235,0.35)] transition hover:bg-blue-700"
-        >
-          Submit Feedback
-        </motion.button>
-            </div>
+            <button
+              type="submit"
+              className="rounded-xl bg-[#7a2e53] px-6 py-3 font-semibold text-white hover:bg-[#642442]"
+            >
+              Submit Feedback
+            </button>
           </div>
+
+          {notice && (
+            <p className="mt-5 rounded-xl bg-[#fff1e8] px-4 py-3 text-sm text-[#7a2e53]">
+              {notice}
+            </p>
+          )}
         </motion.form>
       </div>
     </section>
+  );
+}
+
+function Input({ value, onChange, placeholder }) {
+  return (
+    <input
+      required
+      placeholder={placeholder}
+      value={value}
+      onChange={(event) => onChange(event.target.value)}
+      className="rounded-xl border border-[#eadccf] bg-[#fffaf3] p-4 outline-none focus:border-[#c65f4a] focus:ring-4 focus:ring-[#f3c8bb]/40"
+    />
   );
 }
 

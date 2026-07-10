@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import API from "../../api/axios";
-
+import toast from "react-hot-toast";
 import {
   FolderKanban,
+  LayoutGrid,
   Trash2,
   Pencil,
   Plus,
@@ -13,12 +14,8 @@ import {
   Search,
   X,
   Sparkles,
-  LayoutGrid,
-  Eye,
   TrendingUp,
 } from "lucide-react";
-
-import toast from "react-hot-toast";
 
 function AdminProjects() {
 
@@ -70,11 +67,18 @@ function AdminProjects() {
 
       setLoading(true);
 
-      const res = await API.get("projects");
+      const res = await API.get("/projects");
 
-      setProjects(res.data);
+      setProjects(res.data?.data || res.data || []);
 
     } catch (error) {
+      if (
+        error.response?.status === 503 ||
+        error.code === "ECONNABORTED"
+      ) {
+        setProjects([]);
+        return;
+      }
 
       console.log(
         "FETCH ERROR:",
@@ -272,7 +276,7 @@ function AdminProjects() {
     <div className="space-y-10">
 
       {/* HERO */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-700 rounded-[2rem] p-8 md:p-10 text-white">
+      <div className="relative overflow-hidden bg-gradient-to-r from-[#5b233f] to-[#7a2e53] rounded-[2rem] p-8 md:p-10 text-white">
 
         <div className="absolute top-0 right-0 opacity-10">
           <Sparkles size={220} />
@@ -300,7 +304,7 @@ function AdminProjects() {
                 Project Manager
               </h1>
 
-              <p className="text-blue-100 text-lg max-w-2xl">
+              <p className="text-white/75 text-lg max-w-2xl">
                 Create, manage, edit and showcase your portfolio projects beautifully.
               </p>
 
@@ -324,7 +328,7 @@ function AdminProjects() {
                   {projects.length}
                 </h2>
 
-                <p className="text-blue-100 mt-2">
+                <p className="text-white/75 mt-2">
                   Projects
                 </p>
 
@@ -346,7 +350,7 @@ function AdminProjects() {
                   +12%
                 </h2>
 
-                <p className="text-blue-100 mt-2">
+                <p className="text-white/75 mt-2">
                   This Month
                 </p>
 
@@ -361,13 +365,13 @@ function AdminProjects() {
       </div>
 
       {/* SEARCH */}
-      <div className="bg-white dark:bg-gray-900 rounded-[2rem] p-5 shadow-sm border border-gray-100 dark:border-gray-800">
+      <div className="bg-white dark:bg-slate-950 rounded-[2rem] p-5 shadow-sm border border-[#eadccf] dark:border-slate-800">
 
         <div className="relative">
 
           <Search
             size={22}
-            className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400"
+            className="absolute left-5 top-1/2 -translate-y-1/2 text-[#7c6a61]"
           />
 
           <input
@@ -377,7 +381,7 @@ function AdminProjects() {
             onChange={(e) =>
               setSearch(e.target.value)
             }
-            className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl pl-14 pr-5 py-4 outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
+            className="w-full bg-[#fff8ef] dark:bg-slate-900 border border-[#eadccf] dark:border-slate-700 rounded-2xl pl-14 pr-5 py-4 outline-none focus:ring-2 focus:ring-[#f3c8bb]/60 dark:text-white"
           />
 
         </div>
@@ -385,23 +389,23 @@ function AdminProjects() {
       </div>
 
       {/* FORM */}
-      <div className="bg-white dark:bg-gray-900 rounded-[2rem] p-8 shadow-sm border border-gray-100 dark:border-gray-800">
+      <div className="bg-white dark:bg-slate-950 rounded-[2rem] p-8 shadow-sm border border-[#eadccf] dark:border-slate-800">
 
         <div className="flex items-center gap-4 mb-8">
 
-          <div className="bg-blue-100 dark:bg-blue-900/30 text-blue-600 p-4 rounded-3xl">
+          <div className="bg-[#fbe3dc] dark:bg-[#c65f4a]/10 text-[#c65f4a] p-4 rounded-3xl">
             <FolderKanban size={28} />
           </div>
 
           <div>
 
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
+            <h2 className="text-3xl font-bold text-[#241423] dark:text-white">
               {editingId
                 ? "Edit Project"
                 : "Create New Project"}
             </h2>
 
-            <p className="text-gray-500 dark:text-gray-400">
+            <p className="text-[#7c6a61] dark:text-[#7c6a61]">
               Add modern portfolio projects.
             </p>
 
@@ -417,7 +421,7 @@ function AdminProjects() {
           {/* TITLE */}
           <div>
 
-            <label className="block mb-3 text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <label className="block mb-3 text-sm font-semibold text-[#5f4d55] dark:text-slate-300">
               Project Title
             </label>
 
@@ -428,7 +432,7 @@ function AdminProjects() {
               onChange={(e) =>
                 setTitle(e.target.value)
               }
-              className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
+              className="w-full bg-[#fff8ef] dark:bg-slate-900 border border-[#eadccf] dark:border-slate-700 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#f3c8bb]/60 dark:text-white"
               required
             />
 
@@ -437,7 +441,7 @@ function AdminProjects() {
           {/* DESCRIPTION */}
           <div>
 
-            <label className="block mb-3 text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <label className="block mb-3 text-sm font-semibold text-[#5f4d55] dark:text-slate-300">
               Description
             </label>
 
@@ -448,7 +452,7 @@ function AdminProjects() {
               onChange={(e) =>
                 setDescription(e.target.value)
               }
-              className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-blue-500 dark:text-white min-h-[160px]"
+              className="w-full bg-[#fff8ef] dark:bg-slate-900 border border-[#eadccf] dark:border-slate-700 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#f3c8bb]/60 dark:text-white min-h-[160px]"
               required
             />
 
@@ -457,7 +461,7 @@ function AdminProjects() {
           {/* TECH STACK */}
           <div>
 
-            <label className="block mb-3 text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <label className="block mb-3 text-sm font-semibold text-[#5f4d55] dark:text-slate-300">
               Tech Stack
             </label>
 
@@ -468,7 +472,7 @@ function AdminProjects() {
               onChange={(e) =>
                 setTechStack(e.target.value)
               }
-              className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
+              className="w-full bg-[#fff8ef] dark:bg-slate-900 border border-[#eadccf] dark:border-slate-700 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#f3c8bb]/60 dark:text-white"
               required
             />
 
@@ -479,7 +483,7 @@ function AdminProjects() {
 
             <div>
 
-              <label className="block mb-3 text-sm font-semibold text-gray-700 dark:text-gray-300">
+              <label className="block mb-3 text-sm font-semibold text-[#5f4d55] dark:text-slate-300">
                 GitHub Link
               </label>
 
@@ -490,7 +494,7 @@ function AdminProjects() {
                 onChange={(e) =>
                   setGithub(e.target.value)
                 }
-                className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
+                className="w-full bg-[#fff8ef] dark:bg-slate-900 border border-[#eadccf] dark:border-slate-700 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#f3c8bb]/60 dark:text-white"
                 required
               />
 
@@ -498,7 +502,7 @@ function AdminProjects() {
 
             <div>
 
-              <label className="block mb-3 text-sm font-semibold text-gray-700 dark:text-gray-300">
+              <label className="block mb-3 text-sm font-semibold text-[#5f4d55] dark:text-slate-300">
                 Live Demo
               </label>
 
@@ -509,7 +513,7 @@ function AdminProjects() {
                 onChange={(e) =>
                   setLiveDemo(e.target.value)
                 }
-                className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
+                className="w-full bg-[#fff8ef] dark:bg-slate-900 border border-[#eadccf] dark:border-slate-700 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#f3c8bb]/60 dark:text-white"
               />
 
             </div>
@@ -519,21 +523,21 @@ function AdminProjects() {
           {/* IMAGE */}
           <div>
 
-            <label className="block mb-3 text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <label className="block mb-3 text-sm font-semibold text-[#5f4d55] dark:text-slate-300">
               Project Image
             </label>
 
-            <label className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-[2rem] p-10 flex flex-col items-center justify-center text-center cursor-pointer hover:border-blue-500 transition-all bg-gray-50 dark:bg-gray-800">
+            <label className="border-2 border-dashed border-[#eadccf] dark:border-slate-700 rounded-[2rem] p-10 flex flex-col items-center justify-center text-center cursor-pointer hover:border-[#c65f4a] transition-all bg-[#fff8ef] dark:bg-slate-900">
 
-              <div className="bg-blue-100 dark:bg-blue-900/30 text-blue-600 p-5 rounded-full mb-5">
+              <div className="bg-[#fbe3dc] dark:bg-[#c65f4a]/10 text-[#c65f4a] p-5 rounded-full mb-5">
                 <ImagePlus size={34} />
               </div>
 
-              <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
+              <h3 className="text-xl font-bold text-[#241423] dark:text-white mb-2">
                 Upload Project Image
               </h3>
 
-              <p className="text-gray-500 dark:text-gray-400">
+              <p className="text-[#7c6a61] dark:text-[#7c6a61]">
                 PNG, JPG, JPEG supported
               </p>
 
@@ -554,7 +558,7 @@ function AdminProjects() {
                 <img
                   src={preview}
                   alt="Preview"
-                  className="w-full max-h-[400px] object-cover rounded-[2rem] border border-gray-200 dark:border-gray-700"
+                  className="w-full max-h-[400px] object-cover rounded-[2rem] border border-[#eadccf] dark:border-slate-700"
                 />
 
                 <button
@@ -563,7 +567,7 @@ function AdminProjects() {
                     setPreview("");
                     setImage(null);
                   }}
-                  className="absolute top-5 right-5 bg-white dark:bg-gray-900 text-red-500 p-3 rounded-full shadow-lg"
+                  className="absolute top-5 right-5 bg-white dark:bg-slate-950 text-red-500 p-3 rounded-full shadow-lg"
                 >
                   <X size={20} />
                 </button>
@@ -580,7 +584,7 @@ function AdminProjects() {
             <button
               type="submit"
               disabled={loading}
-              className="flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl transition-all duration-300 disabled:opacity-50 font-semibold"
+              className="flex items-center gap-3 bg-[#c65f4a] hover:bg-[#ad503e] text-white px-8 py-4 rounded-2xl transition-all duration-300 disabled:opacity-50 font-semibold"
             >
 
               {loading ? (
@@ -607,7 +611,7 @@ function AdminProjects() {
               <button
                 type="button"
                 onClick={resetForm}
-                className="px-8 py-4 rounded-2xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all dark:text-white"
+                className="px-8 py-4 rounded-2xl border border-[#eadccf] dark:border-slate-700 hover:bg-[#fff8ef] dark:hover:bg-gray-800 transition-all dark:text-white"
               >
                 Cancel Editing
               </button>
@@ -627,11 +631,11 @@ function AdminProjects() {
 
           <div>
 
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
+            <h2 className="text-3xl font-bold text-[#241423] dark:text-white">
               Existing Projects
             </h2>
 
-            <p className="text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-[#7c6a61] dark:text-[#7c6a61] mt-1">
               Showcase your best portfolio work.
             </p>
 
@@ -646,7 +650,7 @@ function AdminProjects() {
 
             <Loader2
               size={45}
-              className="animate-spin mx-auto text-blue-600"
+              className="animate-spin mx-auto text-[#c65f4a]"
             />
 
           </div>
@@ -657,21 +661,21 @@ function AdminProjects() {
         {filteredProjects.length === 0 &&
           !loading && (
 
-            <div className="bg-white dark:bg-gray-900 rounded-[2rem] p-14 text-center border border-gray-100 dark:border-gray-800 shadow-sm">
+            <div className="bg-white dark:bg-slate-950 rounded-[2rem] p-14 text-center border border-[#eadccf] dark:border-slate-800 shadow-sm">
 
               <div className="flex justify-center mb-6">
 
-                <div className="bg-blue-100 dark:bg-blue-900/30 text-blue-600 p-6 rounded-full">
+                <div className="bg-[#fbe3dc] dark:bg-[#c65f4a]/10 text-[#c65f4a] p-6 rounded-full">
                   <FolderKanban size={45} />
                 </div>
 
               </div>
 
-              <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-3">
+              <h2 className="text-3xl font-bold text-[#241423] dark:text-white mb-3">
                 No Projects Found
               </h2>
 
-              <p className="text-gray-500 dark:text-gray-400">
+              <p className="text-[#7c6a61] dark:text-[#7c6a61]">
                 Add your first portfolio project.
               </p>
 
@@ -686,7 +690,7 @@ function AdminProjects() {
 
             <div
               key={project._id}
-              className="group bg-white dark:bg-gray-900 rounded-[2rem] overflow-hidden border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
+              className="group bg-white dark:bg-slate-950 rounded-[2rem] overflow-hidden border border-[#eadccf] dark:border-slate-800 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
             >
 
               {/* IMAGE */}
@@ -717,17 +721,17 @@ function AdminProjects() {
 
                 <div className="flex items-start justify-between mb-4">
 
-                  <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+                  <h2 className="text-2xl font-bold text-[#241423] dark:text-white">
                     {project.title}
                   </h2>
 
-                  <div className="bg-blue-100 dark:bg-blue-900/30 text-blue-600 p-3 rounded-2xl">
+                  <div className="bg-[#fbe3dc] dark:bg-[#c65f4a]/10 text-[#c65f4a] p-3 rounded-2xl">
                     <FolderKanban size={20} />
                   </div>
 
                 </div>
 
-                <p className="text-gray-500 dark:text-gray-400 mb-5 line-clamp-3">
+                <p className="text-[#7c6a61] dark:text-[#7c6a61] mb-5 line-clamp-3">
                   {project.description}
                 </p>
 
@@ -740,7 +744,7 @@ function AdminProjects() {
 
                       <span
                         key={index}
-                        className="bg-blue-100 dark:bg-blue-900/30 text-blue-600 px-3 py-1 rounded-full text-sm"
+                        className="bg-[#fbe3dc] dark:bg-[#c65f4a]/10 text-[#c65f4a] px-3 py-1 rounded-full text-sm"
                       >
                         {tech.trim()}
                       </span>
@@ -768,7 +772,7 @@ function AdminProjects() {
                       href={project.liveDemo}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-2xl transition-all"
+                      className="flex-1 flex items-center justify-center gap-2 bg-[#c65f4a] hover:bg-[#ad503e] text-white py-3 rounded-2xl transition-all"
                     >
                       <ExternalLink size={18} />
                       Demo
@@ -785,7 +789,7 @@ function AdminProjects() {
                     onClick={() =>
                       handleEdit(project)
                     }
-                    className="flex-1 flex items-center justify-center gap-2 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 py-3 rounded-2xl transition-all dark:text-white"
+                    className="flex-1 flex items-center justify-center gap-2 border border-[#eadccf] dark:border-slate-700 hover:bg-[#fff8ef] dark:hover:bg-gray-800 py-3 rounded-2xl transition-all dark:text-white"
                   >
                     <Pencil size={18} />
                     Edit
@@ -818,7 +822,7 @@ function AdminProjects() {
 
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 px-4">
 
-          <div className="bg-white dark:bg-gray-900 rounded-[2rem] p-8 w-full max-w-md shadow-2xl animate-fadeIn border border-gray-100 dark:border-gray-800">
+          <div className="bg-white dark:bg-slate-950 rounded-[2rem] p-8 w-full max-w-md shadow-2xl animate-fadeIn border border-[#eadccf] dark:border-slate-800">
 
             <div className="flex justify-center mb-6">
 
@@ -828,11 +832,11 @@ function AdminProjects() {
 
             </div>
 
-            <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-3">
+            <h2 className="text-3xl font-bold text-center text-[#241423] dark:text-white mb-3">
               Delete Project?
             </h2>
 
-            <p className="text-gray-500 dark:text-gray-400 text-center mb-8">
+            <p className="text-[#7c6a61] dark:text-[#7c6a61] text-center mb-8">
               This action cannot be undone.
             </p>
 
@@ -843,7 +847,7 @@ function AdminProjects() {
                   setShowDeleteModal(false);
                   setProjectToDelete(null);
                 }}
-                className="flex-1 bg-gray-200 dark:bg-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 py-4 rounded-2xl transition-all"
+                className="flex-1 bg-[#fbe3dc] dark:bg-slate-900 dark:text-white hover:bg-[#eadccf] dark:hover:bg-slate-800 py-4 rounded-2xl transition-all"
               >
                 Cancel
               </button>
@@ -868,3 +872,5 @@ function AdminProjects() {
 }
 
 export default AdminProjects;
+
+

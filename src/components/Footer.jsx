@@ -1,211 +1,127 @@
-import {
-  FaGithub,
-  FaLinkedin,
-  FaEnvelope,
-  FaArrowRight,
-} from "react-icons/fa";
-
-import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { FaArrowRight, FaEnvelope, FaGithub, FaLinkedin } from "react-icons/fa";
+
+const quickLinks = [
+  { label: "About", href: "#about" },
+  { label: "Skills", href: "#skills" },
+  { label: "Services", href: "#services" },
+  { label: "Projects", href: "#projects" },
+  { label: "Contact", href: "#contact" },
+];
+
+const services = [
+  "Portfolio Websites",
+  "Frontend Development",
+  "Admin Experiences",
+  "Mobile-First Polish",
+];
+
 function Footer() {
-  const linkClass =
-    "text-slate-500 transition-all duration-300 hover:text-blue-600 hover:translate-x-1 dark:text-slate-400 dark:hover:text-blue-400";
-
   return (
-    <footer className="relative overflow-hidden border-t border-slate-200 bg-white px-6 py-10 text-slate-900 dark:border-white/10 dark:bg-[#020617] dark:text-white">
-
-      {/* BACKGROUND GLOWS */}
-      <div className="absolute -top-20 left-0 h-60 w-60 rounded-full bg-blue-100/40 blur-3xl dark:bg-blue-500/10" />
-
-      <div className="absolute -bottom-20 right-0 h-60 w-60 rounded-full bg-sky-100/40 blur-3xl dark:bg-cyan-500/10" />
-
-      <div className="relative z-10 mx-auto max-w-7xl">
-
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="mb-10 rounded-3xl bg-gradient-to-r from-blue-600 to-sky-500 p-6 text-white shadow-[0_20px_60px_rgba(37,99,235,0.35)]"
-        >
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
+    <footer className="bg-[linear-gradient(180deg,#241423_0%,#180d18_100%)] px-6 py-12 text-white">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-12 rounded-[1.75rem] border border-white/10 bg-[#fff8ef] p-6 text-[#241423] shadow-2xl shadow-black/20 md:p-8">
+          <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-100">
-                Let’s Work Together
+              <p className="text-sm font-bold uppercase tracking-wide text-[#c65f4a]">
+                Available for selected projects
               </p>
-
-              <h2 className="mt-1 text-xl font-bold sm:text-2xl">
-                Build something great together
+              <h2 className="mt-2 text-2xl font-bold md:text-3xl">
+                Ready to shape your next web experience?
               </h2>
             </div>
-
             <a
               href="#contact"
-              className="inline-flex items-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-blue-600 transition hover:-translate-y-1"
+              className="inline-flex items-center justify-center gap-3 rounded-xl bg-[#c65f4a] px-5 py-3 font-semibold text-white hover:bg-[#ad503e]"
             >
-              Contact Me
-              <FaArrowRight size={14} />
+              Start a Project
+              <FaArrowRight />
             </a>
-
           </div>
-        </motion.div>
+        </div>
 
-        {/* MAIN GRID */}
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
-
-          {/* BRAND */}
           <div>
-            <h2 className="mb-3 text-2xl font-black">
-              Faith{" "}
-              <span className="bg-gradient-to-r from-blue-600 to-sky-400 bg-clip-text text-transparent">
-                Njeri
-              </span>
-            </h2>
-
-            <p className="text-sm leading-7 text-slate-600 dark:text-slate-400">
-              Full Stack Developer focused on building clean,
-              responsive and modern web applications with
-              exceptional user experiences.
+            <h2 className="text-2xl font-bold">Faith Njeri</h2>
+            <p className="mt-4 max-w-sm leading-7 text-[#d7c7ba]">
+              Full-stack developer creating warm, polished, and manageable web
+              experiences with React, Tailwind CSS, Node.js, and MongoDB.
             </p>
-
-            <p className="mt-4 flex items-center gap-2 text-xs text-green-600 dark:text-green-400">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
-              Available for freelance work
-            </p>
+            <div className="mt-5 flex gap-3">
+              <Social href="https://github.com/fn-ui" label="GitHub" icon={FaGithub} />
+              <Social href="https://linkedin.com" label="LinkedIn" icon={FaLinkedin} />
+              <Social href="mailto:fn0740839@gmail.com" label="Email" icon={FaEnvelope} />
+            </div>
           </div>
 
-          {/* QUICK LINKS */}
           <div>
-            <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.15em] text-slate-900 dark:text-white">
-              Quick Links
-            </h3>
-
-            <ul className="space-y-3 text-sm">
+            <h3 className="footer-heading">Navigation</h3>
+            <ul className="mt-4 space-y-3">
+              {quickLinks.map((link) => (
+                <li key={link.href}>
+                  <a href={link.href} className="footer-link">
+                    {link.label}
+                  </a>
+                </li>
+              ))}
               <li>
-                <a href="#about" className={linkClass}>
-                  About
-                </a>
-              </li>
-
-              <li>
-                <a href="#services" className={linkClass}>
-                  Services
-                </a>
-              </li>
-
-              <li>
-                <a href="#projects" className={linkClass}>
-                  Projects
-                </a>
-              </li>
-
-              <li>
-                <a href="#contact" className={linkClass}>
-                  Contact
-                </a>
-              </li>
-
-              <li>
-                <a href="/resume.pdf" className={linkClass}>
+                <a href="/resume.pdf" className="footer-link">
                   Resume
                 </a>
               </li>
-              <li>
-        <Link to="/admin/login" className={linkClass}>
-          Admin
-        </Link>
-      </li>
             </ul>
           </div>
 
-          {/* SERVICES */}
           <div>
-            <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.15em] text-slate-900 dark:text-white">
-              Services
-            </h3>
-
-            <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
-              <li>Web Development</li>
-              <li>UI / UX Design</li>
-              <li>API Integration</li>
-              <li>Responsive Design</li>
+            <h3 className="footer-heading">Services</h3>
+            <ul className="mt-4 space-y-3 text-[#d7c7ba]">
+              {services.map((service) => (
+                <li key={service}>{service}</li>
+              ))}
             </ul>
           </div>
 
-          {/* CONTACT */}
           <div>
-            <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.15em] text-slate-900 dark:text-white">
-              Contact
-            </h3>
-
-            <div className="space-y-4 text-sm">
-
+            <h3 className="footer-heading">Contact</h3>
+            <div className="mt-4 space-y-4 text-sm">
               <div>
-                <p className="text-xs text-slate-500 dark:text-slate-500">
-                  Email
-                </p>
-
-                <a
-                  href="mailto:fn0740839@gmail.com"
-                  className="text-blue-600 transition hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-                >
+                <p className="text-[#9f8d82]">Email</p>
+                <a href="mailto:fn0740839@gmail.com" className="footer-link">
                   fn0740839@gmail.com
                 </a>
               </div>
-
               <div>
-                <p className="text-xs text-slate-500 dark:text-slate-500">
-                  Phone
-                </p>
-
-                <a
-                  href="tel:+254796880912"
-                  className="text-blue-600 transition hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-                >
+                <p className="text-[#9f8d82]">Phone</p>
+                <a href="tel:+254796880912" className="footer-link">
                   +254 796 880 912
                 </a>
               </div>
-
-              {/* SOCIALS */}
-              <div className="flex gap-3 pt-2">
-
-                <a
-                  href="https://github.com/fn-ui"
-                  className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-slate-700 transition hover:-translate-y-1 hover:border-blue-300 hover:text-blue-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:border-blue-500 dark:hover:text-blue-400"
-                >
-                  <FaGithub />
-                </a>
-
-                <a
-                  href="https://linkedin.com"
-                  className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-slate-700 transition hover:-translate-y-1 hover:border-blue-300 hover:text-blue-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:border-blue-500 dark:hover:text-blue-400"
-                >
-                  <FaLinkedin />
-                </a>
-
-                <a
-                  href="mailto:fn0740839@gmail.com"
-                  className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-slate-700 transition hover:-translate-y-1 hover:border-blue-300 hover:text-blue-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:border-blue-500 dark:hover:text-blue-400"
-                >
-                  <FaEnvelope />
-                </a>
-
-              </div>
-
+              <Link to="/admin/login" className="footer-link inline-block">
+                Admin Login
+              </Link>
             </div>
           </div>
-
         </div>
 
-        {/* BOTTOM */}
-        <div className="mt-10 border-t border-slate-200 pt-6 text-center text-xs text-slate-500 dark:border-white/10 dark:text-slate-500">
-          © {new Date().getFullYear()} Faith Njeri — Built with React & Tailwind CSS
+        <div className="mt-10 border-t border-white/10 pt-6 text-center text-sm text-[#9f8d82]">
+          © {new Date().getFullYear()} Faith Njeri. Built with React and Tailwind CSS.
         </div>
-
       </div>
     </footer>
+  );
+}
+
+function Social({ href, label, icon: Icon }) {
+  return (
+    <a
+      href={href}
+      aria-label={label}
+      target={href.startsWith("http") ? "_blank" : undefined}
+      rel="noopener noreferrer"
+      className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 text-[#d7c7ba] transition hover:border-[#f4a391] hover:text-[#f4a391]"
+    >
+      <Icon />
+    </a>
   );
 }
 

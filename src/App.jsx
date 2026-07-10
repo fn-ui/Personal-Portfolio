@@ -19,6 +19,8 @@ import Login from "./pages/admin/Login";
 import Dashboard from "./pages/admin/Dashboard";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminProjects from "./pages/admin/Projects";
+import AdminServices from "./pages/admin/Services";
+import AdminSkills from "./pages/admin/Skills";
 import Messages from "./pages/admin/Messages";
 import AdminTestimonials from "./pages/admin/Testimonials";
 import Settings from "./pages/admin/Settings";
@@ -114,6 +116,8 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="projects" element={<AdminProjects />} />
+          <Route path="services" element={<AdminServices />} />
+          <Route path="skills" element={<AdminSkills />} />
           <Route path="messages" element={<Messages />} />
           <Route path="testimonials" element={<AdminTestimonials />} />
           <Route path="settings" element={<Settings />} />

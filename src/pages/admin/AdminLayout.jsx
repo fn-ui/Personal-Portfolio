@@ -12,8 +12,10 @@ import {
 import {
   LayoutDashboard,
   FolderKanban,
+  Layers3,
   Mail,
   MessageSquareQuote,
+  PanelsTopLeft,
   Settings,
   LogOut,
   Moon,
@@ -109,6 +111,14 @@ function AdminLayout() {
 
         setNotifications(res.data || []);
       } catch (err) {
+        if (
+          err.response?.status === 503 ||
+          err.code === "ECONNABORTED"
+        ) {
+          setNotifications([]);
+          return;
+        }
+
         console.log(
           "❌ Notification fetch error:",
           err
@@ -181,7 +191,12 @@ function AdminLayout() {
     };
 
     // MARK ALL READ
-    const handleAllRead = () => {
+    const handleAllRead = (updated) => {
+      if (Array.isArray(updated)) {
+        setNotifications(updated);
+        return;
+      }
+
       setNotifications((prev) =>
         prev.map((n) => ({
           ...n,
@@ -323,6 +338,63 @@ function AdminLayout() {
       (n) => !n.read
     ).length;
 
+  const getNotificationText = (notification) =>
+    notification.text ||
+    notification.message ||
+    notification.body ||
+    "Notification details unavailable";
+
+  const getNotificationTitle = (notification) => {
+    if (notification.title) {
+      return notification.title;
+    }
+
+    const text =
+      getNotificationText(notification);
+
+    if (
+      notification.type === "success"
+    ) {
+      return "Success";
+    }
+
+    if (
+      notification.type === "warning"
+    ) {
+      return "Needs attention";
+    }
+
+    if (notification.type === "error") {
+      return "Issue detected";
+    }
+
+    return text.length > 64
+      ? `${text.slice(0, 64)}...`
+      : text;
+  };
+
+  const getNotificationBody = (notification) => {
+    if (!notification.title) {
+      return notification.message
+        ? notification.message
+        : "";
+    }
+
+    return getNotificationText(notification);
+  };
+
+  const formatNotificationDate = (value) => {
+    if (!value) return "Just now";
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return "Just now";
+    }
+
+    return date.toLocaleString();
+  };
+
   // =========================
   // NAV LINKS
   // =========================
@@ -339,6 +411,20 @@ function AdminLayout() {
       path: "/admin/projects",
       icon: (
         <FolderKanban size={20} />
+      ),
+    },
+    {
+      name: "Services",
+      path: "/admin/services",
+      icon: (
+        <PanelsTopLeft size={20} />
+      ),
+    },
+    {
+      name: "Skills",
+      path: "/admin/skills",
+      icon: (
+        <Layers3 size={20} />
       ),
     },
     {
@@ -361,7 +447,7 @@ function AdminLayout() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-[#0b1220]">
+    <div className="flex min-h-screen bg-[#fff8ef] text-[#241423] dark:bg-slate-950 dark:text-white">
 
       {/* OVERLAY */}
       {sidebarOpen && (
@@ -378,7 +464,7 @@ function AdminLayout() {
         className={`
           fixed lg:sticky top-0 left-0 z-50
           h-screen flex flex-col justify-between
-          border-r border-gray-200 dark:border-gray-800
+          border-r border-[#eadccf] dark:border-slate-800
           shadow-xl lg:shadow-sm
           transition-all duration-300 overflow-hidden
           ${
@@ -386,7 +472,7 @@ function AdminLayout() {
               ? "w-20"
               : "w-72"
           }
-          bg-white dark:bg-[#0f172a]
+          bg-[#fffaf3] dark:bg-slate-950
           ${
             sidebarOpen
               ? "translate-x-0"
@@ -402,11 +488,11 @@ function AdminLayout() {
 
             {!collapsed && (
               <div>
-                <h1 className="text-2xl font-bold text-blue-600">
+                <h1 className="text-2xl font-bold text-[#c65f4a]">
                   Admin
                 </h1>
 
-                <p className="text-xs text-gray-500 dark:text-gray-400">
+                <p className="text-xs text-[#7c6a61] dark:text-slate-400">
                   Portfolio CMS
                 </p>
               </div>
@@ -418,7 +504,7 @@ function AdminLayout() {
                   !collapsed
                 )
               }
-              className="hidden lg:flex p-2 rounded-xl hover:bg-blue-50 dark:hover:bg-gray-800"
+              className="hidden lg:flex p-2 rounded-xl hover:bg-[#fbe3dc] dark:hover:bg-slate-900"
             >
               {collapsed ? (
                 <ChevronRight size={20} />
@@ -453,8 +539,8 @@ function AdminLayout() {
                 }) =>
                   `flex items-center gap-3 px-4 py-3 rounded-2xl transition-all ${
                     isActive
-                      ? "bg-blue-600 text-white"
-                      : "text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-800"
+                      ? "bg-[#c65f4a] text-white shadow-lg shadow-[#c65f4a]/20"
+                      : "text-[#5f4d55] dark:text-slate-300 hover:bg-[#fbe3dc] dark:hover:bg-slate-900"
                   }`
                 }
               >
@@ -478,7 +564,7 @@ function AdminLayout() {
             onClick={() =>
               setDarkMode(!darkMode)
             }
-            className="w-full flex items-center justify-center gap-2 bg-gray-100 dark:bg-gray-800 py-3 rounded-2xl"
+            className="w-full flex items-center justify-center gap-2 bg-[#fbe3dc] dark:bg-slate-900 py-3 rounded-2xl"
           >
             {darkMode ? (
               <Sun size={18} />
@@ -494,7 +580,7 @@ function AdminLayout() {
 
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-2xl"
+            className="w-full flex items-center justify-center gap-2 bg-[#5b233f] hover:bg-[#4b1932] text-white py-3 rounded-2xl"
           >
             <LogOut size={18} />
 
@@ -510,7 +596,7 @@ function AdminLayout() {
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
 
         {/* TOPBAR */}
-        <header className="sticky top-0 z-30 bg-white/80 dark:bg-[#0f172a]/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex justify-between items-center">
+        <header className="sticky top-0 z-30 bg-[#fffaf3]/85 dark:bg-slate-950/90 backdrop-blur-md border-b border-[#eadccf] dark:border-slate-800 px-6 py-4 flex justify-between items-center">
 
           {/* LEFT */}
           <div className="flex gap-4 items-center">
@@ -524,7 +610,7 @@ function AdminLayout() {
               <Menu size={24} />
             </button>
 
-            <h2 className="font-bold text-lg text-gray-800 dark:text-white">
+            <h2 className="font-bold text-lg text-[#241423] dark:text-white">
               Portfolio Admin
             </h2>
 
@@ -534,7 +620,7 @@ function AdminLayout() {
           <div className="flex gap-4 items-center">
 
             {/* SEARCH */}
-            <div className="hidden md:flex items-center bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-2xl w-72">
+            <div className="hidden md:flex items-center bg-white dark:bg-slate-900 px-4 py-2 rounded-2xl w-72 border border-[#eadccf] dark:border-slate-800">
 
               <Search size={18} />
 
@@ -557,7 +643,7 @@ function AdminLayout() {
                     !showNotifications
                   )
                 }
-                className="relative w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-2xl flex items-center justify-center"
+                className="relative w-10 h-10 bg-white dark:bg-slate-900 rounded-2xl flex items-center justify-center border border-[#eadccf] dark:border-slate-800"
               >
                 <Bell size={18} />
 
@@ -585,7 +671,7 @@ function AdminLayout() {
                         onClick={
                           markAllAsRead
                         }
-                        className="text-xs text-blue-600 hover:underline"
+                        className="text-xs text-[#c65f4a] hover:underline"
                       >
                         Mark all as
                         read
@@ -606,7 +692,17 @@ function AdminLayout() {
                       </div>
                     ) : (
                       notifications.map(
-                        (n) => (
+                        (n) => {
+                          const title =
+                            getNotificationTitle(
+                              n
+                            );
+                          const body =
+                            getNotificationBody(
+                              n
+                            );
+
+                          return (
                           <div
                             key={n._id}
                             onClick={() =>
@@ -620,7 +716,7 @@ function AdminLayout() {
                               hover:bg-gray-50 dark:hover:bg-gray-800
                               ${
                                 !n.read
-                                  ? "bg-blue-50/60 dark:bg-blue-500/10"
+                                  ? "bg-[#fbe3dc]/70 dark:bg-[#c65f4a]/10"
                                   : ""
                               }
                             `}
@@ -634,29 +730,27 @@ function AdminLayout() {
                                   ${
                                     n.read
                                       ? "bg-gray-400"
-                                      : "bg-blue-500"
+                                      : "bg-[#c65f4a]"
                                   }
                                 `}
                               />
 
-                              <div className="flex-1">
+                              <div className="flex-1 min-w-0">
 
                                 <h4 className="font-semibold text-sm text-gray-800 dark:text-white">
-                                  {
-                                    n.title
-                                  }
+                                  {title}
                                 </h4>
 
-                                <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                                  {
-                                    n.message
-                                  }
-                                </p>
+                                {body && (
+                                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-1 leading-relaxed">
+                                    {body}
+                                  </p>
+                                )}
 
                                 <p className="text-xs text-gray-400 mt-2">
-                                  {new Date(
+                                  {formatNotificationDate(
                                     n.createdAt
-                                  ).toLocaleString()}
+                                  )}
                                 </p>
 
                               </div>
@@ -664,7 +758,8 @@ function AdminLayout() {
                             </div>
 
                           </div>
-                        )
+                          );
+                        }
                       )
                     )}
 
