@@ -34,7 +34,10 @@ const getOptional = async (path, fallback = emptyResponse) => {
     return await API.get(path);
   } catch (error) {
     if (error.response?.status === 503 || error.code === "ECONNABORTED") {
-      return fallback;
+      return {
+        ...fallback,
+        databaseUnavailable: true,
+      };
     }
 
     throw error;
@@ -56,6 +59,7 @@ function Dashboard() {
   const [recentProjects, setRecentProjects] = useState([]);
   const [views, setViews] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [databaseUnavailable, setDatabaseUnavailable] = useState(false);
 
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
@@ -77,6 +81,15 @@ function Dashboard() {
             getOptional("/views", { data: { count: 0 } }),
           ]);
 
+        setDatabaseUnavailable(
+          [
+            projectsRes,
+            messagesRes,
+            testimonialsRes,
+            viewsRes,
+          ].some((response) => response.databaseUnavailable)
+        );
+
         const projects = toArray(projectsRes.data);
         const messages = toArray(messagesRes.data);
         const testimonials = toArray(testimonialsRes.data);
@@ -97,6 +110,7 @@ function Dashboard() {
         });
       } catch (error) {
         console.error("Dashboard error:", error);
+        setDatabaseUnavailable(false);
         toast.error("Failed to load dashboard data");
       } finally {
         setLoading(false);
@@ -220,6 +234,20 @@ function Dashboard() {
         </div>
       </section>
 
+      {databaseUnavailable && (
+        <section className="rounded-2xl border border-[#f3c8bb] bg-[#fff1e8] p-5 text-[#7a2e53] shadow-sm shadow-[#7a2e53]/5 dark:border-[#c65f4a]/30 dark:bg-[#c65f4a]/10 dark:text-[#f4a391]">
+          <h2 className="font-extrabold">
+            Database connection unavailable
+          </h2>
+          <p className="mt-2 text-sm leading-6">
+            Your content is still in MongoDB, but the backend cannot reach the
+            database right now. Start the backend from your normal terminal with
+            internet access to restore live projects, messages, testimonials,
+            skills, and services.
+          </p>
+        </section>
+      )}
+
       <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         {cards.map((card) => {
           const Icon = card.icon;
@@ -246,7 +274,9 @@ function Dashboard() {
               </div>
               <p className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#c65f4a] dark:text-[#f4a391]">
                 <TrendingUp size={16} />
-                Live portfolio data
+                {databaseUnavailable
+                  ? "Waiting for database"
+                  : "Live portfolio data"}
               </p>
             </div>
           );
