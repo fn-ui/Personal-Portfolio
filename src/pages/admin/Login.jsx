@@ -67,9 +67,20 @@ function Login() {
         navigate("/admin/dashboard", { replace: true });
       }
     } catch (err) {
-      const errorMsg =
+      let errorMsg =
         err.response?.data?.message ||
         "Login failed. Please try again.";
+
+      if (
+        err.response?.status === 0 ||
+        err.code === "ERR_NETWORK"
+      ) {
+        errorMsg =
+          "Login server is unreachable. Check the deployed API URL and backend CORS settings.";
+      } else if (err.code === "ECONNABORTED") {
+        errorMsg =
+          "Login request timed out. The deployed API may be asleep or unavailable.";
+      }
 
       setErrors({ general: errorMsg });
       toast.error(errorMsg);

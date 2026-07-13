@@ -28,10 +28,28 @@ const server = http.createServer(app);
 
 const PORT = process.env.PORT || 5000;
 const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI || process.env.DATABASE_URL;
+const normalizeOrigin = (origin) => {
+  if (!origin) return "";
+
+  try {
+    return new URL(origin).origin;
+  } catch {
+    return origin.replace(/\/$/, "");
+  }
+};
+
+const configuredOrigins = [
+  process.env.CLIENT_URL,
+  process.env.FRONTEND_URL,
+  process.env.CORS_ORIGIN,
+]
+  .filter(Boolean)
+  .join(",");
+
 const allowedOrigins = [
-  ...(process.env.CLIENT_URL || "http://localhost:5173")
+  ...(configuredOrigins || "http://localhost:5173")
     .split(",")
-    .map((origin) => origin.trim())
+    .map((origin) => normalizeOrigin(origin.trim()))
     .filter(Boolean),
   "http://localhost:5173",
   "http://127.0.0.1:5173",
@@ -39,7 +57,10 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (
+      !origin ||
+      allowedOrigins.includes(normalizeOrigin(origin))
+    ) {
       return callback(null, true);
     }
 
