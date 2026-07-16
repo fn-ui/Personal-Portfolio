@@ -85,7 +85,7 @@ function Login() {
   };
 
   return (
-    <main className="relative isolate min-h-screen overflow-hidden bg-[#241423] px-6 py-8 text-[#241423]">
+    <main className="relative isolate min-h-screen overflow-hidden bg-[#241423] px-5 py-6 text-[#241423]">
       <img
         src={workspaceImg}
         alt=""
@@ -95,54 +95,54 @@ function Login() {
       <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(20,12,20,0.82)_0%,rgba(36,20,35,0.55)_42%,rgba(255,248,239,0.2)_100%)]" />
       <div className="absolute inset-x-0 bottom-0 -z-10 h-1/2 bg-[linear-gradient(0deg,rgba(20,12,20,0.78)_0%,rgba(20,12,20,0)_100%)]" />
 
-      <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-7xl flex-col">
-        <a href="/" className="flex w-fit items-center gap-4 text-white">
-          <span className="grid h-12 w-12 place-items-center rounded-2xl border border-white/20 bg-white/15 text-[#f2a38d] backdrop-blur">
-            <Code2 />
+      <div className="mx-auto flex min-h-[calc(100vh-3rem)] max-w-7xl flex-col">
+        <a href="/" className="flex w-fit items-center gap-3 text-white">
+          <span className="grid h-10 w-10 place-items-center rounded-xl border border-white/20 bg-white/15 text-[#f2a38d] backdrop-blur">
+            <Code2 className="h-5 w-5" />
           </span>
           <span>
-            <span className="block text-2xl font-bold">Admin Studio</span>
-            <span className="text-sm text-[#f8e8df]">
+            <span className="block text-xl font-bold">Admin Studio</span>
+            <span className="text-xs text-[#f8e8df]">
               Manage your portfolio with clarity.
             </span>
           </span>
         </a>
 
-        <div className="flex flex-1 items-center justify-center py-10 lg:justify-end">
-          <form onSubmit={handleLogin} className="w-full max-w-md">
-            <div className="relative overflow-hidden rounded-[2rem] border border-white/25 bg-[#fffaf3]/92 p-7 shadow-2xl shadow-black/25 backdrop-blur-xl sm:p-8">
-              <div className="absolute right-0 top-0 h-32 w-32 rounded-bl-full bg-[#fbe3dc]" />
+        <div className="flex flex-1 items-center justify-center py-6 lg:justify-start">
+          <form onSubmit={handleLogin} className="w-full max-w-sm">
+            <div className="relative overflow-hidden rounded-[1.5rem] border border-white/25 bg-[#fffaf3]/92 p-5 shadow-2xl shadow-black/25 backdrop-blur-xl sm:p-6">
+              <div className="absolute right-0 top-0 h-24 w-24 rounded-bl-full bg-[#fbe3dc]" />
 
-              <div className="relative mb-8 text-center">
-                <div className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-[#fbe3dc] text-[#c65f4a]">
-                  <LockKeyhole className="h-7 w-7" />
+              <div className="relative mb-5 text-center">
+                <div className="mx-auto mb-3 grid h-11 w-11 place-items-center rounded-xl bg-[#fbe3dc] text-[#c65f4a]">
+                  <LockKeyhole className="h-5 w-5" />
                 </div>
                 <p className="section-eyebrow">Secure access</p>
-                <h1 className="mt-3 text-4xl font-extrabold text-[#241423]">
+                <h1 className="mt-2 text-3xl font-extrabold text-[#241423]">
                   Welcome back
                 </h1>
-                <p className="mt-3 text-sm leading-6 text-[#6d5b53]">
+                <p className="mt-2 text-xs leading-5 text-[#6d5b53]">
                   Sign in to update projects, messages, and testimonials.
                 </p>
               </div>
 
               {errors.general && (
-                <div className="mb-5 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4">
-                  <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-600" />
+                <div className="mb-4 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-3">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" />
                   <p className="text-sm text-red-600">{errors.general}</p>
                 </div>
               )}
 
-              <div className="mb-5">
-                <label className="mb-2 block text-sm font-bold text-[#5f4d55]">
+              <div className="mb-4">
+                <label className="mb-2 block text-xs font-bold text-[#5f4d55]">
                   Email address
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#b4a095]" />
+                  <Mail className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#b4a095]" />
                   <input
                     type="email"
                     placeholder="you@example.com"
-                    className={`w-full rounded-xl border bg-white/80 p-4 pl-12 outline-none transition ${
+                    className={`w-full rounded-xl border bg-white/80 px-4 py-3 pl-11 text-sm outline-none transition ${
                       errors.email
                         ? "border-red-500 focus:border-red-600 focus:ring-2 focus:ring-red-200"
                         : "border-[#eadccf] focus:border-[#c65f4a] focus:ring-4 focus:ring-[#f3c8bb]/40"
@@ -160,16 +160,16 @@ function Login() {
                 )}
               </div>
 
-              <div className="mb-5">
-                <label className="mb-2 block text-sm font-bold text-[#5f4d55]">
+              <div className="mb-4">
+                <label className="mb-2 block text-xs font-bold text-[#5f4d55]">
                   Password
                 </label>
                 <div className="relative">
-                  <LockKeyhole className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#b4a095]" />
+                  <LockKeyhole className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#b4a095]" />
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter password"
-                    className={`w-full rounded-xl border bg-white/80 p-4 pl-12 pr-12 outline-none transition ${
+                    className={`w-full rounded-xl border bg-white/80 px-4 py-3 pl-11 pr-11 text-sm outline-none transition ${
                       errors.password
                         ? "border-red-500 focus:border-red-600 focus:ring-2 focus:ring-red-200"
                         : "border-[#eadccf] focus:border-[#c65f4a] focus:ring-4 focus:ring-[#f3c8bb]/40"
@@ -190,9 +190,9 @@ function Login() {
                     disabled={loading}
                   >
                     {showPassword ? (
-                      <EyeOff className="h-5 w-5" />
+                      <EyeOff className="h-4 w-4" />
                     ) : (
-                      <Eye className="h-5 w-5" />
+                      <Eye className="h-4 w-4" />
                     )}
                   </button>
                 </div>
@@ -201,7 +201,7 @@ function Login() {
                 )}
               </div>
 
-              <div className="mb-6 flex flex-col gap-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+              <div className="mb-5 flex flex-col gap-3 text-xs sm:flex-row sm:items-center sm:justify-between">
                 <label className="inline-flex items-center gap-3 text-[#6d5b53]">
                   <input
                     type="checkbox"
@@ -220,7 +220,7 @@ function Login() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#c65f4a] py-4 font-bold text-white shadow-lg shadow-[#c65f4a]/25 transition hover:bg-[#ad503e] disabled:bg-[#d88f7a]"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#c65f4a] py-3 font-bold text-white shadow-lg shadow-[#c65f4a]/25 transition hover:bg-[#ad503e] disabled:bg-[#d88f7a]"
               >
                 {loading ? (
                   <>
@@ -232,13 +232,13 @@ function Login() {
                 )}
               </button>
 
-              <div className="mt-7 flex items-center gap-4 border-t border-[#eadccf] pt-6">
+              <div className="mt-5 flex items-center gap-4 border-t border-[#eadccf] pt-4">
                 <span className="h-px flex-1 bg-[#eadccf]" />
                 <Code2 className="h-5 w-5 text-[#c65f4a]" />
                 <span className="h-px flex-1 bg-[#eadccf]" />
               </div>
 
-              <p className="mt-5 text-center text-xs text-[#7c6a61]">
+              <p className="mt-4 text-center text-[11px] text-[#7c6a61]">
                 Demo credentials are set in your environment variables.
               </p>
             </div>
